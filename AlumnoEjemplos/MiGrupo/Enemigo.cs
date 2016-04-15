@@ -28,7 +28,12 @@ namespace AlumnoEjemplos.MiGrupo
         Vector3[] caminoIda = new Vector3[20];
         Vector3[] caminoVuelta = new Vector3[20];
         int contador;
+        int cantidadWP;
         private Estado estado;
+        public void setCantidadWP(int numero)
+        {
+            this.cantidadWP = numero;
+        }
         public Vector3[] getCaminoOriginal()
         {
             return caminoOriginal;
@@ -96,14 +101,23 @@ namespace AlumnoEjemplos.MiGrupo
         {
             mesh.Position = caminoOriginal[0];
             caminoIda = caminoOriginal;
-            caminoOriginal.Reverse();
-            caminoVuelta = caminoOriginal;
-            caminoOriginal.Reverse();
+            caminoVuelta = getCaminoOriginalClonado();
+            Array.Reverse(caminoVuelta, 0, cantidadWP);
             contador = 0;
+        }
+        public Vector3[] getCaminoOriginalClonado()
+        {
+            Vector3[] aux = new Vector3[20];
+            int auxContador = cantidadWP;
+            int i = 0;
+            for (; i< auxContador; i++)
+            {
+                aux[i] = caminoOriginal[i];
+            }
+            return aux;
         }
         public void seguirA(Vector3 posJugador, float elapsedTime)
         {
-            Matrix matrixBox;
             Vector3 direccion = posJugador - mesh.Position;
             direccion.Normalize();
             direccion.Y = 0;
@@ -123,9 +137,14 @@ namespace AlumnoEjemplos.MiGrupo
                 case Estado.RecorriendoIda:
                     while(caminoIda[contador] != null && i )
                     {
-                        if(mesh.Position == caminoIda[contador])
+                        if((mesh.Position - caminoIda[contador]).Length() < 0.5f)
                         {
                             contador++;
+                            if (contador == cantidadWP)
+                            {
+                                contador = 0;
+                                estado = Estado.RecorriendoVuelta;
+                            }
                         }
                         else
                         {
@@ -133,19 +152,20 @@ namespace AlumnoEjemplos.MiGrupo
                             i = false;
                         }
                     }
-                    if(caminoIda[contador] == null)
-                    {
-                        contador = 0;
-                        estado = Estado.RecorriendoVuelta;
-                    }
+                    
 
                     break;
                 case Estado.RecorriendoVuelta:
                     while (caminoVuelta[contador] != null && i)
                     {
-                        if (mesh.Position == caminoVuelta[contador])
+                        if ((mesh.Position - caminoVuelta[contador]).Length() < 0.5f)
                         {
                             contador++;
+                            if (contador == cantidadWP)
+                            {
+                                contador = 0;
+                                estado = Estado.RecorriendoIda;
+                            }
                         }
                         else
                         {
@@ -153,11 +173,7 @@ namespace AlumnoEjemplos.MiGrupo
                             i = false;
                         }
                     }
-                    if (caminoVuelta[contador] == null)
-                    {
-                        contador = 0;
-                        estado = Estado.RecorriendoVuelta;
-                    }
+                    
 
                     break;
 

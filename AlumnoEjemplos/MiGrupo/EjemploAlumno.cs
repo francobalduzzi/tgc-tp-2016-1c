@@ -13,8 +13,7 @@ using TgcViewer.Utils.Interpolation;
 using TgcViewer.Utils.Sound;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils._2D;
-
-
+using TgcViewer.Utils.TgcSkeletalAnimation;
 
 namespace AlumnoEjemplos.MiGrupo
 {
@@ -24,10 +23,12 @@ namespace AlumnoEjemplos.MiGrupo
     public class EjemploAlumno : TgcExample
     {
         TgcScene escena;
-        vela vela1;
         Camara camara;
+        Vela vela1;
         Linterna linterna;
-        Puerta puerta;
+        Farol farol;
+        TipoIluminador objeto; //Este sera el objeto que tenga en la mano el jugador
+        Enemigo enemigo; // Uno solo para las pruebas dsps abra que hacer una lista. Hay que pasarla las coordenadas para que pueda arrancar y el estado. Camino ida necesita minimo 1 parametro aunque se quede quieto
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
         /// Influye en donde se va a haber en el árbol de la derecha de la pantalla.
@@ -61,12 +62,10 @@ namespace AlumnoEjemplos.MiGrupo
         public override void init()
         {
             camara = new Camara();
-            camara.setCamera(new Vector3(30f, 30f, 90f), new Vector3(289f, 30f, 90f));
+            camara.setCamera(new Vector3(290f, 30f, 90f), new Vector3(289f, 30f, 90f));
             camara.MovementSpeed = 200f;
-            camara.RotationSpeed = 3f;
+            camara.RotationSpeed = 5f;
             camara.JumpSpeed = 80f;
-            puerta = new Puerta();
-            puerta.init(camara);
             //GuiController.Instance: acceso principal a todas las herramientas del Framework
 
             //Device de DirectX para crear primitivas
@@ -75,31 +74,41 @@ namespace AlumnoEjemplos.MiGrupo
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;
             Device d3dDevice = GuiController.Instance.D3dDevice;
             TgcSceneLoader loader = new TgcSceneLoader();
-            escena = loader.loadSceneFromFile(alumnoMediaFolder + "MiGrupo\\mapitaPiola-TgcScene.xml");
-           
-            
-
-            
-
-
-            vela1 = new vela();
-            vela1.init(camara);
+            escena = loader.loadSceneFromFile(alumnoMediaFolder + "MiGrupo\\puerta2-TgcScene.xml");
+            vela1 = new Vela();
+            vela1.init();
             camara.SetEscena(escena);//cargamos la escena en la camara para que detecte colisiones
 
             //Cargamos la linterna
             linterna = new Linterna(camara.getLookAt(), camara.getPosition());
+            objeto = vela1; //Empieza con la linterna en mano.
             //vela.Meshes[0].Rotation = new Vector3(-5f, -14f, 0f);
             //Camara en primera persona:
             Vector3 mira = new Vector3(0,0,0);
             Vector3 vector = new Vector3(0,0,20);
 
+
+
+            enemigo = new Enemigo(); //Cargamos un enemigo
+            enemigo.setEscena(escena);
+            enemigo.getCaminoOriginal().SetValue(new Vector3(93, 5.06f, 381),0);
+            enemigo.getCaminoOriginal().SetValue(new Vector3(120, 5.06f, 73), 1);
+            enemigo.getCaminoOriginal().SetValue(new Vector3(250, 5.06f, 73), 2);
+            enemigo.setCantidadWP(3);
+            enemigo.init();
+            enemigo.setEstado(Enemigo.Estado.RecorriendoIda);
+
+
+
             ///////////////USER VARS//////////////////
 
             //Crear una UserVar
             GuiController.Instance.UserVars.addVar("variablePrueba");
+            GuiController.Instance.UserVars.addVar("PosCam");
 
             //Cargar valor en UserVar
             GuiController.Instance.UserVars.setValue("variablePrueba", 5451);
+            GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition());
 
 
 
@@ -107,6 +116,8 @@ namespace AlumnoEjemplos.MiGrupo
 
             //Crear un modifier para un valor FLOAT
             GuiController.Instance.Modifiers.addFloat("valorFloat", -50f, 200f, 0f);
+            float angle = FastMath.TWO_PI;
+            GuiController.Instance.Modifiers.addVertex3f("rotation", new Vector3(-angle, -angle, -angle), new Vector3(angle, angle, angle), new Vector3(0, 0, 0));
 
             //Crear un modifier para un ComboBox con opciones
             string[] opciones = new string[]{"opcion1", "opcion2", "opcion3"};
@@ -151,8 +162,6 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 string element = lista[i];
             }
-
-
         }
 
 
@@ -167,32 +176,42 @@ namespace AlumnoEjemplos.MiGrupo
         {
             //Device de DirectX para renderizar
             Device d3dDevice = GuiController.Instance.D3dDevice;
-            efectosLinterna();
+            objeto.actualizarEscenario(escena, camara); // Atencion aca, esto es como moo de prueba baja mucho ls FPS, lo ideal seria tener ls meshes cocinados y en el init del programa estos se carguen a cada uno de los objetos
             //Obtener valor de UserVar (hay que castear)
             int valor = (int)GuiController.Instance.UserVars.getValue("variablePrueba");
-            
-
+           
             ///////////////INPUT//////////////////
             //conviene deshabilitar ambas camaras para que no haya interferencia
 
             //Capturar Input teclado 
             if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.F))
             {
-                linterna.CambiarEstadoLuz();
+                objeto.CambiarEstadoLuz();
+            }
+            if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.D1))
+            {
+                objeto.CambiarEstadoLuz();
+                objeto = linterna;
+                objeto.CambiarEstadoLuz();
+            }
+            if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.D2))
+            {
+                objeto.CambiarEstadoLuz();
+                objeto = vela1;
+                objeto.CambiarEstadoLuz();
             }
             //Capturar Input Mouse
             if (GuiController.Instance.D3dInput.buttonPressed(TgcViewer.Utils.Input.TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 //Boton izq apretado
             }
-
+            //enemigo.seguirA(camara.getPosition(), elapsedTime);
             moverCamaraConVela(elapsedTime); //Actualizamos el valor de la camara y vemos si generar efecto de vela
-                                             // vela1.render();
-
-            puerta.moverPuerta(elapsedTime);
-            puerta.render();
-            linterna.render();
+           // vela1.render();
+            objeto.render();
             escena.renderAll();
+            enemigo.render();
+            GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition()); //Actualizamos la user var, nos va a servir
 
         }
 
@@ -211,59 +230,7 @@ namespace AlumnoEjemplos.MiGrupo
             camara.updateCamera();
             if(camara.getPosition() != Aux)
             {
-                linterna.moverLinterna(elapsedTime);
-                vela1.moverVela(elapsedTime, camara);
-            }
-        }
-        public void efectosLinterna()
-        {
-            linterna.Posicion = camara.getPosition();
-            linterna.Direccion = camara.getLookAt();
-            Vector3 lightDir;
-            lightDir = linterna.Direccion - linterna.Posicion;
-            lightDir.Normalize();
-            Effect currentShader;
-            if (linterna.Encendida)
-            {
-                //Con luz: Cambiar el shader actual por el shader default que trae el framework para iluminacion dinamica con SpotLight
-                currentShader = GuiController.Instance.Shaders.TgcMeshSpotLightShader;
-            }
-            else
-            {
-                //Sin luz: Restaurar shader default
-                currentShader = GuiController.Instance.Shaders.TgcMeshShader;
-            }
-
-            foreach (TgcMesh mesh in escena.Meshes)
-            {
-                mesh.Effect = currentShader;
-                //El Technique depende del tipo RenderType del mesh
-                mesh.Technique = GuiController.Instance.Shaders.getTgcMeshTechnique(mesh.RenderType);
-            }
-            //Renderizar meshes
-            foreach (TgcMesh mesh in escena.Meshes)
-            {
-                if (linterna.Encendida)
-                {
-                    //Cargar variables shader de la luz
-                    mesh.Effect.SetValue("lightColor", ColorValue.FromColor(Color.White));
-                    mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(linterna.Posicion));
-                    mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(linterna.Posicion));
-                    mesh.Effect.SetValue("spotLightDir", TgcParserUtils.vector3ToFloat4Array(lightDir));
-                    mesh.Effect.SetValue("lightIntensity", linterna.Intensity);
-                    mesh.Effect.SetValue("lightAttenuation", linterna.Attenuation);
-                    mesh.Effect.SetValue("spotLightAngleCos", FastMath.ToRad(linterna.SpotAngle));
-                    mesh.Effect.SetValue("spotLightExponent", linterna.SpotExponent);
-
-                    //Cargar variables de shader de Material. El Material en realidad deberia ser propio de cada mesh. Pero en este ejemplo se simplifica con uno comun para todos
-                    mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(Color.Black));
-                    mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(Color.White));
-                    mesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor(Color.White));
-                    mesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor(Color.White));
-                    mesh.Effect.SetValue("materialSpecularExp", linterna.SpecularEx);
-                }
-
-                //No renderizar aca porque hace una caja negra loca
+                objeto.mover(elapsedTime);
             }
         }
     }

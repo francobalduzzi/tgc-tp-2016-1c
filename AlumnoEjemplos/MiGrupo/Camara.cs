@@ -50,6 +50,7 @@ namespace AlumnoEjemplos.MiGrupo
         private TgcScene escena;
         private Vector3 eyeAux;
         private Vector3 targetAux;
+        TgcBoundingSphere camaraColision;
 
 
         public Camara()
@@ -156,7 +157,6 @@ namespace AlumnoEjemplos.MiGrupo
         public void updateCamera()
          {
             float elapsedTime = GuiController.Instance.ElapsedTime;
-
             bool colision = ChequearColisiones(); //Detectamos cplisiones y guardamos
 
             //Forward
@@ -242,7 +242,6 @@ namespace AlumnoEjemplos.MiGrupo
          }
         public bool ChequearColisiones()
         {
-            TgcBoundingSphere camaraColision;
             camaraColision = new TgcBoundingSphere(eye, 5f);
             foreach (TgcMesh mesh in escena.Meshes)
             {
