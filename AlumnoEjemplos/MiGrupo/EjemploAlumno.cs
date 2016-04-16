@@ -193,15 +193,15 @@ namespace AlumnoEjemplos.MiGrupo
             }
             if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.D1))
             {
-                objeto.CambiarEstadoLuz();
+                objeto.Encendida = false;
                 objeto = linterna;
-                objeto.CambiarEstadoLuz();
+                objeto.Encendida = true;
             }
             if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.D2))
             {
-                objeto.CambiarEstadoLuz();
+                objeto.Encendida = false;
                 objeto = vela1;
-                objeto.CambiarEstadoLuz();
+                objeto.Encendida = true;
             }
             //Capturar Input Mouse
             if (GuiController.Instance.D3dInput.buttonPressed(TgcViewer.Utils.Input.TgcD3dInput.MouseButtons.BUTTON_LEFT))
@@ -217,7 +217,7 @@ namespace AlumnoEjemplos.MiGrupo
 
             if (recarga.verificarColision(camara))//si agarra la recarga aumento la intensidad 
             {
-                linterna.intensidadInicial();
+                linterna.recargar();
             }
             recarga.render(elapsedTime);
             linterna.bajarIntensidad(elapsedTime);// bajo la intensidad
@@ -234,7 +234,6 @@ namespace AlumnoEjemplos.MiGrupo
         {
 
         }
-
         public void moverCamaraConVela(float elapsedTime)
         {
             Vector3 Aux = camara.getPosition();
