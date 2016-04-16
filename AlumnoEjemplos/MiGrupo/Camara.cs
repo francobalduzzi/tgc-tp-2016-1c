@@ -50,7 +50,7 @@ namespace AlumnoEjemplos.MiGrupo
         private TgcScene escena;
         private Vector3 eyeAux;
         private Vector3 targetAux;
-        TgcBoundingSphere camaraColision;
+        public TgcBoundingSphere camaraColision;
 
 
         public Camara()

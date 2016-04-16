@@ -54,6 +54,17 @@ namespace AlumnoEjemplos.MiGrupo
 
 
 
+        public void intensidadInicial()
+        {
+            this.Intensity = 20;
+        }
+
+        public void bajarIntensidad(float elapsedTime)
+        {
+            this.Intensity = (Intensity - (1 * elapsedTime));//si es necesario modificar velocidad de reduccion          
+        }
+
+
 
 
 
