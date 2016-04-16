@@ -92,12 +92,12 @@ namespace AlumnoEjemplos.MiGrupo
 
             enemigo = new Enemigo(); //Cargamos un enemigo
             enemigo.setEscena(escena);
-            enemigo.getCaminoOriginal().SetValue(new Vector3(93, 5.06f, 381),0);
-            enemigo.getCaminoOriginal().SetValue(new Vector3(120, 5.06f, 73), 1);
+            enemigo.getCaminoOriginal().SetValue(new Vector3(93, 5.06f, 381), 0);
+            enemigo.getCaminoOriginal().SetValue(new Vector3(115, 5.06f, 245), 1);
             enemigo.getCaminoOriginal().SetValue(new Vector3(250, 5.06f, 73), 2);
             enemigo.setCantidadWP(3);
-            enemigo.init();
             enemigo.setEstado(Enemigo.Estado.RecorriendoIda);
+            enemigo.init();
 
 
             recarga = new LinternaRecarga(new Vector3(270f, 17f, 226f));// se carga la/s recarga con la posicion
@@ -213,7 +213,7 @@ namespace AlumnoEjemplos.MiGrupo
            // vela1.render();
             objeto.render();
             escena.renderAll();
-            enemigo.render();
+            enemigo.render(camara.getPosition());
 
             if (recarga.verificarColision(camara))//si agarra la recarga aumento la intensidad 
             {

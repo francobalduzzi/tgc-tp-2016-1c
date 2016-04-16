@@ -21,6 +21,7 @@ namespace AlumnoEjemplos.MiGrupo
         string[] animationsPath;
         string selectedAnim;
         const float VELOCIDAD_MOVIMIËNTO = 50f;
+        const float VELOCIDAD_MOVIMIENTO_CORRER = 200f;
         TgcSkeletalMesh mesh;
         TgcScene escena;
         TgcBox bounding;
@@ -48,7 +49,7 @@ namespace AlumnoEjemplos.MiGrupo
         }
         public enum Estado
         {
-            Parado = 0,
+            Parado = 0, // Hay que pasarle 2 viewpoints: posicion y direccion donde mira.
             RecorriendoIda = 1,
             RecorriendoVuelta = 2,
             Persiguiendo = 3,
@@ -89,8 +90,6 @@ namespace AlumnoEjemplos.MiGrupo
             //Crear esqueleto a modo Debug
             mesh.buildSkletonMesh();
             //Elegir animacion Caminando
-            selectedAnim = animationList[1];
-            mesh.playAnimation(selectedAnim, true);
             // mesh.BoundingBox.move(new Vector3(15,0,-170));
             //mesh.BoundingBox.scaleTranslate(mesh.BoundingBox.Position, new Vector3(4f,0.8f,4f)); // este sera el rango de vision
             bounding = new TgcBox();
@@ -104,6 +103,22 @@ namespace AlumnoEjemplos.MiGrupo
             caminoVuelta = getCaminoOriginalClonado();
             Array.Reverse(caminoVuelta, 0, cantidadWP);
             contador = 0;
+            switch (estado)
+            {
+                case Estado.Parado:
+                    selectedAnim = animationList[0];
+                    break;
+                case Estado.RecorriendoIda:
+                    selectedAnim = animationList[1];
+                    break;
+                case Estado.RecorriendoVuelta:
+                    selectedAnim = animationList[1];
+                    break;
+                case Estado.Persiguiendo:
+                    selectedAnim = animationList[2];
+                    break;
+            }
+            mesh.playAnimation(selectedAnim, true);
         }
         public Vector3[] getCaminoOriginalClonado()
         {
@@ -116,19 +131,19 @@ namespace AlumnoEjemplos.MiGrupo
             }
             return aux;
         }
-        public void seguirA(Vector3 posJugador, float elapsedTime)
+        public void seguirA(Vector3 posJugador, float elapsedTime, float velocidad)
         {
             Vector3 direccion = posJugador - mesh.Position;
             direccion.Normalize();
             direccion.Y = 0;
             mesh.rotateY((float)Math.Atan2(direccion.X, direccion.Z) - mesh.Rotation.Y - Geometry.DegreeToRadian(180f));
             bounding.rotateY((float)Math.Atan2(direccion.X, direccion.Z) - mesh.Rotation.Y - Geometry.DegreeToRadian(180f));
-            direccion *= VELOCIDAD_MOVIMIËNTO * elapsedTime;
+            direccion *= velocidad * elapsedTime;
             mesh.move(direccion);
 
             bounding.move(direccion);
         }
-        public void recorrerCamino()
+        public void recorrerCamino(Vector3 posCam)
         {
             float elapsedTime = GuiController.Instance.ElapsedTime;
             Boolean i = true;
@@ -148,7 +163,7 @@ namespace AlumnoEjemplos.MiGrupo
                         }
                         else
                         {
-                            this.seguirA(caminoIda[contador], elapsedTime);
+                            this.seguirA(caminoIda[contador], elapsedTime, VELOCIDAD_MOVIMIËNTO);
                             i = false;
                         }
                     }
@@ -169,20 +184,28 @@ namespace AlumnoEjemplos.MiGrupo
                         }
                         else
                         {
-                            this.seguirA(caminoVuelta[contador], elapsedTime);
+                            this.seguirA(caminoVuelta[contador], elapsedTime, VELOCIDAD_MOVIMIËNTO);
                             i = false;
                         }
                     }
                     
 
                     break;
-
+                case Estado.Parado:
+                    Vector3 direccion = caminoOriginal[1] - mesh.Position;
+                    direccion.Normalize();
+                    direccion.Y = 0;
+                    mesh.rotateY((float)Math.Atan2(direccion.X, direccion.Z) - mesh.Rotation.Y - Geometry.DegreeToRadian(180f));
+                    break;
+                case Estado.Persiguiendo:
+                    seguirA(posCam, elapsedTime, VELOCIDAD_MOVIMIENTO_CORRER);
+                    break;
             }
         }
-        public void render()
+        public void render(Vector3 posCam)
         {
             //bounding.Rotation = ((Vector3)GuiController.Instance.Modifiers.getValue("rotation"));
-            recorrerCamino();
+            recorrerCamino(posCam);
             mesh.animateAndRender();
             //bounding.render();
             bounding.BoundingBox.render();
