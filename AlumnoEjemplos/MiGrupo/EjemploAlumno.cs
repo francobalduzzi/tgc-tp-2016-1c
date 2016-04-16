@@ -27,6 +27,7 @@ namespace AlumnoEjemplos.MiGrupo
         Vela vela1;
         Linterna linterna;
         Farol farol;
+        Puerta puerta;
         TipoIluminador objeto; //Este sera el objeto que tenga en la mano el jugador
         Enemigo enemigo; // Uno solo para las pruebas dsps abra que hacer una lista. Hay que pasarla las coordenadas para que pueda arrancar y el estado. Camino ida necesita minimo 1 parametro aunque se quede quieto
         LinternaRecarga recarga;
@@ -63,7 +64,7 @@ namespace AlumnoEjemplos.MiGrupo
         public override void init()
         {
             camara = new Camara();
-            camara.setCamera(new Vector3(290f, 30f, 90f), new Vector3(289f, 30f, 90f));
+            camara.setCamera(new Vector3(175f, 60f, 317f), new Vector3(289f, 30f, 90f));
             camara.MovementSpeed = 200f;
             camara.RotationSpeed = 5f;
             camara.JumpSpeed = 80f;
@@ -75,7 +76,7 @@ namespace AlumnoEjemplos.MiGrupo
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;
             Device d3dDevice = GuiController.Instance.D3dDevice;
             TgcSceneLoader loader = new TgcSceneLoader();
-            escena = loader.loadSceneFromFile(alumnoMediaFolder + "MiGrupo\\puerta2-TgcScene.xml");
+            escena = loader.loadSceneFromFile(alumnoMediaFolder + "MiGrupo\\mapaTerrorExportado-TgcScene.xml");
             vela1 = new Vela();
             vela1.init();
             camara.SetEscena(escena);//cargamos la escena en la camara para que detecte colisiones
@@ -88,7 +89,8 @@ namespace AlumnoEjemplos.MiGrupo
             Vector3 mira = new Vector3(0,0,0);
             Vector3 vector = new Vector3(0,0,20);
 
-
+            puerta= new Puerta();
+            puerta.init();
 
             enemigo = new Enemigo(); //Cargamos un enemigo
             enemigo.setEscena(escena);
@@ -193,15 +195,15 @@ namespace AlumnoEjemplos.MiGrupo
             }
             if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.D1))
             {
-                objeto.Encendida = false;
+                objeto.CambiarEstadoLuz();
                 objeto = linterna;
-                objeto.Encendida = true;
+                objeto.CambiarEstadoLuz();
             }
             if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.D2))
             {
-                objeto.Encendida = false;
+                objeto.CambiarEstadoLuz();
                 objeto = vela1;
-                objeto.Encendida = true;
+                objeto.CambiarEstadoLuz();
             }
             //Capturar Input Mouse
             if (GuiController.Instance.D3dInput.buttonPressed(TgcViewer.Utils.Input.TgcD3dInput.MouseButtons.BUTTON_LEFT))
@@ -217,10 +219,13 @@ namespace AlumnoEjemplos.MiGrupo
 
             if (recarga.verificarColision(camara))//si agarra la recarga aumento la intensidad 
             {
-                linterna.recargar();
+                linterna.intensidadInicial();
             }
             recarga.render(elapsedTime);
             linterna.bajarIntensidad(elapsedTime);// bajo la intensidad
+
+            puerta.moverPuerta(elapsedTime);
+            puerta.render();
 
             GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition()); //Actualizamos la user var, nos va a servir
 
@@ -234,6 +239,7 @@ namespace AlumnoEjemplos.MiGrupo
         {
 
         }
+
         public void moverCamaraConVela(float elapsedTime)
         {
             Vector3 Aux = camara.getPosition();

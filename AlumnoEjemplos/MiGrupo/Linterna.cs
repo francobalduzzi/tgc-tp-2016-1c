@@ -4,7 +4,6 @@ using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer;
 using System.Drawing;
-using TgcViewer.Utils._2D;
 
 namespace AlumnoEjemplos.MiGrupo
 {
@@ -12,10 +11,6 @@ namespace AlumnoEjemplos.MiGrupo
     {
         public TgcScene linterna;
         private float movimientoLinterna;
-        const float VALORMAXIMOINTENSIDAD = 20;
-        private float porcentajeRestante;
-        //Crear texto 2, especificando color, alineación, posición, tamaño y fuente.
-        private TgcText2d text2;
         public Linterna(Vector3 Direccion1, Vector3 Posicion1)
         {
             this.init();
@@ -23,8 +18,8 @@ namespace AlumnoEjemplos.MiGrupo
             this.Posicion = Posicion1;
             this.SpotAngle = 20f;
             this.SpotExponent = 40f;
-            this.Intensity = VALORMAXIMOINTENSIDAD;
-            this.Encendida = false;
+            this.Intensity = 20;
+            this.Encendida = true;
             this.Attenuation = 0.1f;
             this.SpecularEx = 9f;
         }
@@ -37,13 +32,6 @@ namespace AlumnoEjemplos.MiGrupo
         }
         override public void init()
         {
-            text2 = new TgcText2d();
-            text2.Text = "100%";
-            text2.Color = Color.DarkSalmon;
-            text2.Align = TgcText2d.TextAlign.RIGHT;
-            text2.Position = new Point(950, 700);
-            text2.Size = new Size(300, 100);
-            text2.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold | FontStyle.Italic));
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;
             var loader = new TgcSceneLoader();
             linterna = loader.loadSceneFromFile(alumnoMediaFolder + "MiGrupo\\Linterna-TgcScene.xml");
@@ -51,14 +39,8 @@ namespace AlumnoEjemplos.MiGrupo
             linterna.Meshes[0].Position = Posicion + new Vector3(-30f, -15f, 60f);
             linterna.Meshes[0].Rotation = new Vector3(Geometry.DegreeToRadian(-350f), Geometry.DegreeToRadian(180f), Geometry.DegreeToRadian(-270f));
         }
-        public void calcularPorcentaje()
-        {
-            text2.Text = ((int)((this.Intensity * 100) / VALORMAXIMOINTENSIDAD)).ToString() + "%";
-        }
         override public void render()
         {
-            calcularPorcentaje();
-            text2.render();
             var matrizView = GuiController.Instance.D3dDevice.Transform.View;
             GuiController.Instance.D3dDevice.Transform.View = Matrix.Identity;
             linterna.renderAll();
@@ -72,25 +54,14 @@ namespace AlumnoEjemplos.MiGrupo
 
 
 
-        public void recargar()
+        public void intensidadInicial()
         {
-            this.Intensity += VALORMAXIMOINTENSIDAD*0.25f;
-            if(this.Intensity > VALORMAXIMOINTENSIDAD)
-            {
-                this.Intensity = VALORMAXIMOINTENSIDAD;
-            }
+            this.Intensity = 20;
         }
 
         public void bajarIntensidad(float elapsedTime)
         {
-            if(this.Intensity > -0.05f && this.Intensity < 0.05f)
-            {
-                this.Encendida = false; 
-            }
-            if (this.Encendida)
-            {
-                this.Intensity = (Intensity - (0.5f * elapsedTime));//si es necesario modificar velocidad de reduccion  
-            }                   
+            this.Intensity = (Intensity - (1 * elapsedTime));//si es necesario modificar velocidad de reduccion          
         }
 
 

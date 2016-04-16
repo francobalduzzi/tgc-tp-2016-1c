@@ -20,23 +20,27 @@ namespace AlumnoEjemplos.MiGrupo
     public class Puerta
     {
         private TgcScene puerta1;
+        private TgcScene cobertura1;
+        TgcMesh meshC;
         TgcMesh meshP;
         private float contador = 0;
-        public void init (Camara camara)
+        public void init ()
         {
             var loader = new TgcSceneLoader();
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;
-            puerta1 = loader.loadSceneFromFile(alumnoMediaFolder + "MiGrupo\\Component_2-TgcScene.xml");
+            puerta1 = loader.loadSceneFromFile(alumnoMediaFolder + "MiGrupo\\Component_1-TgcScene.xml");
             meshP = puerta1.Meshes[0];
-            meshP.Position = new Vector3(15f, 17f, 90f);
+            meshP.Position = new Vector3(229f, 60f, 201f);
+            cobertura1 = loader.loadSceneFromFile(alumnoMediaFolder + "MiGrupo\\cobertura-TgcScene.xml");
+            meshC = cobertura1.Meshes[0];
+            meshC.Position = new Vector3(229f, 60f, 201f);
         }
 
         public void moverPuerta(float elapsedTime)
         {
-            if (contador < 1000)
+            if (contador < 80)
             {
-                Vector3 vector = new Vector3(0, 0, 1) * (elapsedTime * 50);
-                meshP.move(vector);
+                meshP.rotateY(-1f*elapsedTime);
                 contador++;
             }
         }
@@ -44,6 +48,7 @@ namespace AlumnoEjemplos.MiGrupo
         public void render()
         {
             puerta1.renderAll();
+            cobertura1.renderAll();
         }
 
 

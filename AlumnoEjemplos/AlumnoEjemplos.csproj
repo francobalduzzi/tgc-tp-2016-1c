@@ -83,10 +83,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MiGrupo\Camara.cs" />
-    <Compile Include="MiGrupo\Class1.cs" />
     <Compile Include="MiGrupo\EjemploAlumno.cs" />
+    <Compile Include="MiGrupo\Enemigo.cs" />
+    <Compile Include="MiGrupo\Farol.cs" />
     <Compile Include="MiGrupo\Linterna.cs" />
+    <Compile Include="MiGrupo\LinternaRecarga.cs" />
     <Compile Include="MiGrupo\Puerta.cs" />
+    <Compile Include="MiGrupo\TipoIluminador.cs" />
     <Compile Include="MiGrupo\vela.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
