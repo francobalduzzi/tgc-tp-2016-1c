@@ -83,7 +83,9 @@ namespace AlumnoEjemplos.MiGrupo
 
             //Cargamos la linterna
             linterna = new Linterna(camara.getLookAt(), camara.getPosition());
-            objeto = vela1; //Empieza con la linterna en mano.
+            farol = new Farol();
+            farol.init();
+            objeto = farol; //Empieza con la linterna en mano.
             //vela.Meshes[0].Rotation = new Vector3(-5f, -14f, 0f);
             //Camara en primera persona:
             Vector3 mira = new Vector3(0,0,0);
@@ -102,7 +104,7 @@ namespace AlumnoEjemplos.MiGrupo
             enemigo.init();
 
 
-            recarga = new LinternaRecarga(new Vector3(270f, 17f, 226f));// se carga la/s recarga con la posicion
+            recarga = new LinternaRecarga(new Vector3(527f, 17f, 263f));// se carga la/s recarga con la posicion
 
 
             ///////////////USER VARS//////////////////
@@ -205,6 +207,12 @@ namespace AlumnoEjemplos.MiGrupo
                 objeto = vela1;
                 objeto.Encendida = true;
             }
+            if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.D3))
+            {
+                objeto.Encendida = false;
+                objeto = farol;
+                objeto.Encendida = true;
+            }
             //Capturar Input Mouse
             if (GuiController.Instance.D3dInput.buttonPressed(TgcViewer.Utils.Input.TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
@@ -212,7 +220,7 @@ namespace AlumnoEjemplos.MiGrupo
             }
             //enemigo.seguirA(camara.getPosition(), elapsedTime);
             moverCamaraConVela(elapsedTime); //Actualizamos el valor de la camara y vemos si generar efecto de vela
-           // vela1.render();
+            // vela1.render();
             objeto.render();
             escena.renderAll();
             enemigo.render(camara.getPosition());

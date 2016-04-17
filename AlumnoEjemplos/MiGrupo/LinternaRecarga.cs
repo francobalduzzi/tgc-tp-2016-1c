@@ -22,7 +22,7 @@ namespace AlumnoEjemplos.MiGrupo
         {
             this.init();
             this.posicion = pos;
-            this.colision = TgcBox.fromSize(posicion, new Vector3(30, 20, 30));
+            this.colision = TgcBox.fromSize(posicion, new Vector3(30, 100, 30));
             this.meshLR.Position = posicion;
 
         }
@@ -32,7 +32,7 @@ namespace AlumnoEjemplos.MiGrupo
             var loader = new TgcSceneLoader();
             linternaRe = loader.loadSceneFromFile(alumnoMediaFolder + "MiGrupo\\LinternaRecarga-TgcScene.xml");
             meshLR = linternaRe.Meshes[0];
-            meshLR.Scale=new Vector3(0.1f, 0.1f, 0.1f);
+            
         }
         public void render(float elapsedTime)
         {
@@ -42,7 +42,6 @@ namespace AlumnoEjemplos.MiGrupo
                 meshLR.rotateY(2f * elapsedTime);
                 meshLR.render();
             }
-            //colision.BoundingBox.render();
             
         }
         public Boolean verificarColision(Camara camara)
