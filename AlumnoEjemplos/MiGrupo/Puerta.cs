@@ -86,14 +86,21 @@ namespace AlumnoEjemplos.MiGrupo
             Vector3 direccion = camara.getLookAt();
             direccion.Normalize();
             direccion = direccion * 2;
-            if(TgcCollisionUtils.intersectSegmentAABB(camara.getPosition(), camara.getLookAt(), meshP.BoundingBox, out direccion))
+            if(estado == Estado.Cerrado)
             {
-                text2.Text = "Presiona la tecla e para abrir la puerta";
-                return true;
+                if (TgcCollisionUtils.intersectSegmentAABB(camara.getPosition(), camara.getLookAt(), meshP.BoundingBox, out direccion))
+                {
+                    text2.Text = "Presiona la tecla e para abrir la puerta";
+                    return true;
+                }
+                else
+                {
+                    text2.Text = "";
+                    return false;
+                }
             }
             else
             {
-                text2.Text = "";
                 return false;
             }
         }
@@ -101,9 +108,16 @@ namespace AlumnoEjemplos.MiGrupo
         {
             Vector3 direccion = enemigo.getDirector();
             direccion = direccion * 2;
-            if (TgcCollisionUtils.intersectSegmentAABB(enemigo.getPosicion(), direccion, meshP.BoundingBox, out direccion))
-            {               
-                return true;
+            if(estado == Estado.Cerrado)
+            {
+                if (TgcCollisionUtils.intersectSegmentAABB(enemigo.getPosicion(), direccion, meshP.BoundingBox, out direccion))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
