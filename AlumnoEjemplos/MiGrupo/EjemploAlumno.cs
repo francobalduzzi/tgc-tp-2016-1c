@@ -27,10 +27,10 @@ namespace AlumnoEjemplos.MiGrupo
         Vela vela1;
         Linterna linterna;
         Farol farol;
-        Puerta puerta;
         TipoIluminador objeto; //Este sera el objeto que tenga en la mano el jugador
         Enemigo enemigo; // Uno solo para las pruebas dsps abra que hacer una lista. Hay que pasarla las coordenadas para que pueda arrancar y el estado. Camino ida necesita minimo 1 parametro aunque se quede quieto
         LinternaRecarga recarga;
+        Puerta puerta;
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
         /// Influye en donde se va a haber en el árbol de la derecha de la pantalla.
@@ -88,15 +88,15 @@ namespace AlumnoEjemplos.MiGrupo
             //Camara en primera persona:
             Vector3 mira = new Vector3(0,0,0);
             Vector3 vector = new Vector3(0,0,20);
-
-            puerta= new Puerta();
+            puerta = new Puerta();
             puerta.init();
+
 
             enemigo = new Enemigo(); //Cargamos un enemigo
             enemigo.setEscena(escena);
-            enemigo.getCaminoOriginal().SetValue(new Vector3(93, 5.06f, 381), 0);
-            enemigo.getCaminoOriginal().SetValue(new Vector3(115, 5.06f, 245), 1);
-            enemigo.getCaminoOriginal().SetValue(new Vector3(250, 5.06f, 73), 2);
+            enemigo.getCaminoOriginal().SetValue(new Vector3(44, 5.06f, 267), 0);
+            enemigo.getCaminoOriginal().SetValue(new Vector3(200, 5.06f, 269), 1);
+            enemigo.getCaminoOriginal().SetValue(new Vector3(207, 5.06f, 67), 2);
             enemigo.setCantidadWP(3);
             enemigo.setEstado(Enemigo.Estado.RecorriendoIda);
             enemigo.init();
@@ -195,15 +195,15 @@ namespace AlumnoEjemplos.MiGrupo
             }
             if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.D1))
             {
-                objeto.CambiarEstadoLuz();
+                objeto.Encendida = false;
                 objeto = linterna;
-                objeto.CambiarEstadoLuz();
+                objeto.Encendida = true;
             }
             if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.D2))
             {
-                objeto.CambiarEstadoLuz();
+                objeto.Encendida = false;
                 objeto = vela1;
-                objeto.CambiarEstadoLuz();
+                objeto.Encendida = true;
             }
             //Capturar Input Mouse
             if (GuiController.Instance.D3dInput.buttonPressed(TgcViewer.Utils.Input.TgcD3dInput.MouseButtons.BUTTON_LEFT))
@@ -216,16 +216,15 @@ namespace AlumnoEjemplos.MiGrupo
             objeto.render();
             escena.renderAll();
             enemigo.render(camara.getPosition());
+            colisionesConPuerta();
+            puerta.render();
 
             if (recarga.verificarColision(camara))//si agarra la recarga aumento la intensidad 
             {
-                linterna.intensidadInicial();
+                linterna.recargar();
             }
             recarga.render(elapsedTime);
             linterna.bajarIntensidad(elapsedTime);// bajo la intensidad
-
-            puerta.moverPuerta(elapsedTime);
-            puerta.render();
 
             GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition()); //Actualizamos la user var, nos va a servir
 
@@ -239,7 +238,22 @@ namespace AlumnoEjemplos.MiGrupo
         {
 
         }
-
+        public void colisionesConPuerta()
+        {
+            if (puerta.verificarColision(camara))
+            {
+                if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.E))
+                {
+                    puerta.seAbrio();
+                    camara.bloqueada();
+                }
+            }
+            if (puerta.verificarColision(enemigo))
+            {
+                puerta.seAbrio();
+                enemigo.bloqueado();
+            }
+        }
         public void moverCamaraConVela(float elapsedTime)
         {
             Vector3 Aux = camara.getPosition();

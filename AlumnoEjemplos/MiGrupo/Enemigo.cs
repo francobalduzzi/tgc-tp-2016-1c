@@ -12,7 +12,7 @@ using TgcViewer.Utils.TgcSkeletalAnimation;
 
 namespace AlumnoEjemplos.MiGrupo
 {
-    class Enemigo
+    public class Enemigo
     {
         string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;
         string pathMesh;
@@ -22,6 +22,8 @@ namespace AlumnoEjemplos.MiGrupo
         string selectedAnim;
         const float VELOCIDAD_MOVIMIËNTO = 50f;
         const float VELOCIDAD_MOVIMIENTO_CORRER = 200f;
+        private Boolean bloqueadoMov = false;
+        private float tiempoBloqueado = 100f;
         TgcSkeletalMesh mesh;
         TgcScene escena;
         TgcBox bounding;
@@ -31,6 +33,10 @@ namespace AlumnoEjemplos.MiGrupo
         int contador;
         int cantidadWP;
         private Estado estado;
+        public void bloqueado()
+        {
+            bloqueadoMov = true;
+        }
         public void setCantidadWP(int numero)
         {
             this.cantidadWP = numero;
@@ -131,6 +137,34 @@ namespace AlumnoEjemplos.MiGrupo
             }
             return aux;
         }
+        public Vector3 getPosicion()
+        {
+            return mesh.Position;
+        }
+        public Vector3 getDirector()
+        {
+            Vector3 director;
+            switch (estado)
+            {
+                case Estado.Parado:
+                    director = caminoOriginal[1] - mesh.Position;
+                    director.Normalize();
+                    return director;
+                    break;
+                case Estado.RecorriendoIda:
+                    director = caminoIda[contador] - mesh.Position;
+                    director.Normalize();
+                    return director;
+                    break;
+                case Estado.RecorriendoVuelta:
+                    director = caminoVuelta[contador] - mesh.Position;
+                    director.Normalize();
+                    return director;
+                    break;
+                default:
+                    return mesh.Position;
+            }
+        }
         public void seguirA(Vector3 posJugador, float elapsedTime, float velocidad)
         {
             Vector3 direccion = posJugador - mesh.Position;
@@ -163,7 +197,23 @@ namespace AlumnoEjemplos.MiGrupo
                         }
                         else
                         {
-                            this.seguirA(caminoIda[contador], elapsedTime, VELOCIDAD_MOVIMIËNTO);
+                            if (bloqueadoMov)
+                            {
+                                tiempoBloqueado -= 50f * elapsedTime;
+                                selectedAnim = animationList[0];
+                                mesh.playAnimation(selectedAnim, true);
+                                if (tiempoBloqueado < 0f)
+                                {
+                                    tiempoBloqueado = 100f;
+                                    bloqueadoMov = false;
+                                    selectedAnim = animationList[1];
+                                    mesh.playAnimation(selectedAnim, true);
+                                }
+                            }
+                            else
+                            {
+                                this.seguirA(caminoIda[contador], elapsedTime, VELOCIDAD_MOVIMIËNTO);
+                            }
                             i = false;
                         }
                     }
@@ -184,7 +234,23 @@ namespace AlumnoEjemplos.MiGrupo
                         }
                         else
                         {
-                            this.seguirA(caminoVuelta[contador], elapsedTime, VELOCIDAD_MOVIMIËNTO);
+                            if (bloqueadoMov)
+                            {
+                                tiempoBloqueado -= 50f * elapsedTime;
+                                selectedAnim = animationList[0];
+                                mesh.playAnimation(selectedAnim, true);
+                                if (tiempoBloqueado < 0f)
+                                {
+                                    tiempoBloqueado = 100f;
+                                    bloqueadoMov = false;
+                                    selectedAnim = animationList[1];
+                                    mesh.playAnimation(selectedAnim, true);
+                                }
+                            }
+                            else
+                            {
+                                this.seguirA(caminoVuelta[contador], elapsedTime, VELOCIDAD_MOVIMIËNTO);
+                            }
                             i = false;
                         }
                     }

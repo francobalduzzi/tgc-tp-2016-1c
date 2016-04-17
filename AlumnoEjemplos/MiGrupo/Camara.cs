@@ -50,6 +50,8 @@ namespace AlumnoEjemplos.MiGrupo
         private TgcScene escena;
         private Vector3 eyeAux;
         private Vector3 targetAux;
+        private Boolean camBloqueada = false;
+        private float tiempoBloqueado = 100f;
         public TgcBoundingSphere camaraColision;
 
 
@@ -154,17 +156,21 @@ namespace AlumnoEjemplos.MiGrupo
             return target;
         }
 
+        public void bloqueada()
+        {
+            camBloqueada = true;
+        }
         public void updateCamera()
          {
             float elapsedTime = GuiController.Instance.ElapsedTime;
             bool colision = ChequearColisiones(); //Detectamos cplisiones y guardamos
 
-            //Forward
-            if(!colision)
+            if (!colision)
             {
                 eyeAux = eye;
                 targetAux = target;
             }
+                
             if (GuiController.Instance.D3dInput.keyDown(Key.W) && !colision)
              {
                  Vector3 v = moveForward(MovementSpeed * elapsedTime);
@@ -215,6 +221,16 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 eye = eyeAux;
                 target = targetAux;
+            }
+            if (camBloqueada)
+            {
+                tiempoBloqueado -= 50f * elapsedTime;
+                eye = eyeAux;
+                if (tiempoBloqueado < 0f)
+                {
+                    tiempoBloqueado = 100f;
+                    camBloqueada = false;
+                }
             }
             if (GuiController.Instance.D3dInput.keyPressed(Key.L))
              {

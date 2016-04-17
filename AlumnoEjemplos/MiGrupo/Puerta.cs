@@ -24,8 +24,23 @@ namespace AlumnoEjemplos.MiGrupo
         TgcMesh meshC;
         TgcMesh meshP;
         private float contador = 0;
+        public Estado estado;
+        private TgcText2d text2;
+        private float contadorAbierta;
+        public enum Estado
+        {
+            Cerrado = 0,
+            Abierta = 1,
+        }
         public void init ()
         {
+            text2 = new TgcText2d();
+            text2.Text = "";
+            text2.Color = Color.DarkSalmon;
+            text2.Align = TgcText2d.TextAlign.RIGHT;
+            text2.Position = new Point(500, 500);
+            text2.Size = new Size(300, 100);
+            text2.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold | FontStyle.Italic));
             var loader = new TgcSceneLoader();
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;
             puerta1 = loader.loadSceneFromFile(alumnoMediaFolder + "MiGrupo\\Component_1-TgcScene.xml");
@@ -34,19 +49,72 @@ namespace AlumnoEjemplos.MiGrupo
             cobertura1 = loader.loadSceneFromFile(alumnoMediaFolder + "MiGrupo\\cobertura-TgcScene.xml");
             meshC = cobertura1.Meshes[0];
             meshC.Position = new Vector3(229f, 60f, 201f);
+            estado = Estado.Cerrado;
+            contadorAbierta = 500f;
         }
 
-        public void moverPuerta(float elapsedTime)
+        public void moverPuerta()
         {
-            if (contador < 80)
+            float elapsedTime = GuiController.Instance.ElapsedTime;
+            if(estado == Estado.Abierta)
             {
-                meshP.rotateY(-1f*elapsedTime);
+                contadorAbierta -= 80f * elapsedTime;
+            }
+            if(contadorAbierta < 0f)
+            {
+                contadorAbierta = 500f;
+                estado = Estado.Cerrado;
+            }
+            if (contador < 90 && estado == Estado.Abierta)
+            {
+                meshP.rotateY(Geometry.DegreeToRadian(-1f));
                 contador++;
+            }
+            if(contador >0 && estado == Estado.Cerrado)
+            {
+                meshP.rotateY(Geometry.DegreeToRadian(1f));
+                contador--;
             }
         }
 
+        public void seAbrio()
+        {
+            estado = Estado.Abierta;
+        }
+        public Boolean verificarColision(Camara camara)
+        {
+            Vector3 direccion = camara.getLookAt();
+            direccion.Normalize();
+            direccion = direccion * 2;
+            if(TgcCollisionUtils.intersectSegmentAABB(camara.getPosition(), camara.getLookAt(), meshP.BoundingBox, out direccion))
+            {
+                text2.Text = "Presiona la tecla e para abrir la puerta";
+                return true;
+            }
+            else
+            {
+                text2.Text = "";
+                return false;
+            }
+        }
+        public Boolean verificarColision(Enemigo enemigo)
+        {
+            Vector3 direccion = enemigo.getDirector();
+            direccion = direccion * 2;
+            if (TgcCollisionUtils.intersectSegmentAABB(enemigo.getPosicion(), direccion, meshP.BoundingBox, out direccion))
+            {               
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public void render()
         {
+            text2.render();
+            meshP.BoundingBox.render();
+            this.moverPuerta();
             puerta1.renderAll();
             cobertura1.renderAll();
         }

@@ -32,6 +32,7 @@ namespace AlumnoEjemplos.MiGrupo
             var loader = new TgcSceneLoader();
             linternaRe = loader.loadSceneFromFile(alumnoMediaFolder + "MiGrupo\\LinternaRecarga-TgcScene.xml");
             meshLR = linternaRe.Meshes[0];
+            meshLR.Scale=new Vector3(0.1f, 0.1f, 0.1f);
         }
         public void render(float elapsedTime)
         {
