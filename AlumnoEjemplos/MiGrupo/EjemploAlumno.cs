@@ -30,6 +30,8 @@ namespace AlumnoEjemplos.MiGrupo
         TipoIluminador objeto; //Este sera el objeto que tenga en la mano el jugador
         Enemigo enemigo; // Uno solo para las pruebas dsps abra que hacer una lista. Hay que pasarla las coordenadas para que pueda arrancar y el estado. Camino ida necesita minimo 1 parametro aunque se quede quieto
         LinternaRecarga recarga;
+        VelaRecarga recargaVela;
+        FarolRecarga recargaFarol;
         Puerta puerta;
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
@@ -103,7 +105,8 @@ namespace AlumnoEjemplos.MiGrupo
             enemigo.setEstado(Enemigo.Estado.RecorriendoIda);
             enemigo.init();
 
-
+            recargaVela = new VelaRecarga(new Vector3(500f,17f,263f));
+            recargaFarol = new FarolRecarga(new Vector3(480f,17f,263f));
             recarga = new LinternaRecarga(new Vector3(527f, 17f, 263f));// se carga la/s recarga con la posicion
 
 
@@ -232,6 +235,8 @@ namespace AlumnoEjemplos.MiGrupo
                 linterna.recargar();
             }
             recarga.render(elapsedTime);
+            recargaVela.render(elapsedTime);
+            recargaFarol.render(elapsedTime);
             linterna.bajarIntensidad(elapsedTime);// bajo la intensidad
 
             GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition()); //Actualizamos la user var, nos va a servir
