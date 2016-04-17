@@ -224,7 +224,7 @@ namespace AlumnoEjemplos.MiGrupo
             }
             if (camBloqueada)
             {
-                tiempoBloqueado -= 50f * elapsedTime;
+                tiempoBloqueado -= 90f * elapsedTime;
                 eye = eyeAux;
                 if (tiempoBloqueado < 0f)
                 {

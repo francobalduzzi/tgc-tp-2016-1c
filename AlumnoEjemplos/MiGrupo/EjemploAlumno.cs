@@ -244,8 +244,16 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.E))
                 {
-                    puerta.seAbrio();
-                    camara.bloqueada();
+                    if(puerta.getEstado() == Puerta.Estado.Cerrado)
+                    {
+                        puerta.seAbrioJugador();
+                        camara.bloqueada();
+                    }
+                    else
+                    {
+                        puerta.seCerroJugador();
+                        camara.bloqueada();
+                    }
                 }
             }
             if (puerta.verificarColision(enemigo))

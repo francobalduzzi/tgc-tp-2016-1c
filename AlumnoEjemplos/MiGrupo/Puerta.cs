@@ -27,6 +27,7 @@ namespace AlumnoEjemplos.MiGrupo
         public Estado estado;
         private TgcText2d text2;
         private float contadorAbierta;
+        private Boolean abiertaJugador;
         public enum Estado
         {
             Cerrado = 0,
@@ -56,7 +57,7 @@ namespace AlumnoEjemplos.MiGrupo
         public void moverPuerta()
         {
             float elapsedTime = GuiController.Instance.ElapsedTime;
-            if(estado == Estado.Abierta)
+            if(estado == Estado.Abierta && !abiertaJugador)
             {
                 contadorAbierta -= 80f * elapsedTime;
             }
@@ -77,17 +78,29 @@ namespace AlumnoEjemplos.MiGrupo
             }
         }
 
+        public Estado getEstado()
+        {
+            return estado;
+        }
         public void seAbrio()
         {
             estado = Estado.Abierta;
+        }
+        public void seAbrioJugador()
+        {
+            estado = Estado.Abierta;
+            abiertaJugador = true;
+        }
+        public void seCerroJugador()
+        {
+            estado = Estado.Cerrado;
+            abiertaJugador = false;
         }
         public Boolean verificarColision(Camara camara)
         {
             Vector3 direccion = camara.getLookAt();
             direccion.Normalize();
             direccion = direccion * 2;
-            if(estado == Estado.Cerrado)
-            {
                 if (TgcCollisionUtils.intersectSegmentAABB(camara.getPosition(), camara.getLookAt(), meshP.BoundingBox, out direccion))
                 {
                     text2.Text = "Presiona la tecla e para abrir la puerta";
@@ -98,11 +111,6 @@ namespace AlumnoEjemplos.MiGrupo
                     text2.Text = "";
                     return false;
                 }
-            }
-            else
-            {
-                return false;
-            }
         }
         public Boolean verificarColision(Enemigo enemigo)
         {
