@@ -10,6 +10,8 @@ namespace AlumnoEjemplos.MiGrupo
 {
     public class Linterna : TipoIluminador
     {
+
+        Device d3dDevice = GuiController.Instance.D3dDevice;
         public TgcScene linterna;
         private float movimientoLinterna;
         const float VALORMAXIMOINTENSIDAD = 20;
@@ -41,7 +43,7 @@ namespace AlumnoEjemplos.MiGrupo
             text2.Text = "100%";
             text2.Color = Color.DarkSalmon;
             text2.Align = TgcText2d.TextAlign.RIGHT;
-            text2.Position = new Point(950, 700);
+            text2.Position = new Point(d3dDevice.PresentationParameters.BackBufferWidth- 360, d3dDevice.PresentationParameters.BackBufferHeight - 100);
             text2.Size = new Size(300, 100);
             text2.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold | FontStyle.Italic));
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;

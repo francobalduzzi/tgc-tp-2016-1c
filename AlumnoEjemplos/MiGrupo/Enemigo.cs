@@ -9,6 +9,7 @@ using TgcViewer;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcSkeletalAnimation;
+using System.Drawing;
 
 namespace AlumnoEjemplos.MiGrupo
 {
@@ -264,13 +265,67 @@ namespace AlumnoEjemplos.MiGrupo
                     mesh.rotateY((float)Math.Atan2(direccion.X, direccion.Z) - mesh.Rotation.Y - Geometry.DegreeToRadian(180f));
                     break;
                 case Estado.Persiguiendo:
+                    selectedAnim = animationList[2];
+                    mesh.playAnimation(selectedAnim, true);
                     seguirA(posCam, elapsedTime, VELOCIDAD_MOVIMIENTO_CORRER);
                     break;
+            }
+        }
+        public void verSiPerseguir(Vector3 posCam)
+        {
+            if (calculo(posCam))
+            {
+                estado = Estado.Persiguiendo;
+            }
+        }
+        public Boolean calculo(Vector3 posicion)
+        {
+            Vector3 director = this.getDirector();
+            Vector3 versorY = new Vector3(0, 1, 0);
+            Vector3 perpendicularDir1;
+            Vector3 perpendicularDir2;
+            Vector3 arista1;
+            Vector3 arista2;
+            Vector3 arista3;
+            float orientacionO;
+            float orientacion1;
+            float orientacion2;
+            float orientacion3;
+            director.Y = 0;
+            director.Normalize();
+            perpendicularDir1 = Vector3.Cross(director, versorY);
+            perpendicularDir1.Normalize();
+            perpendicularDir2 = perpendicularDir1 * -1;
+            arista1 = mesh.Position;
+            arista2 = director + perpendicularDir1;
+            arista2 *= 500;
+            arista3 = director + perpendicularDir2;
+            arista3 *= 500;
+            orientacionO = (arista1.X - arista3.X) * (arista2.Z - arista3.Z) - (arista1.Z - arista3.Z) * (arista2.X - arista3.X);
+            orientacion1 = (arista1.X - posicion.X) * (arista2.Z - posicion.Z) - (arista1.Z - posicion.Z) * (arista2.X - posicion.X);
+            orientacion2 = (arista2.X - posicion.X) * (arista3.Z - posicion.Z) - (arista2.Z - posicion.Z) * (arista3.X - posicion.X);
+            orientacion3 = (arista3.X - posicion.X) * (arista1.Z - posicion.Z) - (arista3.Z - posicion.Z) * (arista1.X - posicion.X);
+            GuiController.Instance.UserVars.setValue("Inclusion0", orientacionO);
+            GuiController.Instance.UserVars.setValue("Inclusion1", orientacion1);
+            GuiController.Instance.UserVars.setValue("Inclusion2", orientacion2);
+            GuiController.Instance.UserVars.setValue("Inclusion3", orientacion3);
+            if (orientacion1 >= 0 && orientacion2 >= 0 && orientacion3 >= 0 && orientacionO >= 0)
+            {
+                return true;
+            }
+            if (orientacion1 <= 0 && orientacion2 <= 0 && orientacion3 <= 0 && orientacionO <= 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
         public void render(Vector3 posCam)
         {
             //bounding.Rotation = ((Vector3)GuiController.Instance.Modifiers.getValue("rotation"));
+            verSiPerseguir(posCam);
             recorrerCamino(posCam);
             mesh.animateAndRender();
             //bounding.render();

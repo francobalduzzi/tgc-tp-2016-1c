@@ -66,7 +66,7 @@ namespace AlumnoEjemplos.MiGrupo
         public override void init()
         {
             camara = new Camara();
-            camara.setCamera(new Vector3(175f, 60f, 317f), new Vector3(289f, 30f, 90f));
+            camara.setCamera(new Vector3(359f, 60f, 964f), new Vector3(289f, 30f, 90f));
             camara.MovementSpeed = 200f;
             camara.RotationSpeed = 5f;
             camara.JumpSpeed = 80f;
@@ -115,6 +115,10 @@ namespace AlumnoEjemplos.MiGrupo
             //Crear una UserVar
             GuiController.Instance.UserVars.addVar("variablePrueba");
             GuiController.Instance.UserVars.addVar("PosCam");
+            GuiController.Instance.UserVars.addVar("Inclusion0");
+            GuiController.Instance.UserVars.addVar("Inclusion1");
+            GuiController.Instance.UserVars.addVar("Inclusion2");
+            GuiController.Instance.UserVars.addVar("Inclusion3");
 
             //Cargar valor en UserVar
             GuiController.Instance.UserVars.setValue("variablePrueba", 5451);
