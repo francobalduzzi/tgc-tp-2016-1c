@@ -102,6 +102,7 @@ namespace AlumnoEjemplos.MiGrupo
             enemigo.getCaminoOriginal().SetValue(new Vector3(200, 5.06f, 269), 1);
             enemigo.getCaminoOriginal().SetValue(new Vector3(207, 5.06f, 67), 2);
             enemigo.setCantidadWP(3);
+            enemigo.setEscena(escena);
             enemigo.setEstado(Enemigo.Estado.RecorriendoIda);
             enemigo.init();
 
@@ -119,6 +120,7 @@ namespace AlumnoEjemplos.MiGrupo
             GuiController.Instance.UserVars.addVar("Inclusion1");
             GuiController.Instance.UserVars.addVar("Inclusion2");
             GuiController.Instance.UserVars.addVar("Inclusion3");
+            GuiController.Instance.UserVars.addVar("Booleano");
 
             //Cargar valor en UserVar
             GuiController.Instance.UserVars.setValue("variablePrueba", 5451);

@@ -268,7 +268,17 @@ namespace AlumnoEjemplos.MiGrupo
                     selectedAnim = animationList[2];
                     mesh.playAnimation(selectedAnim, true);
                     seguirA(posCam, elapsedTime, VELOCIDAD_MOVIMIENTO_CORRER);
+                    dejarDePerseguir(posCam);
                     break;
+            }
+        }
+        public void dejarDePerseguir(Vector3 posCam)
+        {
+            if ((mesh.Position - posCam).Length() > 500f)
+            {
+                selectedAnim = animationList[1];
+                mesh.playAnimation(selectedAnim, true);
+                estado = Estado.RecorriendoIda;
             }
         }
         public void verSiPerseguir(Vector3 posCam)
@@ -295,6 +305,7 @@ namespace AlumnoEjemplos.MiGrupo
             director.Normalize();
             perpendicularDir1 = Vector3.Cross(director, versorY);
             perpendicularDir1.Normalize();
+            perpendicularDir1 *= 1.3f;
             perpendicularDir2 = perpendicularDir1 * -1;
             arista1 = mesh.Position;
             arista2 = director + perpendicularDir1;
