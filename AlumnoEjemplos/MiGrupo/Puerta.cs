@@ -33,7 +33,7 @@ namespace AlumnoEjemplos.MiGrupo
             Cerrado = 0,
             Abierta = 1,
         }
-        public void init ()
+        public void init(Vector3 posP)
         {
             text2 = new TgcText2d();
             text2.Text = "";
@@ -46,10 +46,10 @@ namespace AlumnoEjemplos.MiGrupo
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;
             puerta1 = loader.loadSceneFromFile(alumnoMediaFolder + "MiGrupo\\Component_1-TgcScene.xml");
             meshP = puerta1.Meshes[0];
-            meshP.Position = new Vector3(229f, 60f, 201f);
+            meshP.Position = posP;
             cobertura1 = loader.loadSceneFromFile(alumnoMediaFolder + "MiGrupo\\cobertura-TgcScene.xml");
             meshC = cobertura1.Meshes[0];
-            meshC.Position = new Vector3(229f, 60f, 201f);
+            meshC.Position = posP;
             estado = Estado.Cerrado;
             contadorAbierta = 500f;
         }
@@ -57,11 +57,11 @@ namespace AlumnoEjemplos.MiGrupo
         public void moverPuerta()
         {
             float elapsedTime = GuiController.Instance.ElapsedTime;
-            if(estado == Estado.Abierta && !abiertaJugador)
+            if (estado == Estado.Abierta && !abiertaJugador)
             {
                 contadorAbierta -= 80f * elapsedTime;
             }
-            if(contadorAbierta < 0f)
+            if (contadorAbierta < 0f)
             {
                 contadorAbierta = 500f;
                 estado = Estado.Cerrado;
@@ -71,7 +71,7 @@ namespace AlumnoEjemplos.MiGrupo
                 meshP.rotateY(Geometry.DegreeToRadian(-1f));
                 contador++;
             }
-            if(contador >0 && estado == Estado.Cerrado)
+            if (contador > 0 && estado == Estado.Cerrado)
             {
                 meshP.rotateY(Geometry.DegreeToRadian(1f));
                 contador--;
@@ -101,22 +101,22 @@ namespace AlumnoEjemplos.MiGrupo
             Vector3 direccion = camara.getLookAt();
             direccion.Normalize();
             direccion = direccion * 2;
-                if (TgcCollisionUtils.intersectSegmentAABB(camara.getPosition(), camara.getLookAt(), meshP.BoundingBox, out direccion))
-                {
-                    text2.Text = "Presiona la tecla e para abrir la puerta";
-                    return true;
-                }
-                else
-                {
-                    text2.Text = "";
-                    return false;
-                }
+            if (TgcCollisionUtils.intersectSegmentAABB(camara.getPosition(), camara.getLookAt(), meshP.BoundingBox, out direccion))
+            {
+                text2.Text = "Presiona la tecla e para abrir la puerta";
+                return true;
+            }
+            else
+            {
+                text2.Text = "";
+                return false;
+            }
         }
         public Boolean verificarColision(Enemigo enemigo)
         {
             Vector3 direccion = enemigo.getDirector();
             direccion = direccion * 2;
-            if(estado == Estado.Cerrado)
+            if (estado == Estado.Cerrado && enemigo.getEstado() != Enemigo.Estado.Persiguiendo)
             {
                 if (TgcCollisionUtils.intersectSegmentAABB(enemigo.getPosicion(), direccion, meshP.BoundingBox, out direccion))
                 {
@@ -141,6 +141,10 @@ namespace AlumnoEjemplos.MiGrupo
             cobertura1.renderAll();
         }
 
-
+        public void escalar(Vector3 v)
+        {
+            meshP.Scale = v;
+            meshC.Scale = v;
+        }
     }
 }

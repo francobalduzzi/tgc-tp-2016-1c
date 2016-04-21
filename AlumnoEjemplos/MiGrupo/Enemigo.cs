@@ -15,25 +15,25 @@ namespace AlumnoEjemplos.MiGrupo
 {
     public class Enemigo
     {
-        string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;
-        string pathMesh;
-        string mediaPath;
-        string[] animationList;
-        string[] animationsPath;
-        string selectedAnim;
-        const float VELOCIDAD_MOVIMIËNTO = 50f;
-        const float VELOCIDAD_MOVIMIENTO_CORRER = 200f;
-        private Boolean bloqueadoMov = false;
-        private float tiempoBloqueado = 100f;
-        TgcSkeletalMesh mesh;
-        TgcScene escena;
-        TgcBox bounding;
-        Vector3[] caminoOriginal = new Vector3[20];
-        Vector3[] caminoIda = new Vector3[20];
-        Vector3[] caminoVuelta = new Vector3[20];
-        int contador;
-        int cantidadWP;
-        private Estado estado;
+        protected string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;
+        protected string pathMesh;
+        protected string mediaPath;
+        protected string[] animationList;
+        protected string[] animationsPath;
+        protected string selectedAnim;
+        protected const float VELOCIDAD_MOVIMIËNTO = 50f;
+        protected const float VELOCIDAD_MOVIMIENTO_CORRER = 200f;
+        protected Boolean bloqueadoMov = false;
+        protected float tiempoBloqueado = 100f;
+        protected TgcSkeletalMesh mesh;
+        protected TgcScene escena;
+        protected TgcBox bounding;
+        protected Vector3[] caminoOriginal = new Vector3[20];
+        protected Vector3[] caminoIda = new Vector3[20];
+        protected Vector3[] caminoVuelta = new Vector3[20];
+        protected int contador;
+        protected int cantidadWP;
+        protected Estado estado;
         public void bloqueado()
         {
             bloqueadoMov = true;
@@ -60,6 +60,10 @@ namespace AlumnoEjemplos.MiGrupo
             RecorriendoIda = 1,
             RecorriendoVuelta = 2,
             Persiguiendo = 3,
+        }
+        public Estado getEstado()
+        {
+            return estado;
         }
         public Enemigo()
         {
@@ -103,6 +107,7 @@ namespace AlumnoEjemplos.MiGrupo
             bounding = TgcBox.fromSize(mesh.Position, new Vector3(100f, 100f, 300f));
             bounding.move(new Vector3(15, 0, -170));
         }
+
         public void init()
         {
             mesh.Position = caminoOriginal[0];
@@ -316,10 +321,6 @@ namespace AlumnoEjemplos.MiGrupo
             orientacion1 = (arista1.X - posicion.X) * (arista2.Z - posicion.Z) - (arista1.Z - posicion.Z) * (arista2.X - posicion.X);
             orientacion2 = (arista2.X - posicion.X) * (arista3.Z - posicion.Z) - (arista2.Z - posicion.Z) * (arista3.X - posicion.X);
             orientacion3 = (arista3.X - posicion.X) * (arista1.Z - posicion.Z) - (arista3.Z - posicion.Z) * (arista1.X - posicion.X);
-            GuiController.Instance.UserVars.setValue("Inclusion0", orientacionO);
-            GuiController.Instance.UserVars.setValue("Inclusion1", orientacion1);
-            GuiController.Instance.UserVars.setValue("Inclusion2", orientacion2);
-            GuiController.Instance.UserVars.setValue("Inclusion3", orientacion3);
             if (orientacion1 >= 0 && orientacion2 >= 0 && orientacion3 >= 0 && orientacionO >= 0)
             {
                 return true;
