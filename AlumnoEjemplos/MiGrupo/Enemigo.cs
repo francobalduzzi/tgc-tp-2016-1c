@@ -312,12 +312,12 @@ namespace AlumnoEjemplos.MiGrupo
             int contador = 0;
             foreach(TgcMesh mesh in escena.Meshes)
             {
-                if(TgcCollisionUtils.intersectRayAABB(new TgcRay(mesh.Position, posicion), mesh.BoundingBox, out burocracia))
+                if(TgcCollisionUtils.intersectRayAABB(new TgcRay(this.mesh.Position, posicion), mesh.BoundingBox, out burocracia))
                 {
                     contador++;
                 }
             }
-            if (contador > 17)
+            if (contador == 3)
             {
                 return true;
             }
