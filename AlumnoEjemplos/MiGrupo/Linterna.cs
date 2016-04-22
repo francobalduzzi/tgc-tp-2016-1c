@@ -16,8 +16,6 @@ namespace AlumnoEjemplos.MiGrupo
         private float movimientoLinterna;
         const float VALORMAXIMOINTENSIDAD = 20;
         private float porcentajeRestante;
-        //Crear texto 2, especificando color, alineación, posición, tamaño y fuente.
-        private TgcText2d text2;
         public Linterna(Vector3 Direccion1, Vector3 Posicion1)
         {
             this.init();
@@ -39,13 +37,6 @@ namespace AlumnoEjemplos.MiGrupo
         }
         override public void init()
         {
-            text2 = new TgcText2d();
-            text2.Text = "100%";
-            text2.Color = Color.DarkSalmon;
-            text2.Align = TgcText2d.TextAlign.RIGHT;
-            text2.Position = new Point(d3dDevice.PresentationParameters.BackBufferWidth- 360, d3dDevice.PresentationParameters.BackBufferHeight - 100);
-            text2.Size = new Size(300, 100);
-            text2.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold | FontStyle.Italic));
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;
             var loader = new TgcSceneLoader();
             linterna = loader.loadSceneFromFile(alumnoMediaFolder + "MiGrupo\\Linterna-TgcScene.xml");
@@ -53,14 +44,12 @@ namespace AlumnoEjemplos.MiGrupo
             linterna.Meshes[0].Position = Posicion + new Vector3(-30f, -15f, 60f);
             linterna.Meshes[0].Rotation = new Vector3(Geometry.DegreeToRadian(-350f), Geometry.DegreeToRadian(180f), Geometry.DegreeToRadian(-270f));
         }
-        public void calcularPorcentaje()
+        public float damePorcentaje()
         {
-            text2.Text = ((int)((this.Intensity * 100) / VALORMAXIMOINTENSIDAD)).ToString() + "%";
+            return ((this.Intensity) / VALORMAXIMOINTENSIDAD);
         }
         override public void render()
         {
-            calcularPorcentaje();
-            text2.render();
             var matrizView = GuiController.Instance.D3dDevice.Transform.View;
             GuiController.Instance.D3dDevice.Transform.View = Matrix.Identity;
             linterna.renderAll();

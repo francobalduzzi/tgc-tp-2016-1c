@@ -35,6 +35,9 @@ namespace AlumnoEjemplos.MiGrupo
         FarolRecarga recargaFarol;
         Puerta puerta1;
         Puerta puerta2;
+        Sonidos pasos;
+        float contador = 0;
+        Barra barra;
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
         /// Influye en donde se va a haber en el árbol de la derecha de la pantalla.
@@ -81,9 +84,9 @@ namespace AlumnoEjemplos.MiGrupo
             Device d3dDevice = GuiController.Instance.D3dDevice;
             TgcSceneLoader loader = new TgcSceneLoader();
             escena = loader.loadSceneFromFile(alumnoMediaFolder + "MiGrupo\\mapaFinal-TgcScene.xml");
-            foreach(TgcMesh mesh in escena.Meshes) //escalamos el mapa
+            foreach (TgcMesh mesh in escena.Meshes) //escalamos el mapa
             {
-                mesh.Scale = new Vector3(0.3f,0.3f,0.3f);
+                mesh.Scale = new Vector3(0.3f, 0.3f, 0.3f);
             }
             vela1 = new Vela();
             vela1.init();
@@ -101,9 +104,8 @@ namespace AlumnoEjemplos.MiGrupo
             puerta1 = new Puerta();
             puerta1.init(new Vector3(260f, 57f, 770f));
             puerta2 = new Puerta();
-            puerta2.init(new Vector3(1400f,57f,1363f));
+            puerta2.init(new Vector3(1400f, 57f, 1363f));
             puerta2.escalar(new Vector3(1.3f, 1f, 1f));
-           
 
 
             enemigo = new Enemigo(); //Cargamos un enemigo
@@ -141,6 +143,9 @@ namespace AlumnoEjemplos.MiGrupo
             recargaVela = new VelaRecarga(new Vector3(500f,17f,263f));
             recargaFarol = new FarolRecarga(new Vector3(480f,17f,263f));
             recarga = new LinternaRecarga(new Vector3(527f, 17f, 263f));// se carga la/s recarga con la posicion
+
+            pasos = new Sonidos();
+            barra = new Barra();
 
 
             ///////////////USER VARS//////////////////
@@ -260,21 +265,19 @@ namespace AlumnoEjemplos.MiGrupo
             // vela1.render();
             objeto.render();
             escena.renderAll();
-            enemigo.render(camara.getPosition());
+            //enemigo.render(camara.getPosition());
             colisionesConPuerta();
             puerta1.render();
             puerta2.render();
 
-            if (recarga.verificarColision(camara))//si agarra la recarga aumento la intensidad 
-            {
-                linterna.recargar();
-            }
+            verificarRegargas();
             recarga.render(elapsedTime);
             recargaVela.render(elapsedTime);
             recargaFarol.render(elapsedTime);
             linterna.bajarIntensidad(elapsedTime);// bajo la intensidad
             enemigo2.render(camara.getPosition());
-
+            verificarSonidos(elapsedTime);
+            barra.render(linterna.damePorcentaje());
             GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition()); //Actualizamos la user var, nos va a servir
 
         }
@@ -286,6 +289,23 @@ namespace AlumnoEjemplos.MiGrupo
         public override void close()
         {
 
+        }
+
+        public void verificarRegargas()
+        {
+            if (recarga.verificarColision(camara))//si agarra la recarga aumento la intensidad 
+            {
+                linterna.recargar();
+            }
+        }
+        public void verificarSonidos(float elapsedTime)
+        {
+            contador = contador + ((1) * elapsedTime);
+            if (contador >= (45 * elapsedTime))
+            {
+                pasos.play();
+                contador = 0;
+            }
         }
         public void colisionesConPuerta()
         {
@@ -309,11 +329,6 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 puerta1.seAbrio();
                 enemigo2.bloqueado();
-            }
-            if (puerta1.verificarColision(enemigo))
-            {
-                puerta1.seAbrio();
-                enemigo.bloqueado();
             }
         }
         public void moverCamaraConVela(float elapsedTime)
