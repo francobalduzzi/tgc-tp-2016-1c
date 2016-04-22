@@ -265,7 +265,7 @@ namespace AlumnoEjemplos.MiGrupo
             // vela1.render();
             objeto.render();
             escena.renderAll();
-            //enemigo.render(camara.getPosition());
+            enemigo.render(camara.getPosition());
             colisionesConPuerta();
             puerta1.render();
             puerta2.render();

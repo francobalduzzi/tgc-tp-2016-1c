@@ -304,24 +304,27 @@ namespace AlumnoEjemplos.MiGrupo
             calculito.Y = 0;
             calculito.Normalize();
             distancia = posicion - mesh.Position;
-            return (Vector3.Dot(director, calculito) >= 0.5 && distancia.Length() <= 500 && this.calculoParedesEnMedio(posicion)<5);
+            return (Vector3.Dot(director, calculito) >= 0.5 && distancia.Length() <= 500 && calculoParedesEnMedio(posicion));
         }
-        public int calculoParedesEnMedio(Vector3 posicion)
+        public Boolean calculoParedesEnMedio(Vector3 posicion)
         {
-            TgcRay rayo = new TgcRay();
-            rayo.Origin = mesh.Position;
-            rayo.Direction = posicion;
             Vector3 burocracia;
             int contador = 0;
             foreach(TgcMesh mesh in escena.Meshes)
             {
-                 if(TgcCollisionUtils.intersectRayAABB(rayo,mesh.BoundingBox,out burocracia))
+                if(TgcCollisionUtils.intersectRayAABB(new TgcRay(mesh.Position, posicion), mesh.BoundingBox, out burocracia))
                 {
                     contador++;
                 }
             }
-            GuiController.Instance.UserVars.setValue("PosCam",contador);
-            return contador;
+            if (contador > 17)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         public void render(Vector3 posCam)
         {
