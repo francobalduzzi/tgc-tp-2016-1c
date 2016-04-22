@@ -116,7 +116,7 @@ namespace AlumnoEjemplos.MiGrupo
             enemigo.setEstado(Enemigo.Estado.RecorriendoIda);
             enemigo.init();
 
-            enemigo2 = new Enemigo2(); //Cargamos un enemigo
+            /*enemigo2 = new Enemigo2(); //Cargamos un enemigo
             enemigo2.setEscena(escena);
             enemigo2.getCaminoOriginal().SetValue(new Vector3(227.5f, 5.02f, 861.67f), 0);
             enemigo2.getCaminoOriginal().SetValue(new Vector3(231.5f, 5.02f, 708.3f), 1);
@@ -125,7 +125,18 @@ namespace AlumnoEjemplos.MiGrupo
             enemigo2.setCantidadWP(4);
             enemigo2.setEscena(escena);
             enemigo2.setEstado(Enemigo.Estado.RecorriendoIda);
+            enemigo2.init();*/
+
+            enemigo2 = new Enemigo2(); //Cargamos un enemigo
+            enemigo2.setEscena(escena);
+            enemigo2.getCaminoOriginal().SetValue(new Vector3(931f, 5.02f, 816f), 0);
+            enemigo2.getCaminoOriginal().SetValue(new Vector3(931f, 5.02f, 835f), 1);;
+            enemigo2.setCantidadWP(2);
+            enemigo2.setEscena(escena);
+            enemigo2.setEstado(Enemigo.Estado.Parado);
             enemigo2.init();
+
+
 
             recargaVela = new VelaRecarga(new Vector3(500f,17f,263f));
             recargaFarol = new FarolRecarga(new Vector3(480f,17f,263f));
@@ -137,11 +148,7 @@ namespace AlumnoEjemplos.MiGrupo
             //Crear una UserVar
             GuiController.Instance.UserVars.addVar("variablePrueba");
             GuiController.Instance.UserVars.addVar("PosCam");
-            GuiController.Instance.UserVars.addVar("Inclusion0");
-            GuiController.Instance.UserVars.addVar("Inclusion1");
-            GuiController.Instance.UserVars.addVar("Inclusion2");
-            GuiController.Instance.UserVars.addVar("Inclusion3");
-            GuiController.Instance.UserVars.addVar("Booleano");
+            GuiController.Instance.UserVars.addVar("contador");
 
             //Cargar valor en UserVar
             GuiController.Instance.UserVars.setValue("variablePrueba", 5451);

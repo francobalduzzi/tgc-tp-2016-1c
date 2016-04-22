@@ -296,43 +296,32 @@ namespace AlumnoEjemplos.MiGrupo
         public Boolean calculo(Vector3 posicion)
         {
             Vector3 director = this.getDirector();
-            Vector3 versorY = new Vector3(0, 1, 0);
-            Vector3 perpendicularDir1;
-            Vector3 perpendicularDir2;
-            Vector3 arista1;
-            Vector3 arista2;
-            Vector3 arista3;
-            float orientacionO;
-            float orientacion1;
-            float orientacion2;
-            float orientacion3;
             director.Y = 0;
             director.Normalize();
-            perpendicularDir1 = Vector3.Cross(director, versorY);
-            perpendicularDir1.Normalize();
-            perpendicularDir1 *= 1.3f;
-            perpendicularDir2 = perpendicularDir1 * -1;
-            arista1 = mesh.Position;
-            arista2 = director + perpendicularDir1;
-            arista2 *= 500;
-            arista3 = director + perpendicularDir2;
-            arista3 *= 500;
-            orientacionO = (arista1.X - arista3.X) * (arista2.Z - arista3.Z) - (arista1.Z - arista3.Z) * (arista2.X - arista3.X);
-            orientacion1 = (arista1.X - posicion.X) * (arista2.Z - posicion.Z) - (arista1.Z - posicion.Z) * (arista2.X - posicion.X);
-            orientacion2 = (arista2.X - posicion.X) * (arista3.Z - posicion.Z) - (arista2.Z - posicion.Z) * (arista3.X - posicion.X);
-            orientacion3 = (arista3.X - posicion.X) * (arista1.Z - posicion.Z) - (arista3.Z - posicion.Z) * (arista1.X - posicion.X);
-            if (orientacion1 >= 0 && orientacion2 >= 0 && orientacion3 >= 0 && orientacionO >= 0)
+            Vector3 calculito;
+            Vector3 distancia;
+            calculito = posicion - mesh.Position;
+            calculito.Y = 0;
+            calculito.Normalize();
+            distancia = posicion - mesh.Position;
+            return (Vector3.Dot(director, calculito) >= 0.5 && distancia.Length() <= 500 && this.calculoParedesEnMedio(posicion)<5);
+        }
+        public int calculoParedesEnMedio(Vector3 posicion)
+        {
+            TgcRay rayo = new TgcRay();
+            rayo.Origin = mesh.Position;
+            rayo.Direction = posicion;
+            Vector3 burocracia;
+            int contador = 0;
+            foreach(TgcMesh mesh in escena.Meshes)
             {
-                return true;
+                 if(TgcCollisionUtils.intersectRayAABB(rayo,mesh.BoundingBox,out burocracia))
+                {
+                    contador++;
+                }
             }
-            if (orientacion1 <= 0 && orientacion2 <= 0 && orientacion3 <= 0 && orientacionO <= 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            GuiController.Instance.UserVars.setValue("PosCam",contador);
+            return contador;
         }
         public void render(Vector3 posCam)
         {
