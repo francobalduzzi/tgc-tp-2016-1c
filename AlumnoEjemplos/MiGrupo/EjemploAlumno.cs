@@ -38,6 +38,10 @@ namespace AlumnoEjemplos.MiGrupo
         Sonidos pasos;
         float contador = 0;
         Barra barra;
+
+        ElementoMapa esqueleto;
+        ElementoMapa antorcha1;
+
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
         /// Influye en donde se va a haber en el árbol de la derecha de la pantalla.
@@ -118,6 +122,13 @@ namespace AlumnoEjemplos.MiGrupo
             enemigo.setEstado(Enemigo.Estado.RecorriendoIda);
             enemigo.init();
 
+
+            esqueleto = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3 (359f, 0f, 940f));
+            esqueleto.rotateY(3.14f);
+
+            antorcha1 = new ElementoMapa("Antorcha-TgcScene.xml", new Vector3(359f, 80f, 925f));
+            antorcha1.rotateY(3.14f);
+
             /*enemigo2 = new Enemigo2(); //Cargamos un enemigo
             enemigo2.setEscena(escena);
             enemigo2.getCaminoOriginal().SetValue(new Vector3(227.5f, 5.02f, 861.67f), 0);
@@ -146,6 +157,7 @@ namespace AlumnoEjemplos.MiGrupo
 
             pasos = new Sonidos();
             barra = new Barra();
+
 
 
             ///////////////USER VARS//////////////////
@@ -280,6 +292,9 @@ namespace AlumnoEjemplos.MiGrupo
             barra.render(linterna.damePorcentaje());
             GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition()); //Actualizamos la user var, nos va a servir
 
+
+            esqueleto.render();
+            antorcha1.render();
         }
 
         /// <summary>
