@@ -33,6 +33,14 @@ namespace AlumnoEjemplos.MiGrupo
             Cerrado = 0,
             Abierta = 1,
         }
+        public TgcMesh getMeshP()
+        {
+            return meshP;
+        }
+        public TgcMesh getMeshC()
+        {
+            return meshC;
+        }
         public void init(Vector3 posP)
         {
             text2 = new TgcText2d();
@@ -70,11 +78,13 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 meshP.rotateY(Geometry.DegreeToRadian(-1f));
                 contador++;
+                meshP.BoundingBox.transform(meshP.Transform);
             }
             if (contador > 0 && estado == Estado.Cerrado)
             {
                 meshP.rotateY(Geometry.DegreeToRadian(1f));
                 contador--;
+                meshP.BoundingBox.transform(meshP.Transform);
             }
         }
 
@@ -98,10 +108,10 @@ namespace AlumnoEjemplos.MiGrupo
         }
         public Boolean verificarColision(Camara camara)
         {
-            Vector3 direccion = camara.getLookAt();
+            Vector3 direccion = camara.getLookAt() - camara.getPosition();
             direccion.Normalize();
-            direccion = direccion * 2;
-            if (TgcCollisionUtils.intersectSegmentAABB(camara.getPosition(), camara.getLookAt(), meshP.BoundingBox, out direccion))
+            direccion = direccion * 1;
+            if (TgcCollisionUtils.intersectSegmentAABB(camara.getPosition(), direccion, meshP.BoundingBox, out direccion))
             {
                 text2.Text = "Presiona la tecla e para abrir la puerta";
                 return true;
@@ -136,6 +146,7 @@ namespace AlumnoEjemplos.MiGrupo
         {
             text2.render();
             meshP.BoundingBox.render();
+            meshC.BoundingBox.render();
             this.moverPuerta();
             puerta1.renderAll();
             cobertura1.renderAll();

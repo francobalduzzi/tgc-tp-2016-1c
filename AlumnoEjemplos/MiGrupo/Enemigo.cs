@@ -304,7 +304,7 @@ namespace AlumnoEjemplos.MiGrupo
             calculito.Y = 0;
             calculito.Normalize();
             distancia = posicion - mesh.Position;
-            return (Vector3.Dot(director, calculito) >= 0.5 && distancia.Length() <= 500 && calculoParedesEnMedio(posicion));
+            return (Vector3.Dot(director, calculito) >= 0.5 && distancia.Length() <= 500);
         }
         public Boolean calculoParedesEnMedio(Vector3 posicion)
         {

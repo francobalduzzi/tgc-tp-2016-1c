@@ -14,6 +14,7 @@ using TgcViewer.Utils.Sound;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils._2D;
 using TgcViewer.Utils.TgcSkeletalAnimation;
+using System.Collections;
 
 namespace AlumnoEjemplos.MiGrupo
 {
@@ -38,7 +39,8 @@ namespace AlumnoEjemplos.MiGrupo
         Sonidos pasos;
         float contador = 0;
         Barra barra;
-
+        ArrayList listaEnemigos;
+        ArrayList listaPuertas;
         ElementoMapa esqueleto;
         ElementoMapa antorcha1;
 
@@ -105,14 +107,22 @@ namespace AlumnoEjemplos.MiGrupo
             //Camara en primera persona:
             Vector3 mira = new Vector3(0,0,0);
             Vector3 vector = new Vector3(0,0,20);
+            listaPuertas = new ArrayList();
             puerta1 = new Puerta();
             puerta1.init(new Vector3(260f, 57f, 770f));
             puerta2 = new Puerta();
             puerta2.init(new Vector3(1400f, 57f, 1363f));
             puerta2.escalar(new Vector3(1.3f, 1f, 1f));
+            listaPuertas.Add(puerta1);
+            listaPuertas.Add(puerta2);
 
-
-            enemigo = new Enemigo(); //Cargamos un enemigo
+            foreach (Puerta puerta in listaPuertas) //Aca añadimos los meshes correspondiente a cada puerta a la escena
+            {
+                escena.Meshes.Add(puerta.getMeshC());
+                escena.Meshes.Add(puerta.getMeshP());
+            }
+            listaEnemigos = new ArrayList(); //Creamos lista de enemigos
+            enemigo = new Enemigo(); //Cargamos un enemigo  Toda la carga de enemigos se hace en una funcion cargar enemigos, etc
             enemigo.setEscena(escena);
             enemigo.getCaminoOriginal().SetValue(new Vector3(718.5f, 5.02f, 1493.4f), 0);
             enemigo.getCaminoOriginal().SetValue(new Vector3(1360.2f, 5.02f, 1493.4f), 1);
@@ -149,7 +159,8 @@ namespace AlumnoEjemplos.MiGrupo
             enemigo2.setEstado(Enemigo.Estado.Parado);
             enemigo2.init();
 
-
+            listaEnemigos.Add(enemigo);
+            listaEnemigos.Add(enemigo2); //Cargamos los enemigos
 
             recargaVela = new VelaRecarga(new Vector3(500f,17f,263f));
             recargaFarol = new FarolRecarga(new Vector3(480f,17f,263f));
@@ -277,7 +288,6 @@ namespace AlumnoEjemplos.MiGrupo
             // vela1.render();
             objeto.render();
             escena.renderAll();
-            enemigo.render(camara.getPosition());
             colisionesConPuerta();
             puerta1.render();
             puerta2.render();
@@ -287,12 +297,11 @@ namespace AlumnoEjemplos.MiGrupo
             recargaVela.render(elapsedTime);
             recargaFarol.render(elapsedTime);
             linterna.bajarIntensidad(elapsedTime);// bajo la intensidad
-            enemigo2.render(camara.getPosition());
             verificarSonidos(elapsedTime);
             barra.render(linterna.damePorcentaje());
             GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition()); //Actualizamos la user var, nos va a servir
 
-
+            renderEnemigos(camara.getPosition());
             esqueleto.render();
             antorcha1.render();
         }
@@ -322,28 +331,44 @@ namespace AlumnoEjemplos.MiGrupo
                 contador = 0;
             }
         }
+        public void renderEnemigos(Vector3 posCam)
+        {
+            foreach(Enemigo enemigo in listaEnemigos)
+            {
+                enemigo.render(posCam);
+            }
+        }
         public void colisionesConPuerta()
         {
-            if (puerta1.verificarColision(camara))
+            foreach(Puerta puerta in listaPuertas)
             {
-                if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.E))
+                if (puerta.verificarColision(camara))
                 {
-                    if(puerta1.getEstado() == Puerta.Estado.Cerrado)
+                    if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.E))
                     {
-                        puerta1.seAbrioJugador();
-                        camara.bloqueada();
-                    }
-                    else
-                    {
-                        puerta1.seCerroJugador();
-                        camara.bloqueada();
+                        if (puerta.getEstado() == Puerta.Estado.Cerrado)
+                        {
+                            puerta.seAbrioJugador();
+                            camara.bloqueada();
+                        }
+                        else
+                        {
+                            puerta.seCerroJugador();
+                            camara.bloqueada();
+                        }
                     }
                 }
-            }
-            if (puerta1.verificarColision(enemigo2))
-            {
-                puerta1.seAbrio();
-                enemigo2.bloqueado();
+                else
+                {
+                    foreach(Enemigo enemigo in listaEnemigos)
+                    {
+                        if (puerta.verificarColision(enemigo))
+                        {
+                            puerta.seAbrio();
+                            enemigo.bloqueado();
+                        }
+                    }
+                }
             }
         }
         public void moverCamaraConVela(float elapsedTime)
