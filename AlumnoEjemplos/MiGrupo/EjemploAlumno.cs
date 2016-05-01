@@ -118,7 +118,9 @@ namespace AlumnoEjemplos.MiGrupo
 
             foreach (Puerta puerta in listaPuertas) //Aca añadimos los meshes correspondiente a cada puerta a la escena
             {
-                escena.Meshes.Add(puerta.getMeshC());
+                escena.Meshes.Add(puerta.getMeshC1());
+                escena.Meshes.Add(puerta.getMeshC3());
+                escena.Meshes.Add(puerta.getMeshC2());
                 escena.Meshes.Add(puerta.getMeshP());
             }
             listaEnemigos = new ArrayList(); //Creamos lista de enemigos

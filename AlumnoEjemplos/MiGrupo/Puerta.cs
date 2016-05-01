@@ -21,7 +21,11 @@ namespace AlumnoEjemplos.MiGrupo
     {
         private TgcScene puerta1;
         private TgcScene cobertura1;
-        TgcMesh meshC;
+        private TgcScene cobertura2;
+        private TgcScene cobertura3;
+        TgcMesh meshC1;
+        TgcMesh meshC2;
+        TgcMesh meshC3;
         TgcMesh meshP;
         private float contador = 0;
         public Estado estado;
@@ -37,27 +41,42 @@ namespace AlumnoEjemplos.MiGrupo
         {
             return meshP;
         }
-        public TgcMesh getMeshC()
+        public TgcMesh getMeshC3()
         {
-            return meshC;
+            return meshC3;
         }
+        public TgcMesh getMeshC2()
+        {
+            return meshC2;
+        }
+        public TgcMesh getMeshC1()
+        {
+            return meshC1;
+        }
+
         public void init(Vector3 posP)
         {
             text2 = new TgcText2d();
             text2.Text = "";
-            text2.Color = Color.DarkSalmon;
-            text2.Align = TgcText2d.TextAlign.RIGHT;
+            text2.Color = Color.DarkRed;
+            text2.Align = TgcText2d.TextAlign.CENTER;
             text2.Position = new Point(500, 500);
             text2.Size = new Size(300, 100);
-            text2.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold | FontStyle.Italic));
+            text2.changeFont(new System.Drawing.Font("Chiller", 30, FontStyle.Regular));
             var loader = new TgcSceneLoader();
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;
             puerta1 = loader.loadSceneFromFile(alumnoMediaFolder + "MiGrupo\\Component_1-TgcScene.xml");
             meshP = puerta1.Meshes[0];
             meshP.Position = posP;
-            cobertura1 = loader.loadSceneFromFile(alumnoMediaFolder + "MiGrupo\\cobertura-TgcScene.xml");
-            meshC = cobertura1.Meshes[0];
-            meshC.Position = posP;
+            cobertura1 = loader.loadSceneFromFile(alumnoMediaFolder + "MiGrupo\\cobertura1-TgcScene.xml");
+            cobertura2 = loader.loadSceneFromFile(alumnoMediaFolder + "MiGrupo\\cobertura2-TgcScene.xml");
+            cobertura3 = loader.loadSceneFromFile(alumnoMediaFolder + "MiGrupo\\cobertura3-TgcScene.xml");
+            meshC1 = cobertura1.Meshes[0];
+            meshC1.Position = posP;
+            meshC2 = cobertura2.Meshes[0];
+            meshC2.Position = posP;
+            meshC3 = cobertura3.Meshes[0];
+            meshC3.Position = posP;
             estado = Estado.Cerrado;
             contadorAbierta = 500f;
         }
@@ -113,7 +132,7 @@ namespace AlumnoEjemplos.MiGrupo
             direccion = direccion * 1;
             if (TgcCollisionUtils.intersectSegmentAABB(camara.getPosition(), direccion, meshP.BoundingBox, out direccion))
             {
-                text2.Text = "Presiona la tecla e para abrir la puerta";
+                text2.Text = "Presiona E para abrir la puerta";
                 return true;
             }
             else
@@ -146,16 +165,22 @@ namespace AlumnoEjemplos.MiGrupo
         {
             text2.render();
             meshP.BoundingBox.render();
-            meshC.BoundingBox.render();
+            meshC1.BoundingBox.render();
+            meshC2.BoundingBox.render();
+            meshC3.BoundingBox.render();
             this.moverPuerta();
             puerta1.renderAll();
             cobertura1.renderAll();
+            cobertura3.renderAll();
+            cobertura2.renderAll();
         }
 
         public void escalar(Vector3 v)
         {
             meshP.Scale = v;
-            meshC.Scale = v;
+            meshC1.Scale = v;
+            meshC2.Scale = v;
+            meshC3.Scale = v;
         }
     }
 }
