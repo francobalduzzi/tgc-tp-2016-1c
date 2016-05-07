@@ -304,26 +304,59 @@ namespace AlumnoEjemplos.MiGrupo
             calculito.Y = 0;
             calculito.Normalize();
             distancia = posicion - mesh.Position;
-            return (Vector3.Dot(director, calculito) >= 0.5 && distancia.Length() <= 500);
+            return (Vector3.Dot(director, calculito) >= 0.5 && distancia.Length() <= 500 && calculoParedesEnMedio(posicion));
         }
         public Boolean calculoParedesEnMedio(Vector3 posicion)
         {
-            Vector3 burocracia;
             int contador = 0;
             foreach(TgcMesh mesh in escena.Meshes)
             {
-                if(TgcCollisionUtils.intersectRayAABB(new TgcRay(this.mesh.Position, posicion), mesh.BoundingBox, out burocracia))
+                if(interseccionRayoPlano(this.mesh.Position, posicion, mesh))
                 {
                     contador++;
                 }
             }
-            if (contador == 3)
+            if (contador == 0)
             {
                 return true;
             }
             else
             {
                 return false;
+            }
+        }
+
+        public Vector3 calculoNormalPared(TgcMesh mesh)
+        {
+            Vector3 punto1 = mesh.getVertexPositions()[0];
+            Vector3 punto2 = mesh.getVertexPositions()[1];
+            Vector3 punto3 = mesh.getVertexPositions()[2];
+            Vector3 vectorDir1 = punto2 - punto1;
+            Vector3 vectorDir2 = punto3 - punto1;
+            Vector3 normalPared = Vector3.Cross(vectorDir1, vectorDir2);
+            return normalPared;
+        }
+        public Boolean interseccionRayoPlano(Vector3 Origen, Vector3 Destino, TgcMesh mesh)
+        {
+            Vector3 normalPared = calculoNormalPared(mesh);
+            Vector3 puntoPared = mesh.getVertexPositions()[0];
+            Vector3 calculo1 = puntoPared - Origen;
+            Vector3 calculo2 = Destino - Origen;
+            if(Vector3.Dot(normalPared,calculo2) == 0)
+            {
+                return false;
+            }
+            else
+            {
+                float r1 = Vector3.Dot(normalPared, calculo1) / Vector3.Dot(normalPared, calculo2);
+                if(r1 >= 0 && r1 <= 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
         public void render(Vector3 posCam)

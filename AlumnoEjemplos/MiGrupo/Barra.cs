@@ -34,11 +34,14 @@ namespace AlumnoEjemplos.MiGrupo
             sprite.Texture = TgcTexture.createTexture(alumnoMediaFolder + "MiGrupo\\barraRoja.png");
             spriteAmarillo.Texture= TgcTexture.createTexture(alumnoMediaFolder + "MiGrupo\\barraAmarilla.png");
 
-            sprite.Position = new Vector2(900, 550);
-            sprite.Scaling = new Vector2(0.1f,0.05f);
+            
 
-            spriteAmarillo.Position = new Vector2(900, 550);
+            sprite.Scaling = new Vector2(0.1f,0.05f);
             spriteAmarillo.Scaling = new Vector2(0.1f, 0.05f);
+
+            sprite.Position = new Vector2(GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth* 4/5, GuiController.Instance.D3dDevice.PresentationParameters.BackBufferHeight *  9/10);
+            spriteAmarillo.Position = new Vector2(GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth * 4 / 5, GuiController.Instance.D3dDevice.PresentationParameters.BackBufferHeight * 9 / 10);
+
 
         }
         public void render(float cargaLinterna)

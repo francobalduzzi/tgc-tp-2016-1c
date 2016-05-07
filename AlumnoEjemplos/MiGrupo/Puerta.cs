@@ -130,7 +130,12 @@ namespace AlumnoEjemplos.MiGrupo
             Vector3 direccion = camara.getLookAt() - camara.getPosition();
             direccion.Normalize();
             direccion = direccion * 1;
-            if (TgcCollisionUtils.intersectSegmentAABB(camara.getPosition(), direccion, meshP.BoundingBox, out direccion))
+            if (interseccionRayoPlano(camara.getPosition(), camara.getLookAt(), meshP) && (meshP.Position-camara.getPosition()).Length() <= 200f)
+            {
+                text2.Text = "Presiona E para abrir la puerta";
+                return true;
+            }
+            if (interseccionRayoPlano(camara.getPosition(), -camara.getLookAt(), meshP) && (meshP.Position - camara.getPosition()).Length() <= 200f)
             {
                 text2.Text = "Presiona E para abrir la puerta";
                 return true;
@@ -141,6 +146,41 @@ namespace AlumnoEjemplos.MiGrupo
                 return false;
             }
         }
+
+        public Vector3 calculoNormalPared(TgcMesh mesh)
+        {
+            Vector3 punto1 = mesh.getVertexPositions()[0];
+            Vector3 punto2 = mesh.getVertexPositions()[1];
+            Vector3 punto3 = mesh.getVertexPositions()[2];
+            Vector3 vectorDir1 = punto2 - punto1;
+            Vector3 vectorDir2 = punto3 - punto1;
+            Vector3 normalPared = Vector3.Cross(vectorDir1, vectorDir2);
+            return normalPared;
+        }
+        public Boolean interseccionRayoPlano(Vector3 Origen, Vector3 Destino, TgcMesh mesh)
+        {
+            Vector3 normalPared = calculoNormalPared(mesh);
+            Vector3 puntoPared = mesh.getVertexPositions()[0];
+            Vector3 calculo1 = puntoPared - Origen;
+            Vector3 calculo2 = Destino - Origen;
+            if (Vector3.Dot(normalPared, calculo2) == 0)
+            {
+                return false;
+            }
+            else
+            {
+                float r1 = Vector3.Dot(normalPared, calculo1) / Vector3.Dot(normalPared, calculo2);
+                if (r1 >= 0 )
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
         public Boolean verificarColision(Enemigo enemigo)
         {
             Vector3 direccion = enemigo.getDirector();

@@ -154,7 +154,7 @@ namespace AlumnoEjemplos.MiGrupo
 
             enemigo2 = new Enemigo2(); //Cargamos un enemigo
             enemigo2.setEscena(escena);
-            enemigo2.getCaminoOriginal().SetValue(new Vector3(931f, 5.02f, 816f), 0);
+            enemigo2.getCaminoOriginal().SetValue(new Vector3(965f, 5.02f, 842f), 0);
             enemigo2.getCaminoOriginal().SetValue(new Vector3(931f, 5.02f, 835f), 1);;
             enemigo2.setCantidadWP(2);
             enemigo2.setEscena(escena);
@@ -360,8 +360,8 @@ namespace AlumnoEjemplos.MiGrupo
                         }
                     }
                 }
-                else
-                {
+                
+                
                     foreach(Enemigo enemigo in listaEnemigos)
                     {
                         if (puerta.verificarColision(enemigo))
@@ -370,7 +370,7 @@ namespace AlumnoEjemplos.MiGrupo
                             enemigo.bloqueado();
                         }
                     }
-                }
+                
             }
         }
         public void moverCamaraConVela(float elapsedTime)
