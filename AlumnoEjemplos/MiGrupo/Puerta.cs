@@ -129,13 +129,7 @@ namespace AlumnoEjemplos.MiGrupo
         {
             Vector3 direccion = camara.getLookAt() - camara.getPosition();
             direccion.Normalize();
-            direccion = direccion * 1;
-            if (interseccionRayoPlano(camara.getPosition(), camara.getLookAt(), meshP) && (meshP.Position-camara.getPosition()).Length() <= 200f)
-            {
-                text2.Text = "Presiona E para abrir la puerta";
-                return true;
-            }
-            if (interseccionRayoPlano(camara.getPosition(), -camara.getLookAt(), meshP) && (meshP.Position - camara.getPosition()).Length() <= 200f)
+            if (interseccionRayoPlano(camara.getPosition(), direccion, meshP) && (meshP.Position-camara.getPosition()).Length() <= 200f)
             {
                 text2.Text = "Presiona E para abrir la puerta";
                 return true;
@@ -162,7 +156,7 @@ namespace AlumnoEjemplos.MiGrupo
             Vector3 normalPared = calculoNormalPared(mesh);
             Vector3 puntoPared = mesh.getVertexPositions()[0];
             Vector3 calculo1 = puntoPared - Origen;
-            Vector3 calculo2 = Destino - Origen;
+            Vector3 calculo2 = Destino;
             if (Vector3.Dot(normalPared, calculo2) == 0)
             {
                 return false;

@@ -185,7 +185,6 @@ namespace AlumnoEjemplos.MiGrupo
             GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition());
 
 
-
             ///////////////MODIFIERS//////////////////
 
             //Crear un modifier para un valor FLOAT
