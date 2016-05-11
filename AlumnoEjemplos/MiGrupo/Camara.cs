@@ -52,6 +52,7 @@ namespace AlumnoEjemplos.MiGrupo
         private Vector3 targetAux;
         private Boolean camBloqueada = false;
         private float tiempoBloqueado = 100f;
+        private Sliding slidin = new Sliding();
         public TgcBoundingSphere camaraColision;
 
 
@@ -161,66 +162,57 @@ namespace AlumnoEjemplos.MiGrupo
             camBloqueada = true;
         }
         public void updateCamera()
-         {
+        {
             float elapsedTime = GuiController.Instance.ElapsedTime;
             bool colision = ChequearColisiones(); //Detectamos cplisiones y guardamos
 
-            if (!colision)
-            {
                 eyeAux = eye;
-                targetAux = target;
-            }
-                
-            if (GuiController.Instance.D3dInput.keyDown(Key.W) && !colision)
-             {
-                 Vector3 v = moveForward(MovementSpeed * elapsedTime);
-                 movimiento = v;
-                 moving = true;
-             }
 
-             //Backward
-             if (GuiController.Instance.D3dInput.keyDown(Key.S) && !colision)
-             {
-                 Vector3 v = moveForward(-MovementSpeed * elapsedTime);
-                 movimiento = v;
-                 moving = true;
+            if (GuiController.Instance.D3dInput.keyDown(Key.W))
+            {
+                Vector3 v = moveForward(MovementSpeed * elapsedTime);
+                movimiento = v;
+                moving = true;
+            }
+
+            //Backward
+            if (GuiController.Instance.D3dInput.keyDown(Key.S))
+            {
+                Vector3 v = moveForward(-MovementSpeed * elapsedTime);
+                movimiento = v;
+                moving = true;
             }
 
             //Strafe right
-            if (GuiController.Instance.D3dInput.keyDown(Key.D) && !colision)
-             {
-                 Vector3 v = moveSide(MovementSpeed * elapsedTime);
-                 movimiento = v;
-                 moving = true;
+            if (GuiController.Instance.D3dInput.keyDown(Key.D))
+            {
+                Vector3 v = moveSide(MovementSpeed * elapsedTime);
+                movimiento = v;
+                moving = true;
             }
 
             //Strafe left
-            if (GuiController.Instance.D3dInput.keyDown(Key.A) && !colision)
-             {
-                 Vector3 v = moveSide(-MovementSpeed * elapsedTime);
-                 movimiento = v;
-                 moving = true;
+            if (GuiController.Instance.D3dInput.keyDown(Key.A))
+            {
+                Vector3 v = moveSide(-MovementSpeed * elapsedTime);
+                movimiento = v;
+                moving = true;
             }
 
             //Jump
-            if (GuiController.Instance.D3dInput.keyDown(Key.Space) && !colision)
-             {
-                 Vector3 v = moveUp(JumpSpeed * elapsedTime);
-                 movimiento = v;
-                 moving = true;
+            if (GuiController.Instance.D3dInput.keyDown(Key.Space))
+            {
+                Vector3 v = moveUp(JumpSpeed * elapsedTime);
+                movimiento = v;
+                moving = true;
             }
 
             //Crouch
-            if (GuiController.Instance.D3dInput.keyDown(Key.LeftControl) && !colision)
-             {
-                 Vector3 v = moveUp(-JumpSpeed * elapsedTime);
-                 movimiento = v;
-                 moving = true;
-            }
-            if (colision)
+            if (GuiController.Instance.D3dInput.keyDown(Key.LeftControl))
             {
-                eye = eyeAux;
-                target = targetAux;
+                Vector3 v = moveUp(-JumpSpeed * elapsedTime);
+                movimiento = v;
+                moving = true;
             }
             if (camBloqueada)
             {
@@ -233,29 +225,29 @@ namespace AlumnoEjemplos.MiGrupo
                 }
             }
             if (GuiController.Instance.D3dInput.keyPressed(Key.L))
-             {
-                 LockCam = !LockCam;
+            {
+                LockCam = !LockCam;
 
-             }
+            }
 
-             //Solo rotar si se esta aprentando el boton izq del mouse
+            //Solo rotar si se esta aprentando el boton izq del mouse
             //if (lockCam || GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_RIGHT))
             // {
-                 rotate(-GuiController.Instance.D3dInput.XposRelative * rotationSpeed,
-                        -GuiController.Instance.D3dInput.YposRelative * rotationSpeed);
+            rotate(-GuiController.Instance.D3dInput.XposRelative * rotationSpeed,
+                   -GuiController.Instance.D3dInput.YposRelative * rotationSpeed);
 
             // }
 
 
-             if (lockCam)
-                 Cursor.Position = mouseCenter;
+            if (lockCam)
+                Cursor.Position = mouseCenter;
 
-             viewMatrix = Matrix.LookAtLH(eye, target, up);
+            viewMatrix = Matrix.LookAtLH(eye, target, up);
 
-             updateViewMatrix(GuiController.Instance.D3dDevice);
+            updateViewMatrix(GuiController.Instance.D3dDevice);
 
 
-         }
+        }
         public bool ChequearColisiones()
         {
             camaraColision = new TgcBoundingSphere(eye, 5f);
@@ -290,7 +282,7 @@ namespace AlumnoEjemplos.MiGrupo
             Vector3 calculo2 = Destino - Origen;
             if (Vector3.Dot(normalPared, calculo2) == 0)
             {
-                salida = new Vector3(0,0,0);
+                salida = new Vector3(0, 0, 0);
                 return false;
             }
             else
@@ -365,15 +357,31 @@ namespace AlumnoEjemplos.MiGrupo
         public Vector3 moveForward(float movimiento)
         {
             Vector3 v = ForwardDirection * movimiento;
-            move(v);
-            return v;
+            camaraColision = new TgcBoundingSphere(eye, 5f);
+            List<TgcBoundingBox> lista = new List<TgcBoundingBox>();
+            foreach (TgcMesh meshito in escena.Meshes)
+            {
+                lista.Add(meshito.BoundingBox);
+            }
+            Vector3 realMovement = slidin.moveCharacter(camaraColision, v, lista);
+            realMovement = new Vector3(realMovement.X, 0, realMovement.Z);
+            move(realMovement);
+            return realMovement;
         }
 
         public Vector3 moveSide(float movimiento)
         {
             Vector3 v = SideDirection * movimiento;
-            move(v);
-            return v;
+            camaraColision = new TgcBoundingSphere(eye, 5f);
+            List<TgcBoundingBox> lista = new List<TgcBoundingBox>();
+            foreach (TgcMesh meshito in escena.Meshes)
+            {
+                lista.Add(meshito.BoundingBox);
+            }
+            Vector3 realMovement = slidin.moveCharacter(camaraColision, v, lista);
+            realMovement = new Vector3(realMovement.X, 0, realMovement.Z);
+            move(realMovement);
+            return realMovement;
         }
 
         public Vector3 moveUp(float movimiento)

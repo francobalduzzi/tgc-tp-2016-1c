@@ -34,6 +34,8 @@ namespace AlumnoEjemplos.MiGrupo
         protected int contador;
         protected int cantidadWP;
         protected Estado estado;
+        protected Estado estadoAux;
+        protected Sliding slidin = new Sliding();
         public void bloqueado()
         {
             bloqueadoMov = true;
@@ -179,6 +181,7 @@ namespace AlumnoEjemplos.MiGrupo
             mesh.rotateY((float)Math.Atan2(direccion.X, direccion.Z) - mesh.Rotation.Y - Geometry.DegreeToRadian(180f));
             bounding.rotateY((float)Math.Atan2(direccion.X, direccion.Z) - mesh.Rotation.Y - Geometry.DegreeToRadian(180f));
             direccion *= velocidad * elapsedTime;
+
             mesh.move(direccion);
 
             bounding.move(direccion);
@@ -280,7 +283,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         public void seguirASlider(Vector3 posJugador, float elapsedTime, float velocidad)
         {
-            Boolean interseccionB = false;
+            /*Boolean interseccionB = false;
             Ray rayo = new Ray(this.mesh.Position, posJugador);
             foreach(TgcMesh mesh in escena.Meshes)
             {
@@ -289,16 +292,14 @@ namespace AlumnoEjemplos.MiGrupo
                     interseccionB = true;
                     Vector3 interseccion;
                     rayo.interseccionRayoPlano(mesh, out interseccion);
-                    Vector3 dirAInt = interseccion - this.mesh.Position;
-                    Vector3 normal = calculoNormalPared(mesh);
+                    Vector3 dirAInt = posJugador - interseccion;
+                    Vector3 normal = -calculoNormalPared(mesh);
                     Vector3 direc = Vector3.Cross(normal, new Vector3(0, 1, 0));
                     direc.Normalize();
-                    Vector3 direccion = Vector3.Dot(direc, dirAInt) * direc;
-                    direccion.Normalize();
-                    direccion.Y = 0;
-                    this.mesh.rotateY((float)Math.Atan2(direccion.X, direccion.Z) - this.mesh.Rotation.Y - Geometry.DegreeToRadian(180f));
-                    bounding.rotateY((float)Math.Atan2(direccion.X, direccion.Z) - this.mesh.Rotation.Y - Geometry.DegreeToRadian(180f));
-                    direccion *= velocidad * elapsedTime;
+                    //Vector3 direccion = Vector3.Dot(direc, dirAInt) * direc + normal;
+                    Vector3 direccion = dirAInt + normal;
+                   /* Vector3 direccionMover = direccion - this.mesh.Position;
+                    direccionMover.Y = 0;
                     this.mesh.move(direccion);
                     break;
                 }
@@ -315,7 +316,25 @@ namespace AlumnoEjemplos.MiGrupo
 
                 bounding.move(direccion);
             }
+            */
+            Vector3 direccion = posJugador - mesh.Position;
+            direccion.Normalize();
+            direccion.Y = 0;
+            mesh.rotateY(((float)Math.Atan2(direccion.X, direccion.Z) - mesh.Rotation.Y - Geometry.DegreeToRadian(180f)));
+            bounding.rotateY((float)Math.Atan2(direccion.X, direccion.Z) - mesh.Rotation.Y - Geometry.DegreeToRadian(180f));
+            direccion *= velocidad;
+            TgcBoundingSphere characterSphere = new TgcBoundingSphere(mesh.BoundingBox.calculateBoxCenter(), 30f);
+            List<TgcBoundingBox> lista= new List<TgcBoundingBox>();
+            foreach(TgcMesh meshito in escena.Meshes)
+            {
+                lista.Add(meshito.BoundingBox);
+            }
+            Vector3 realMovement = slidin.moveCharacter(characterSphere, direccion, lista);
+            characterSphere.moveCenter(realMovement*elapsedTime);
+            mesh.move(realMovement * elapsedTime);
+            mesh.Position = new Vector3(mesh.Position.X, 5.02f, mesh.Position.Z);
             
+            bounding.move(realMovement);
         }
 
 
@@ -338,6 +357,7 @@ namespace AlumnoEjemplos.MiGrupo
                 selectedAnim = animationList[1];
                 mesh.playAnimation(selectedAnim, true);
                 estado = Estado.RecorriendoIda;
+                mesh.Position = new Vector3(mesh.Position.X, 5.02f, mesh.Position.Z);
             }
         }
         public void verSiPerseguir(Vector3 posCam)
