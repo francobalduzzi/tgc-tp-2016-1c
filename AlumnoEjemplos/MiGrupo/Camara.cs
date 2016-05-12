@@ -364,7 +364,7 @@ namespace AlumnoEjemplos.MiGrupo
                 lista.Add(meshito.BoundingBox);
             }
             Vector3 realMovement = slidin.moveCharacter(camaraColision, v, lista);
-            realMovement = new Vector3(realMovement.X, 0, realMovement.Z);
+           // realMovement = new Vector3(realMovement.X, 0, realMovement.Z);
             move(realMovement);
             return realMovement;
         }
@@ -379,16 +379,25 @@ namespace AlumnoEjemplos.MiGrupo
                 lista.Add(meshito.BoundingBox);
             }
             Vector3 realMovement = slidin.moveCharacter(camaraColision, v, lista);
-            realMovement = new Vector3(realMovement.X, 0, realMovement.Z);
+           // realMovement = new Vector3(realMovement.X, 0, realMovement.Z);
             move(realMovement);
             return realMovement;
         }
 
         public Vector3 moveUp(float movimiento)
         {
-            move(up * movimiento);
+            
             Vector3 v = up * movimiento;
-            return v;
+            camaraColision = new TgcBoundingSphere(eye, 5f);
+            List<TgcBoundingBox> lista = new List<TgcBoundingBox>();
+            foreach (TgcMesh meshito in escena.Meshes)
+            {
+                lista.Add(meshito.BoundingBox);
+            }
+            Vector3 realMovement = slidin.moveCharacter(camaraColision, v, lista);
+           // realMovement = new Vector3(realMovement.X, realMovement.Y, realMovement.Z);
+            move(realMovement);
+            return realMovement;
         }
 
         public void rotateY(float movimiento)

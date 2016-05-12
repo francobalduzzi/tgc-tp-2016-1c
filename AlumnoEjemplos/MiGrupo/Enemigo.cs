@@ -323,7 +323,7 @@ namespace AlumnoEjemplos.MiGrupo
             mesh.rotateY(((float)Math.Atan2(direccion.X, direccion.Z) - mesh.Rotation.Y - Geometry.DegreeToRadian(180f)));
             bounding.rotateY((float)Math.Atan2(direccion.X, direccion.Z) - mesh.Rotation.Y - Geometry.DegreeToRadian(180f));
             direccion *= velocidad;
-            TgcBoundingSphere characterSphere = new TgcBoundingSphere(mesh.BoundingBox.calculateBoxCenter(), 30f);
+            TgcBoundingSphere characterSphere = new TgcBoundingSphere(mesh.BoundingBox.calculateBoxCenter(), 10f);
             List<TgcBoundingBox> lista= new List<TgcBoundingBox>();
             foreach(TgcMesh meshito in escena.Meshes)
             {

@@ -57,7 +57,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         public Sliding()
         {
-            gravityEnabled = true;
+            gravityEnabled = false;
             gravityForce = new Vector3(0, -10, 0);
             slideFactor = 1.3f;
         }
