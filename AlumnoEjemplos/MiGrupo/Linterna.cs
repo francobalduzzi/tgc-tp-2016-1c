@@ -16,6 +16,7 @@ namespace AlumnoEjemplos.MiGrupo
         private float movimientoLinterna;
         const float VALORMAXIMOINTENSIDAD = 20;
         private float porcentajeRestante;
+        Barra barra;
         public Linterna(Vector3 Direccion1, Vector3 Posicion1)
         {
             this.init();
@@ -27,6 +28,7 @@ namespace AlumnoEjemplos.MiGrupo
             this.Encendida = false;
             this.Attenuation = 0.1f;
             this.SpecularEx = 9f;
+            barra = new Barra();
         }
         override public void mover(float elapsedTime)
         {
@@ -54,6 +56,7 @@ namespace AlumnoEjemplos.MiGrupo
             GuiController.Instance.D3dDevice.Transform.View = Matrix.Identity;
             linterna.renderAll();
             GuiController.Instance.D3dDevice.Transform.View = matrizView;
+            barra.render(this.damePorcentaje());
         }
         override public void CambiarEstadoLuz()
         {
@@ -72,7 +75,7 @@ namespace AlumnoEjemplos.MiGrupo
             }
         }
 
-        public void bajarIntensidad(float elapsedTime)
+        public override void bajarIntensidad(float elapsedTime)
         {
             if(this.Intensity > -0.05f && this.Intensity < 0.05f)
             {
@@ -96,30 +99,39 @@ namespace AlumnoEjemplos.MiGrupo
             lightDir = this.Direccion - this.Posicion;
             lightDir.Normalize();
             Effect currentShader;
-            if (this.Encendida)
-            {
-                //Con luz: Cambiar el shader actual por el shader default que trae el framework para iluminacion dinamica con SpotLight
-                currentShader = GuiController.Instance.Shaders.TgcMeshSpotLightShader;
-            }
-            else
-            {
-                //Sin luz: Restaurar shader default
-                currentShader = GuiController.Instance.Shaders.TgcMeshPointLightShader;
-            }
-
-            foreach (TgcMesh mesh in escena.Meshes)
-            {
-                mesh.Effect = currentShader;
-                //El Technique depende del tipo RenderType del mesh
-                mesh.Technique = GuiController.Instance.Shaders.getTgcMeshTechnique(mesh.RenderType);
-            }
-            //Renderizar meshes
-            foreach (TgcMesh mesh in escena.Meshes)
-            {
-                if (this.Encendida)
+            currentShader = GuiController.Instance.Shaders.TgcMeshSpotLightShader;
+                foreach (TgcMesh mesh in escena.Meshes)
                 {
+                    mesh.Effect = currentShader;
+                    //El Technique depende del tipo RenderType del mesh
+                    mesh.Technique = GuiController.Instance.Shaders.getTgcMeshTechnique(mesh.RenderType);
+                }
+                //Renderizar meshes
+                foreach (TgcMesh mesh in escena.Meshes)
+                {
+                    if (this.Encendida)
+                    {
+                        //Cargar variables shader de la luz
+                        mesh.Effect.SetValue("lightColor", ColorValue.FromColor(Color.White));
+                        mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(this.Posicion));
+                        mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(this.Posicion));
+                        mesh.Effect.SetValue("spotLightDir", TgcParserUtils.vector3ToFloat4Array(lightDir));
+                        mesh.Effect.SetValue("lightIntensity", this.Intensity);
+                        mesh.Effect.SetValue("lightAttenuation", this.Attenuation);
+                        mesh.Effect.SetValue("spotLightAngleCos", FastMath.ToRad(this.SpotAngle));
+                        mesh.Effect.SetValue("spotLightExponent", this.SpotExponent);
+
+                        //Cargar variables de shader de Material. El Material en realidad deberia ser propio de cada mesh. Pero en este ejemplo se simplifica con uno comun para todos
+                        mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(Color.Black));
+                        mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(Color.White));
+                        mesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor(Color.White));
+                        mesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor(Color.White));
+                        mesh.Effect.SetValue("materialSpecularExp", this.SpecularEx);
+                    }
+                  else
+                 {
                     //Cargar variables shader de la luz
-                    mesh.Effect.SetValue("lightColor", ColorValue.FromColor(Color.White));
+                    mesh.Effect.SetValue("lightColor", ColorValue.FromColor(Color.Black));
                     mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(this.Posicion));
                     mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(this.Posicion));
                     mesh.Effect.SetValue("spotLightDir", TgcParserUtils.vector3ToFloat4Array(lightDir));
@@ -136,8 +148,8 @@ namespace AlumnoEjemplos.MiGrupo
                     mesh.Effect.SetValue("materialSpecularExp", this.SpecularEx);
                 }
 
-                //No renderizar aca porque hace una caja negra loca
-            }
+                    //No renderizar aca porque hace una caja negra loca
+                }
         }
     }
 }

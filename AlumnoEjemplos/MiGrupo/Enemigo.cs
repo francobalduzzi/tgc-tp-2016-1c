@@ -283,40 +283,6 @@ namespace AlumnoEjemplos.MiGrupo
 
         public void seguirASlider(Vector3 posJugador, float elapsedTime, float velocidad)
         {
-            /*Boolean interseccionB = false;
-            Ray rayo = new Ray(this.mesh.Position, posJugador);
-            foreach(TgcMesh mesh in escena.Meshes)
-            {
-                if (rayo.intersectAABB(mesh.BoundingBox))
-                {
-                    interseccionB = true;
-                    Vector3 interseccion;
-                    rayo.interseccionRayoPlano(mesh, out interseccion);
-                    Vector3 dirAInt = posJugador - interseccion;
-                    Vector3 normal = -calculoNormalPared(mesh);
-                    Vector3 direc = Vector3.Cross(normal, new Vector3(0, 1, 0));
-                    direc.Normalize();
-                    //Vector3 direccion = Vector3.Dot(direc, dirAInt) * direc + normal;
-                    Vector3 direccion = dirAInt + normal;
-                   /* Vector3 direccionMover = direccion - this.mesh.Position;
-                    direccionMover.Y = 0;
-                    this.mesh.move(direccion);
-                    break;
-                }
-            }
-            if (!interseccionB)
-            {
-                Vector3 direccion = posJugador - mesh.Position;
-                direccion.Normalize();
-                direccion.Y = 0;
-                mesh.rotateY((float)Math.Atan2(direccion.X, direccion.Z) - mesh.Rotation.Y - Geometry.DegreeToRadian(180f));
-                bounding.rotateY((float)Math.Atan2(direccion.X, direccion.Z) - mesh.Rotation.Y - Geometry.DegreeToRadian(180f));
-                direccion *= velocidad * elapsedTime;
-                mesh.move(direccion);
-
-                bounding.move(direccion);
-            }
-            */
             Vector3 direccion = posJugador - mesh.Position;
             direccion.Normalize();
             direccion.Y = 0;

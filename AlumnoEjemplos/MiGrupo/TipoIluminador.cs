@@ -23,5 +23,6 @@ namespace AlumnoEjemplos.MiGrupo
         public abstract void init();
         public abstract void render();
         public abstract void CambiarEstadoLuz();
+        public abstract void bajarIntensidad(float elapsedTime);
     }
 }

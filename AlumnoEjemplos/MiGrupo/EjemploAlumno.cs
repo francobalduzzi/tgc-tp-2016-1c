@@ -44,6 +44,8 @@ namespace AlumnoEjemplos.MiGrupo
         ElementoMapa esqueleto;
         ElementoMapa antorcha1;
 
+        
+
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
         /// Influye en donde se va a haber en el árbol de la derecha de la pantalla.
@@ -77,7 +79,7 @@ namespace AlumnoEjemplos.MiGrupo
         public override void init()
         {
             camara = new Camara();
-            camara.setCamera(new Vector3(359f, 60f, 964f), new Vector3(289f, 30f, 90f));
+            camara.setCamera(new Vector3(359f, 60f, 1000f), new Vector3(289f, 30f, 90f));
             camara.MovementSpeed = 200f;
             camara.RotationSpeed = 5f;
             camara.JumpSpeed = 80f;
@@ -164,9 +166,9 @@ namespace AlumnoEjemplos.MiGrupo
             listaEnemigos.Add(enemigo);
             listaEnemigos.Add(enemigo2); //Cargamos los enemigos
 
-            recargaVela = new VelaRecarga(new Vector3(500f,17f,263f));
-            recargaFarol = new FarolRecarga(new Vector3(480f,17f,263f));
-            recarga = new LinternaRecarga(new Vector3(527f, 17f, 263f));// se carga la/s recarga con la posicion
+            recargaVela = new VelaRecarga(new Vector3(359f, 7f, 964f));
+            recargaFarol = new FarolRecarga(new Vector3(379f,2f,964f));
+            recarga = new LinternaRecarga(new Vector3(457f, 5f, 964f));// se carga la/s recarga con la posicion
 
             pasos = new Sonidos();
             barra = new Barra();
@@ -266,6 +268,7 @@ namespace AlumnoEjemplos.MiGrupo
                 objeto.Encendida = false;
                 objeto = linterna;
                 objeto.Encendida = true;
+
             }
             if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.D2))
             {
@@ -297,9 +300,9 @@ namespace AlumnoEjemplos.MiGrupo
             recarga.render(elapsedTime);
             recargaVela.render(elapsedTime);
             recargaFarol.render(elapsedTime);
-            linterna.bajarIntensidad(elapsedTime);// bajo la intensidad
+            objeto.bajarIntensidad(elapsedTime);// bajo la intensidad
             verificarSonidos(elapsedTime);
-            barra.render(linterna.damePorcentaje());
+           // barra.render(linterna.damePorcentaje());
             GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition()); //Actualizamos la user var, nos va a servir
 
             renderEnemigos(camara.getPosition());
@@ -321,6 +324,14 @@ namespace AlumnoEjemplos.MiGrupo
             if (recarga.verificarColision(camara))//si agarra la recarga aumento la intensidad 
             {
                 linterna.recargar();
+            }
+            if (recargaVela.verificarColision(camara))//si agarra la recarga aumento la intensidad 
+            {
+                vela1.recargar();
+            }
+            if (recargaFarol.verificarColision(camara))//si agarra la recarga aumento la intensidad 
+            {
+                farol.recargar();
             }
         }
         public void verificarSonidos(float elapsedTime)

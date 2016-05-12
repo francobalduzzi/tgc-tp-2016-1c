@@ -20,7 +20,7 @@ namespace AlumnoEjemplos.MiGrupo
         {
             this.init();
             this.posicion = pos;
-            this.colision = TgcBox.fromSize(posicion, new Vector3(30, 100, 30));
+            this.colision = TgcBox.fromSize(posicion, new Vector3(30, 200, 30));
             this.meshLR.Position = posicion;
 
         }
