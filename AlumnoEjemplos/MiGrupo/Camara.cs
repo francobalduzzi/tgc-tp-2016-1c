@@ -54,6 +54,8 @@ namespace AlumnoEjemplos.MiGrupo
         private float tiempoBloqueado = 100f;
         private Sliding slidin = new Sliding();
         public TgcBoundingSphere camaraColision;
+        public Boolean escondido = false;
+        public Vector3 posicionAntesDeEsconderse;
 
 
         public Camara()
@@ -224,6 +226,10 @@ namespace AlumnoEjemplos.MiGrupo
                     camBloqueada = false;
                 }
             }
+            if (this.escondido)
+            {
+                eye = eyeAux;
+            }
             if (GuiController.Instance.D3dInput.keyPressed(Key.L))
             {
                 LockCam = !LockCam;
@@ -248,6 +254,7 @@ namespace AlumnoEjemplos.MiGrupo
 
 
         }
+
         public bool ChequearColisiones()
         {
             camaraColision = new TgcBoundingSphere(eye, 5f);
@@ -354,6 +361,21 @@ namespace AlumnoEjemplos.MiGrupo
 
         }
 
+        public void esconder(Vector3 posicion)
+        {
+            this.posicionAntesDeEsconderse = eye;
+            eye = new Vector3(posicion.X,eye.Y,posicion.Z);
+            this.escondido = true;
+        }
+        public void desesconder()
+        {
+            eye = posicionAntesDeEsconderse;
+            this.escondido = false;
+        }
+        public Boolean getEscondido()
+        {
+            return escondido;
+        }
         public Vector3 moveForward(float movimiento)
         {
             Vector3 v = ForwardDirection * movimiento;

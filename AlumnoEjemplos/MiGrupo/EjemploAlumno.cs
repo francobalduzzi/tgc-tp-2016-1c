@@ -43,8 +43,8 @@ namespace AlumnoEjemplos.MiGrupo
         ArrayList listaPuertas;
         ElementoMapa esqueleto;
         ElementoMapa antorcha1;
-
-        
+        ArrayList listaEscondites;
+        Escondite escondite1;
 
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
@@ -135,6 +135,7 @@ namespace AlumnoEjemplos.MiGrupo
             enemigo.setEscena(escena);
             enemigo.setEstado(Enemigo.Estado.RecorriendoIda);
             enemigo.init();
+            enemigo.setCamara(camara);
 
 
             esqueleto = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3 (359f, 0f, 940f));
@@ -162,7 +163,7 @@ namespace AlumnoEjemplos.MiGrupo
             enemigo2.setEscena(escena);
             enemigo2.setEstado(Enemigo.Estado.Parado);
             enemigo2.init();
-
+            enemigo2.setCamara(camara);
             listaEnemigos.Add(enemigo);
             listaEnemigos.Add(enemigo2); //Cargamos los enemigos
 
@@ -173,7 +174,10 @@ namespace AlumnoEjemplos.MiGrupo
             pasos = new Sonidos();
             barra = new Barra();
 
-
+            listaEscondites = new ArrayList();
+            escondite1 = new Escondite();
+            escondite1.init(new Vector3(1249f, 5.02f, 1211f));
+            listaEscondites.Add(escondite1);
 
             ///////////////USER VARS//////////////////
 
@@ -304,7 +308,8 @@ namespace AlumnoEjemplos.MiGrupo
             verificarSonidos(elapsedTime);
            // barra.render(linterna.damePorcentaje());
             GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition()); //Actualizamos la user var, nos va a servir
-
+            renderEscondites();
+            colisionesConEscondites();
             renderEnemigos(camara.getPosition());
             esqueleto.render();
             antorcha1.render();
@@ -341,6 +346,13 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 pasos.play();
                 contador = 0;
+            }
+        }
+        public void renderEscondites()
+        {
+            foreach(Escondite escondite in listaEscondites)
+            {
+                escondite.render();
             }
         }
         public void renderEnemigos(Vector3 posCam)
@@ -381,6 +393,28 @@ namespace AlumnoEjemplos.MiGrupo
                         }
                     }
                 
+            }
+        }
+
+        public void colisionesConEscondites()
+        {
+            foreach(Escondite escondite in listaEscondites)
+            {
+                if (escondite.verificarColision(camara))
+                {
+                    if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.E))
+                    {
+                        if (camara.getEscondido())
+                        {
+                            camara.desesconder();
+                        }
+                        else
+                        {
+                            escondite.esconder(camara);
+                        }
+                        
+                    }
+                }
             }
         }
         public void moverCamaraConVela(float elapsedTime)

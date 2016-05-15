@@ -129,9 +129,17 @@ namespace AlumnoEjemplos.MiGrupo
         {
             Vector3 direccion = camara.getLookAt() - camara.getPosition();
             direccion.Normalize();
-            if (interseccionRayoPlano(camara.getPosition(), direccion, meshP) && (meshP.Position-camara.getPosition()).Length() <= 200f)
+            if ((meshP.Position-camara.getPosition()).Length() <= 50f)
             {
-                text2.Text = "Presiona E para abrir la puerta";
+                if(this.estado == Estado.Cerrado)
+                {
+                    text2.Text = "Presiona E para abrir la puerta";
+                }
+                else
+                {
+                    text2.Text = "Presiona E para cerrar la puerta";
+                }
+                
                 return true;
             }
             else

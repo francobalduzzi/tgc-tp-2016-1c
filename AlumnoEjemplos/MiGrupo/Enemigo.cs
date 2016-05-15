@@ -36,6 +36,11 @@ namespace AlumnoEjemplos.MiGrupo
         protected Estado estado;
         protected Estado estadoAux;
         protected Sliding slidin = new Sliding();
+        protected Camara camara;
+        public void setCamara(Camara camara)
+        {
+            this.camara = camara;
+        }
         public void bloqueado()
         {
             bloqueadoMov = true;
@@ -328,7 +333,7 @@ namespace AlumnoEjemplos.MiGrupo
         }
         public void verSiPerseguir(Vector3 posCam)
         {
-            if (calculo(posCam))
+            if (calculo(posCam) && !camara.escondido)
             {
                 estado = Estado.Persiguiendo;
             }
