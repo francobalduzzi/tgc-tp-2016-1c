@@ -7,26 +7,28 @@ using Microsoft.DirectX.Direct3D;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer;
-
+using AlumnoEjemplos.CucarachaJugosita;
 
 namespace AlumnoEjemplos.MiGrupo
 {
-    class LinternaRecarga
+    class LinternaRecarga : Recarga
     {
         public Vector3 posicion;
         public TgcBox colision;
         public TgcScene linternaRe;
         public TgcMesh meshLR;
+        public Linterna linterna;
         public Boolean bandera = false;
-        public LinternaRecarga(Vector3 pos)
+        public LinternaRecarga(Vector3 pos, Linterna linterna)
         {
             this.init();
+            this.linterna = linterna;
             this.posicion = pos;
             this.colision = TgcBox.fromSize(posicion, new Vector3(30, 100, 30));
             this.meshLR.Position = posicion;
 
         }
-        public void init()
+        override public void init()
         {
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
             var loader = new TgcSceneLoader();
@@ -34,7 +36,7 @@ namespace AlumnoEjemplos.MiGrupo
             meshLR = linternaRe.Meshes[0];
             
         }
-        public void render(float elapsedTime)
+        override public void render(float elapsedTime)
         {
             var matrizView = GuiController.Instance.D3dDevice.Transform.View;
             if (bandera == false)
@@ -44,7 +46,7 @@ namespace AlumnoEjemplos.MiGrupo
             }
             
         }
-        public Boolean verificarColision(Camara camara)
+       override  public Boolean verificarColision(Camara camara)
         {
             if ((TgcCollisionUtils.testSphereAABB(camara.camaraColision, colision.BoundingBox))&&(bandera==false))
             {
@@ -52,6 +54,10 @@ namespace AlumnoEjemplos.MiGrupo
                 return true;
             }
             return false;
+        }
+        override public void recarga()
+        {
+            linterna.recargar();
         }
     }
 }

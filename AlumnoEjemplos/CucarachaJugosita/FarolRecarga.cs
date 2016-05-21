@@ -1,4 +1,5 @@
-﻿using Microsoft.DirectX;
+﻿using AlumnoEjemplos.CucarachaJugosita;
+using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,22 +10,24 @@ using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.MiGrupo
 {
-    class FarolRecarga
+    class FarolRecarga : Recarga
     {
         public Vector3 posicion;
         public TgcBox colision;
         public TgcScene linternaRe;
         public TgcMesh meshLR;
+        public Farol farol;
         public Boolean bandera = false;
-        public FarolRecarga(Vector3 pos)
+        public FarolRecarga(Vector3 pos, Farol farol)
         {
             this.init();
+            this.farol = farol;
             this.posicion = pos;
             this.colision = TgcBox.fromSize(posicion, new Vector3(30, 200, 30));
             this.meshLR.Position = posicion;
 
         }
-        public void init()
+        override public void init()
         {
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
             var loader = new TgcSceneLoader();
@@ -32,7 +35,7 @@ namespace AlumnoEjemplos.MiGrupo
             meshLR = linternaRe.Meshes[0];
 
         }
-        public void render(float elapsedTime)
+        override public void render(float elapsedTime)
         {
             var matrizView = GuiController.Instance.D3dDevice.Transform.View;
             if (bandera == false)
@@ -42,7 +45,7 @@ namespace AlumnoEjemplos.MiGrupo
             }
 
         }
-        public Boolean verificarColision(Camara camara)
+        override public Boolean verificarColision(Camara camara)
         {
             if ((TgcCollisionUtils.testSphereAABB(camara.camaraColision, colision.BoundingBox)) && (bandera == false))
             {
@@ -50,6 +53,10 @@ namespace AlumnoEjemplos.MiGrupo
                 return true;
             }
             return false;
+        }
+        override public void recarga()
+        {
+            farol.recargar();
         }
     }
 }

@@ -15,6 +15,9 @@ using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils._2D;
 using TgcViewer.Utils.TgcSkeletalAnimation;
 using System.Collections;
+using TgcViewer.Utils.Shaders;
+using TgcViewer.Utils;
+using AlumnoEjemplos.CucarachaJugosita;
 
 namespace AlumnoEjemplos.MiGrupo
 {
@@ -41,10 +44,22 @@ namespace AlumnoEjemplos.MiGrupo
         Barra barra;
         ArrayList listaEnemigos;
         ArrayList listaPuertas;
+        ArrayList listaRecargas;
+        ArrayList listaElementoMapa;
         ElementoMapa esqueleto;
         ElementoMapa antorcha1;
         ArrayList listaEscondites;
         Escondite escondite1;
+        VertexBuffer screenQuadVB;
+        Texture renderTarget2D;
+        Surface pOldRT;
+        Effect effect;
+        TgcSprite menu;
+        TgcSprite ganado;
+        TgcSprite objetivo;
+        TgcSprite manual;
+        TgcSprite gameOver;
+        float time = 0;
 
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
@@ -78,6 +93,8 @@ namespace AlumnoEjemplos.MiGrupo
         /// </summary>
         public override void init()
         {
+            
+            cargarShaderPostProcesado();
             camara = new Camara();
             camara.setCamera(new Vector3(359f, 60f, 1000f), new Vector3(289f, 30f, 90f));
             camara.MovementSpeed = 200f;
@@ -88,6 +105,8 @@ namespace AlumnoEjemplos.MiGrupo
             //Device de DirectX para crear primitivas
 
             //Carpeta de archivos Media del alumno
+
+            cargarImagenes2D();
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
             Device d3dDevice = GuiController.Instance.D3dDevice;
             TgcSceneLoader loader = new TgcSceneLoader();
@@ -115,6 +134,8 @@ namespace AlumnoEjemplos.MiGrupo
             puerta2 = new Puerta();
             puerta2.init(new Vector3(1400f, 57f, 1363f));
             puerta2.escalar(new Vector3(1.3f, 1f, 1f));
+
+            //Añadimos puertas a la lista
             listaPuertas.Add(puerta1);
             listaPuertas.Add(puerta2);
 
@@ -164,21 +185,34 @@ namespace AlumnoEjemplos.MiGrupo
             enemigo2.setEstado(Enemigo.Estado.Parado);
             enemigo2.init();
             enemigo2.setCamara(camara);
+
+            //Añadimos enemigos a la lista
             listaEnemigos.Add(enemigo);
             listaEnemigos.Add(enemigo2); //Cargamos los enemigos
 
-            recargaVela = new VelaRecarga(new Vector3(359f, 7f, 964f));
-            recargaFarol = new FarolRecarga(new Vector3(379f,2f,964f));
-            recarga = new LinternaRecarga(new Vector3(457f, 5f, 964f));// se carga la/s recarga con la posicion
+            recargaVela = new VelaRecarga(new Vector3(359f, 7f, 964f), vela1);
+            recargaFarol = new FarolRecarga(new Vector3(379f,2f,964f), farol);
+            recarga = new LinternaRecarga(new Vector3(457f, 5f, 964f), linterna);// se carga la/s recarga con la posicion
 
             pasos = new Sonidos();
             barra = new Barra();
 
+            //Añadimos los escondite a la lista
             listaEscondites = new ArrayList();
             escondite1 = new Escondite();
             escondite1.init(new Vector3(1249f, 5.02f, 1211f));
             listaEscondites.Add(escondite1);
 
+            //Añadimos recargas a la lista
+            listaRecargas = new ArrayList();
+            listaRecargas.Add(recargaFarol);
+            listaRecargas.Add(recargaVela);
+            listaRecargas.Add(recarga);
+
+            //Añadimos elementos del mapa
+            listaElementoMapa = new ArrayList();
+            listaElementoMapa.Add(antorcha1);
+            listaElementoMapa.Add(esqueleto);
             ///////////////USER VARS//////////////////
 
             //Crear una UserVar
@@ -254,6 +288,13 @@ namespace AlumnoEjemplos.MiGrupo
         public override void render(float elapsedTime)
         {
             //Device de DirectX para renderizar
+            while(!GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.J))
+            {
+                GuiController.Instance.Drawer2D.beginDrawSprite();
+                menu.render();
+                GuiController.Instance.Drawer2D.endDrawSprite();
+            }
+
             Device d3dDevice = GuiController.Instance.D3dDevice;
             objeto.actualizarEscenario(escena, camara); // Atencion aca, esto es como moo de prueba baja mucho ls FPS, lo ideal seria tener ls meshes cocinados y en el init del programa estos se carguen a cada uno de los objetos
             //Obtener valor de UserVar (hay que castear)
@@ -291,28 +332,8 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 //Boton izq apretado
             }
-            //enemigo.seguirA(camara.getPosition(), elapsedTime);
-            moverCamaraConVela(elapsedTime); //Actualizamos el valor de la camara y vemos si generar efecto de vela
-            // vela1.render();
-            objeto.render();
-            escena.renderAll();
-            colisionesConPuerta();
-            puerta1.render();
-            puerta2.render();
-
-            verificarRegargas();
-            recarga.render(elapsedTime);
-            recargaVela.render(elapsedTime);
-            recargaFarol.render(elapsedTime);
-            objeto.bajarIntensidad(elapsedTime);// bajo la intensidad
-            verificarSonidos(elapsedTime);
-           // barra.render(linterna.damePorcentaje());
-            GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition()); //Actualizamos la user var, nos va a servir
-            renderEscondites();
-            colisionesConEscondites();
-            renderEnemigos(camara.getPosition());
-            esqueleto.render();
-            antorcha1.render();
+            postProcesado(elapsedTime, d3dDevice);
+            
         }
 
         /// <summary>
@@ -324,19 +345,75 @@ namespace AlumnoEjemplos.MiGrupo
 
         }
 
+
+        public void renderTotal(float elapsedTime)
+        {
+            //enemigo.seguirA(camara.getPosition(), elapsedTime);
+            moverCamaraConVela(elapsedTime); //Actualizamos el valor de la camara y vemos si generar efecto de vela
+            // vela1.render();
+            objeto.render();
+            escena.renderAll();
+            colisionesConPuerta();
+            renderPuertas();
+            verificarRegargas();
+            renderRecargas(elapsedTime);
+            objeto.bajarIntensidad(elapsedTime);// bajo la intensidad
+            verificarSonidos(elapsedTime);
+            // barra.render(linterna.damePorcentaje());
+            GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition()); //Actualizamos la user var, nos va a servir
+            renderEscondites();
+            colisionesConEscondites();
+            renderEnemigos(camara.getPosition());
+            renderElementosMapa();
+        }
+        public void cargarImagenes2D()
+        {
+            /*TgcSprite menu;
+        TgcSprite ganado;
+        TgcSprite objetivo;
+        TgcSprite manual;
+        TgcSprite gameOver;*/
+            menu = new TgcSprite();
+            ganado = new TgcSprite();
+            objetivo = new TgcSprite();
+            manual = new TgcSprite();
+            gameOver = new TgcSprite();
+            string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
+            menu.Texture = TgcTexture.createTexture(alumnoMediaFolder + "CucarachaJugosita\\Media\\Menu.jpg");
+            ganado.Texture = TgcTexture.createTexture(alumnoMediaFolder + "CucarachaJugosita\\Media\\Ganado.jpg");
+            objetivo.Texture = TgcTexture.createTexture(alumnoMediaFolder + "CucarachaJugosita\\Media\\Objetivo.jpg");
+            manual.Texture = TgcTexture.createTexture(alumnoMediaFolder + "CucarachaJugosita\\Media\\Manual.jpg");
+            gameOver.Texture = TgcTexture.createTexture(alumnoMediaFolder + "CucarachaJugosita\\Media\\GameOver.jpg");
+            
+            Size screenSize = GuiController.Instance.Panel3d.Size;
+            Size textureSize = menu.Texture.Size;
+            menu.Position = new Vector2(FastMath.Max(screenSize.Width / 2 - textureSize.Width / 2, 0), FastMath.Max(screenSize.Height / 2 - textureSize.Height / 2, 0));
+            //Ubicarlo centrado en la pantalla
+            menu.Position = new Vector2(0, 0);
+            menu.Scaling = new Vector2((float)screenSize.Width / textureSize.Width, (float)screenSize.Height / textureSize.Height);
+        }
+        public void renderRecargas(float elapsedTime)
+        {
+            foreach(Recarga recarga in listaRecargas)
+            {
+                recarga.render(elapsedTime);
+            }
+        }
         public void verificarRegargas()
         {
-            if (recarga.verificarColision(camara))//si agarra la recarga aumento la intensidad 
+            foreach(Recarga recarga in listaRecargas)
             {
-                linterna.recargar();
+                if (recarga.verificarColision(camara))
+                {
+                    recarga.recarga();
+                }
             }
-            if (recargaVela.verificarColision(camara))//si agarra la recarga aumento la intensidad 
+        }
+        public void renderElementosMapa()
+        {
+            foreach(ElementoMapa elemento in listaElementoMapa)
             {
-                vela1.recargar();
-            }
-            if (recargaFarol.verificarColision(camara))//si agarra la recarga aumento la intensidad 
-            {
-                farol.recargar();
+                elemento.render();
             }
         }
         public void verificarSonidos(float elapsedTime)
@@ -346,6 +423,13 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 pasos.play();
                 contador = 0;
+            }
+        }
+        public void renderPuertas()
+        {
+            foreach(Puerta puerta in listaPuertas)
+            {
+                puerta.render();
             }
         }
         public void renderEscondites()
@@ -362,6 +446,94 @@ namespace AlumnoEjemplos.MiGrupo
                 enemigo.render(posCam);
             }
         }
+
+        public void postProcesado(float elapsedTime, Device d3dDevice)
+        {
+            int contador = 0;
+            foreach (Enemigo enemigo in listaEnemigos)
+            {
+                if(enemigo.getEstado() == Enemigo.Estado.Persiguiendo)
+                {
+                    contador++;
+                }               
+            }
+            if (contador > 0)
+            {
+                GuiController.Instance.CustomRenderEnabled = true;
+                time += elapsedTime;
+                effect.SetValue("time", time);
+                pOldRT = d3dDevice.GetRenderTarget(0);
+                Surface pSurf = renderTarget2D.GetSurfaceLevel(0);
+                d3dDevice.SetRenderTarget(0, pSurf);
+                d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+
+
+                //Dibujamos la escena comun, pero en vez de a la pantalla al Render Target
+                drawSceneToRenderTarget(d3dDevice, elapsedTime);
+
+                //Liberar memoria de surface de Render Target
+                pSurf.Dispose();
+
+                //Ahora volvemos a restaurar el Render Target original (osea dibujar a la pantalla)
+                d3dDevice.SetRenderTarget(0, pOldRT);
+
+
+                //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de alarma
+                drawPostProcess(d3dDevice);
+            }
+            else
+            {
+                renderTotal(elapsedTime);
+            }
+        }
+
+        private void drawSceneToRenderTarget(Device d3dDevice, float elapsedTime)
+        {
+            //Arrancamos el renderizado. Esto lo tenemos que hacer nosotros a mano porque estamos en modo CustomRenderEnabled = true
+            //d3dDevice.BeginScene();
+
+
+            //Como estamos en modo CustomRenderEnabled, tenemos que dibujar todo nosotros, incluso el contador de FPS
+            GuiController.Instance.Text3d.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
+
+            //Tambien hay que dibujar el indicador de los ejes cartesianos
+            GuiController.Instance.AxisLines.render();
+
+            //Dibujamos todos los meshes del escenario
+            renderTotal(elapsedTime);
+            //Terminamos manualmente el renderizado de esta escena. Esto manda todo a dibujar al GPU al Render Target que cargamos antes
+            //d3dDevice.EndScene();
+        }
+        private void drawPostProcess(Device d3dDevice)
+        {
+            //Arrancamos la escena
+            //d3dDevice.BeginScene();
+
+            //Cargamos para renderizar el unico modelo que tenemos, un Quad que ocupa toda la pantalla, con la textura de todo lo dibujado antes
+            d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
+            d3dDevice.SetStreamSource(0, screenQuadVB, 0);
+
+            //Ver si el efecto de oscurecer esta activado, configurar Technique del shader segun corresponda
+                effect.Technique = "BlurTechnique";
+
+            //Cargamos parametros en el shader de Post-Procesado
+            effect.SetValue("render_target2D", renderTarget2D);
+            effect.SetValue("blur_intensity", 0.015f);
+
+
+            //Limiamos la pantalla y ejecutamos el render del shader
+            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            effect.Begin(FX.None);
+            effect.BeginPass(0);
+            d3dDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+            effect.EndPass();
+            effect.End();
+
+            //Terminamos el renderizado de la escena
+           // d3dDevice.EndScene();
+        }
+
+
         public void colisionesConPuerta()
         {
             foreach(Puerta puerta in listaPuertas)
@@ -396,6 +568,36 @@ namespace AlumnoEjemplos.MiGrupo
             }
         }
 
+        public void cargarShaderPostProcesado()
+        {
+            Device d3dDevice = GuiController.Instance.D3dDevice;
+            CustomVertex.PositionTextured[] screenQuadVertices = new CustomVertex.PositionTextured[]
+            {
+                new CustomVertex.PositionTextured( -1, 1, 1, 0,0),
+                new CustomVertex.PositionTextured(1,  1, 1, 1,0),
+                new CustomVertex.PositionTextured(-1, -1, 1, 0,1),
+                new CustomVertex.PositionTextured(1,-1, 1, 1,1)
+            };
+            //vertex buffer de los triangulos
+            screenQuadVB = new VertexBuffer(typeof(CustomVertex.PositionTextured),
+                    4, d3dDevice, Usage.Dynamic | Usage.WriteOnly,
+                        CustomVertex.PositionTextured.Format, Pool.Default);
+            screenQuadVB.SetData(screenQuadVertices, 0, LockFlags.None);
+
+            //Creamos un Render Targer sobre el cual se va a dibujar la pantalla
+            renderTarget2D = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
+                    , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
+                        Format.X8R8G8B8, Pool.Default);
+
+
+            //Cargar shader con efectos de Post-Procesado
+            string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
+            effect = TgcShaders.loadEffect(alumnoMediaFolder + "CucarachaJugosita\\blurPersecucion.fx");
+
+            //Configurar Technique dentro del shader
+            effect.Technique = "BlurTechnique";
+
+        }
         public void colisionesConEscondites()
         {
             foreach(Escondite escondite in listaEscondites)

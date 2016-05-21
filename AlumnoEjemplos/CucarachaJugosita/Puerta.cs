@@ -206,10 +206,6 @@ namespace AlumnoEjemplos.MiGrupo
         public void render()
         {
             text2.render();
-            meshP.BoundingBox.render();
-            meshC1.BoundingBox.render();
-            meshC2.BoundingBox.render();
-            meshC3.BoundingBox.render();
             this.moverPuerta();
             puerta1.renderAll();
             cobertura1.renderAll();
