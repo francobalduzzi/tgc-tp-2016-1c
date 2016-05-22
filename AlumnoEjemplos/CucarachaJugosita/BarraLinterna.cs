@@ -26,15 +26,16 @@ namespace AlumnoEjemplos.MiGrupo
         public void init()
         {
             //Device d3dDevice = GuiController.Instance.D3dDevice;
-            string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;
+            string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
 
             //Crear Sprite
             sprite = new TgcSprite();
             spriteAmarillo = new TgcSprite();
-            sprite.Texture = TgcTexture.createTexture(alumnoMediaFolder + "MiGrupo\\barraRoja.png");
-            spriteAmarillo.Texture= TgcTexture.createTexture(alumnoMediaFolder + "MiGrupo\\barraAmarilla.png");
+            sprite.Texture = TgcTexture.createTexture(alumnoMediaFolder + "CucarachaJugosita\\Media\\barraRoja.png");
+            spriteAmarillo.Texture = TgcTexture.createTexture(alumnoMediaFolder + "CucarachaJugosita\\Media\\barraAmarilla.png");
 
-            
+
+
 
             sprite.Scaling = new Vector2(0.1f,0.05f);
             spriteAmarillo.Scaling = new Vector2(0.1f, 0.05f);

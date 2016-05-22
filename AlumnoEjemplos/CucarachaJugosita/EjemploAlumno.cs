@@ -53,6 +53,7 @@ namespace AlumnoEjemplos.MiGrupo
         VertexBuffer screenQuadVB;
         Texture renderTarget2D;
         Surface pOldRT;
+        Surface g_pDepthStencil;     // Depth-stencil buffer
         Effect effect;
         TgcSprite menu;
         TgcSprite ganado;
@@ -398,7 +399,7 @@ namespace AlumnoEjemplos.MiGrupo
             GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition()); //Actualizamos la user var, nos va a servir
             renderEscondites();
             colisionesConEscondites();
-            //renderEnemigos(camara.getPosition()); //saco el render para poder investigar bien el mapa
+            renderEnemigos(camara.getPosition()); //saco el render para poder investigar bien el mapa
             renderElementosMapa();
         }
         public void cargarImagenes2D()
@@ -522,6 +523,10 @@ namespace AlumnoEjemplos.MiGrupo
                 pOldRT = d3dDevice.GetRenderTarget(0);
                 Surface pSurf = renderTarget2D.GetSurfaceLevel(0);
                 d3dDevice.SetRenderTarget(0, pSurf);
+                Surface pOldDS = d3dDevice.DepthStencilSurface;
+                // Probar de comentar esta linea, para ver como se produce el fallo en el ztest
+                // por no soportar usualmente el multisampling en el render to texture.
+                d3dDevice.DepthStencilSurface = g_pDepthStencil;
                 d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
 
@@ -533,7 +538,7 @@ namespace AlumnoEjemplos.MiGrupo
 
                 //Ahora volvemos a restaurar el Render Target original (osea dibujar a la pantalla)
                 d3dDevice.SetRenderTarget(0, pOldRT);
-
+                d3dDevice.DepthStencilSurface = pOldDS;
 
                 //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de alarma
                 drawPostProcess(d3dDevice);
@@ -559,7 +564,7 @@ namespace AlumnoEjemplos.MiGrupo
             //Dibujamos todos los meshes del escenario
             renderTotal(elapsedTime);
             //Terminamos manualmente el renderizado de esta escena. Esto manda todo a dibujar al GPU al Render Target que cargamos antes
-            //d3dDevice.EndScene();
+           // d3dDevice.EndScene();
         }
         private void drawPostProcess(Device d3dDevice)
         {
@@ -587,7 +592,7 @@ namespace AlumnoEjemplos.MiGrupo
             effect.End();
 
             //Terminamos el renderizado de la escena
-           // d3dDevice.EndScene();
+            //d3dDevice.EndScene();
         }
 
 
@@ -645,6 +650,12 @@ namespace AlumnoEjemplos.MiGrupo
                 new CustomVertex.PositionTextured(-1, -1, 1, 0,1),
                 new CustomVertex.PositionTextured(1,-1, 1, 1,1)
             };
+            g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
+                                                                         d3dDevice.PresentationParameters.BackBufferHeight,
+                                                                         DepthFormat.D24S8,
+                                                                         MultiSampleType.None,
+                                                                         0,
+                                                                         true);
             //vertex buffer de los triangulos
             screenQuadVB = new VertexBuffer(typeof(CustomVertex.PositionTextured),
                     4, d3dDevice, Usage.Dynamic | Usage.WriteOnly,

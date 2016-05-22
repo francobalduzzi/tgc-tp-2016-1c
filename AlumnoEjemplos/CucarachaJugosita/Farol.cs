@@ -88,7 +88,8 @@ namespace AlumnoEjemplos.MiGrupo
         {
             Effect currentShader;
             //Con luz: Cambiar el shader actual por el shader default que trae el framework para iluminacion dinamica con SpotLight
-            currentShader = GuiController.Instance.Shaders.TgcMeshPointLightShader;
+            //currentShader = GuiController.Instance.Shaders.TgcMeshPointLightShader;
+            currentShader = GuiController.Instance.Shaders.TgcMeshShader;
 
             //Aplicar a cada mesh el shader actual
             foreach (TgcMesh mesh in escena.Meshes)
@@ -100,7 +101,7 @@ namespace AlumnoEjemplos.MiGrupo
 
 
             //Renderizar meshes
-            foreach (TgcMesh mesh in escena.Meshes)
+            /*foreach (TgcMesh mesh in escena.Meshes)
             {
                 if (this.Encendida)
                 {
@@ -134,7 +135,7 @@ namespace AlumnoEjemplos.MiGrupo
                     mesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor(Color.White));
                     mesh.Effect.SetValue("materialSpecularExp", (float)9f);
                 }
-            }
+            }*/
 
         }
     }
