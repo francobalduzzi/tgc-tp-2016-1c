@@ -59,6 +59,7 @@ namespace AlumnoEjemplos.MiGrupo
         TgcSprite objetivo;
         TgcSprite manual;
         TgcSprite gameOver;
+        EstadoMenu estadoMenu;
         float time = 0;
 
         /// <summary>
@@ -287,52 +288,86 @@ namespace AlumnoEjemplos.MiGrupo
         /// <param name="elapsedTime">Tiempo en segundos transcurridos desde el último frame</param>
         public override void render(float elapsedTime)
         {
-            //Device de DirectX para renderizar
-            while(!GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.J))
+            switch (estadoMenu)
             {
-                GuiController.Instance.Drawer2D.beginDrawSprite();
-                menu.render();
-                GuiController.Instance.Drawer2D.endDrawSprite();
+                case EstadoMenu.Menu:
+                    GuiController.Instance.Drawer2D.beginDrawSprite();
+                    menu.render();
+                    GuiController.Instance.Drawer2D.endDrawSprite();
+                    if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.J))
+                    {
+                        estadoMenu = EstadoMenu.Juego;
+                    }
+                    if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.M))
+                    {
+                        estadoMenu = EstadoMenu.Manual;
+                    }
+                    if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.O))
+                    {
+                        estadoMenu = EstadoMenu.Objetivo;
+                    }
+                    break;
+                case EstadoMenu.Manual:
+                    GuiController.Instance.Drawer2D.beginDrawSprite();
+                    manual.render();
+                    GuiController.Instance.Drawer2D.endDrawSprite();
+                    if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.V))
+                    {
+                        estadoMenu = EstadoMenu.Menu;
+                    }
+                    break;
+                case EstadoMenu.Objetivo:
+                    GuiController.Instance.Drawer2D.beginDrawSprite();
+                    objetivo.render();
+                    GuiController.Instance.Drawer2D.endDrawSprite();
+                    if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.V))
+                    {
+                        estadoMenu = EstadoMenu.Menu;
+                    }
+                    break;
+                case EstadoMenu.Juego:
+                    Device d3dDevice = GuiController.Instance.D3dDevice;
+                    objeto.actualizarEscenario(escena, camara); // Atencion aca, esto es como moo de prueba baja mucho ls FPS, lo ideal seria tener ls meshes cocinados y en el init del programa estos se carguen a cada uno de los objetos
+                                                                //Obtener valor de UserVar (hay que castear)
+                    int valor = (int)GuiController.Instance.UserVars.getValue("variablePrueba");
+
+                    ///////////////INPUT//////////////////
+                    //conviene deshabilitar ambas camaras para que no haya interferencia
+
+                    //Capturar Input teclado 
+                    if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.F))
+                    {
+                        objeto.CambiarEstadoLuz();
+                    }
+                    if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.D1))
+                    {
+                        objeto.Encendida = false;
+                        objeto = linterna;
+                        objeto.Encendida = true;
+
+                    }
+                    if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.D2))
+                    {
+                        objeto.Encendida = false;
+                        objeto = vela1;
+                        objeto.Encendida = true;
+                    }
+                    if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.D3))
+                    {
+                        objeto.Encendida = false;
+                        objeto = farol;
+                        objeto.Encendida = true;
+                    }
+                    //Capturar Input Mouse
+                    if (GuiController.Instance.D3dInput.buttonPressed(TgcViewer.Utils.Input.TgcD3dInput.MouseButtons.BUTTON_LEFT))
+                    {
+                        //Boton izq apretado
+                    }
+                    postProcesado(elapsedTime, d3dDevice);
+                    break;
             }
 
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-            objeto.actualizarEscenario(escena, camara); // Atencion aca, esto es como moo de prueba baja mucho ls FPS, lo ideal seria tener ls meshes cocinados y en el init del programa estos se carguen a cada uno de los objetos
-            //Obtener valor de UserVar (hay que castear)
-            int valor = (int)GuiController.Instance.UserVars.getValue("variablePrueba");
            
-            ///////////////INPUT//////////////////
-            //conviene deshabilitar ambas camaras para que no haya interferencia
-
-            //Capturar Input teclado 
-            if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.F))
-            {
-                objeto.CambiarEstadoLuz();
-            }
-            if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.D1))
-            {
-                objeto.Encendida = false;
-                objeto = linterna;
-                objeto.Encendida = true;
-
-            }
-            if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.D2))
-            {
-                objeto.Encendida = false;
-                objeto = vela1;
-                objeto.Encendida = true;
-            }
-            if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.D3))
-            {
-                objeto.Encendida = false;
-                objeto = farol;
-                objeto.Encendida = true;
-            }
-            //Capturar Input Mouse
-            if (GuiController.Instance.D3dInput.buttonPressed(TgcViewer.Utils.Input.TgcD3dInput.MouseButtons.BUTTON_LEFT))
-            {
-                //Boton izq apretado
-            }
-            postProcesado(elapsedTime, d3dDevice);
             
         }
 
@@ -391,6 +426,28 @@ namespace AlumnoEjemplos.MiGrupo
             //Ubicarlo centrado en la pantalla
             menu.Position = new Vector2(0, 0);
             menu.Scaling = new Vector2((float)screenSize.Width / textureSize.Width, (float)screenSize.Height / textureSize.Height);
+            textureSize = ganado.Texture.Size;
+            ganado.Position = new Vector2(FastMath.Max(screenSize.Width / 2 - textureSize.Width / 2, 0), FastMath.Max(screenSize.Height / 2 - textureSize.Height / 2, 0));
+            //Ubicarlo centrado en la pantalla
+            ganado.Position = new Vector2(0, 0);
+            ganado.Scaling = new Vector2((float)screenSize.Width / textureSize.Width, (float)screenSize.Height / textureSize.Height);
+            textureSize = objetivo.Texture.Size;
+            objetivo.Position = new Vector2(FastMath.Max(screenSize.Width / 2 - textureSize.Width / 2, 0), FastMath.Max(screenSize.Height / 2 - textureSize.Height / 2, 0));
+            //Ubicarlo centrado en la pantalla
+            objetivo.Position = new Vector2(0, 0);
+            objetivo.Scaling = new Vector2((float)screenSize.Width / textureSize.Width, (float)screenSize.Height / textureSize.Height);
+            textureSize = manual.Texture.Size;
+            manual.Position = new Vector2(FastMath.Max(screenSize.Width / 2 - textureSize.Width / 2, 0), FastMath.Max(screenSize.Height / 2 - textureSize.Height / 2, 0));
+            //Ubicarlo centrado en la pantalla
+            manual.Position = new Vector2(0, 0);
+            manual.Scaling = new Vector2((float)screenSize.Width / textureSize.Width, (float)screenSize.Height / textureSize.Height);
+            textureSize = gameOver.Texture.Size;
+            gameOver.Position = new Vector2(FastMath.Max(screenSize.Width / 2 - textureSize.Width / 2, 0), FastMath.Max(screenSize.Height / 2 - textureSize.Height / 2, 0));
+            //Ubicarlo centrado en la pantalla
+            gameOver.Position = new Vector2(0, 0);
+            gameOver.Scaling = new Vector2((float)screenSize.Width / textureSize.Width, (float)screenSize.Height / textureSize.Height);
+            estadoMenu = EstadoMenu.Menu;
+
         }
         public void renderRecargas(float elapsedTime)
         {
@@ -533,6 +590,16 @@ namespace AlumnoEjemplos.MiGrupo
            // d3dDevice.EndScene();
         }
 
+
+        public enum EstadoMenu
+        {
+            Menu = 0,
+            Objetivo = 1,
+            Manual = 2,
+            Juego = 3,
+            Ganado = 4,
+            GameOver = 5,
+        }
 
         public void colisionesConPuerta()
         {
