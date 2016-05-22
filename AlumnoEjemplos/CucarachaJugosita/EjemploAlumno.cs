@@ -111,10 +111,10 @@ namespace AlumnoEjemplos.MiGrupo
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
             Device d3dDevice = GuiController.Instance.D3dDevice;
             TgcSceneLoader loader = new TgcSceneLoader();
-            escena = loader.loadSceneFromFile(alumnoMediaFolder + "CucarachaJugosita\\Media\\mapaFinal-TgcScene.xml");
+            escena = loader.loadSceneFromFile(alumnoMediaFolder + "CucarachaJugosita\\Media\\mapitaFinal1-TgcScene.xml");
             foreach (TgcMesh mesh in escena.Meshes) //escalamos el mapa
             {
-                mesh.Scale = new Vector3(0.3f, 0.3f, 0.3f);
+                mesh.Scale = new Vector3(5f, 5f, 5f);
             }
             vela1 = new Vela();
             vela1.init();
@@ -398,7 +398,7 @@ namespace AlumnoEjemplos.MiGrupo
             GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition()); //Actualizamos la user var, nos va a servir
             renderEscondites();
             colisionesConEscondites();
-            renderEnemigos(camara.getPosition());
+            //renderEnemigos(camara.getPosition()); //saco el render para poder investigar bien el mapa
             renderElementosMapa();
         }
         public void cargarImagenes2D()
