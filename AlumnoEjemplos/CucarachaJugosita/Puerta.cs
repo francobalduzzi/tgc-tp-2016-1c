@@ -129,7 +129,7 @@ namespace AlumnoEjemplos.MiGrupo
         {
             Vector3 direccion = camara.getLookAt() - camara.getPosition();
             direccion.Normalize();
-            if ((meshP.Position-camara.getPosition()).Length() <= 50f)
+            if ((meshP.Position-camara.getPosition()).Length() <= 100f)
             {
                 if(this.estado == Estado.Cerrado)
                 {

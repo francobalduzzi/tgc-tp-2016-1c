@@ -56,6 +56,8 @@ namespace AlumnoEjemplos.MiGrupo
         Surface pOldRT;
         Surface g_pDepthStencil;     // Depth-stencil buffer
         Effect effect;
+        Effect efectoVictoria;
+        Vector3 posVictoria = new Vector3(444, 60, 623);
         TgcSprite menu;
         TgcSprite ganado;
         TgcSprite objetivo;
@@ -547,39 +549,46 @@ namespace AlumnoEjemplos.MiGrupo
             }
             if (contador > 0)
             {
-                GuiController.Instance.CustomRenderEnabled = true;
-                time += elapsedTime;
-                effect.SetValue("time", time);
-                pOldRT = d3dDevice.GetRenderTarget(0);
-                Surface pSurf = renderTarget2D.GetSurfaceLevel(0);
-                d3dDevice.SetRenderTarget(0, pSurf);
-                Surface pOldDS = d3dDevice.DepthStencilSurface;
-                // Probar de comentar esta linea, para ver como se produce el fallo en el ztest
-                // por no soportar usualmente el multisampling en el render to texture.
-                d3dDevice.DepthStencilSurface = g_pDepthStencil;
-                d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-
-
-                //Dibujamos la escena comun, pero en vez de a la pantalla al Render Target
-                drawSceneToRenderTarget(d3dDevice, elapsedTime);
-
-                //Liberar memoria de surface de Render Target
-                pSurf.Dispose();
-
-                //Ahora volvemos a restaurar el Render Target original (osea dibujar a la pantalla)
-                d3dDevice.SetRenderTarget(0, pOldRT);
-                d3dDevice.DepthStencilSurface = pOldDS;
-
-                //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de alarma
-                drawPostProcess(d3dDevice);
+                efectoPostProcesadoPersecucion(elapsedTime, d3dDevice);
             }
             else
             {
-                renderTotal(elapsedTime);
+                efectoPostProcesadoVictoria(elapsedTime,d3dDevice);
+                //renderTotal(elapsedTime); --->>> Comentamos xq se hace el render en el post procesado si abro esto se renderiza 2 veces y duplica tiempo
             }
         }
 
-        private void drawSceneToRenderTarget(Device d3dDevice, float elapsedTime)
+        //Efectos de post procesado en persecucion
+        #region
+        public void efectoPostProcesadoPersecucion(float elapsedTime, Device d3dDevice)
+        {
+            GuiController.Instance.CustomRenderEnabled = true;
+            time += elapsedTime;
+            effect.SetValue("time", time);
+            pOldRT = d3dDevice.GetRenderTarget(0);
+            Surface pSurf = renderTarget2D.GetSurfaceLevel(0);
+            d3dDevice.SetRenderTarget(0, pSurf);
+            Surface pOldDS = d3dDevice.DepthStencilSurface;
+            // Probar de comentar esta linea, para ver como se produce el fallo en el ztest
+            // por no soportar usualmente el multisampling en el render to texture.
+            d3dDevice.DepthStencilSurface = g_pDepthStencil;
+            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+
+
+            //Dibujamos la escena comun, pero en vez de a la pantalla al Render Target
+            drawSceneToRenderTargetPersecucion(d3dDevice, elapsedTime);
+
+            //Liberar memoria de surface de Render Target
+            pSurf.Dispose();
+
+            //Ahora volvemos a restaurar el Render Target original (osea dibujar a la pantalla)
+            d3dDevice.SetRenderTarget(0, pOldRT);
+            d3dDevice.DepthStencilSurface = pOldDS;
+
+            //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de alarma
+            drawPostProcessPersecucion(d3dDevice);
+        }
+        private void drawSceneToRenderTargetPersecucion(Device d3dDevice, float elapsedTime)
         {
             //Arrancamos el renderizado. Esto lo tenemos que hacer nosotros a mano porque estamos en modo CustomRenderEnabled = true
             //d3dDevice.BeginScene();
@@ -596,7 +605,7 @@ namespace AlumnoEjemplos.MiGrupo
             //Terminamos manualmente el renderizado de esta escena. Esto manda todo a dibujar al GPU al Render Target que cargamos antes
            // d3dDevice.EndScene();
         }
-        private void drawPostProcess(Device d3dDevice)
+        private void drawPostProcessPersecucion(Device d3dDevice)
         {
             //Arrancamos la escena
             //d3dDevice.BeginScene();
@@ -605,27 +614,104 @@ namespace AlumnoEjemplos.MiGrupo
             d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
             d3dDevice.SetStreamSource(0, screenQuadVB, 0);
 
-            //Ver si el efecto de oscurecer esta activado, configurar Technique del shader segun corresponda
-                effect.Technique = "BlurTechnique";
 
             //Cargamos parametros en el shader de Post-Procesado
             effect.SetValue("render_target2D", renderTarget2D);
             effect.SetValue("blur_intensity", 0.015f);
-
-
+            /*efectoVictoria.SetValue("posCam", TgcParserUtils.vector3ToFloat4Array(camara.getPosition()));
+            efectoVictoria.SetValue("posicion", TgcParserUtils.vector3ToFloat4Array(posVictoria));
+            efectoVictoria.SetValue("render_target2D", renderTarget2D);*/
             //Limiamos la pantalla y ejecutamos el render del shader
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             effect.Begin(FX.None);
             effect.BeginPass(0);
+            /*efectoVictoria.Begin(FX.None);
+            efectoVictoria.BeginPass(0);*/
             d3dDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
             effect.EndPass();
             effect.End();
+            /*efectoVictoria.EndPass();
+            efectoVictoria.End();*/
 
             //Terminamos el renderizado de la escena
             //d3dDevice.EndScene();
         }
+        #endregion
+        //Fin efectos post procesado persecucion
+        // Efectos de post procesado difuminado victoria
+        #region
+        public void efectoPostProcesadoVictoria(float elapsedTime, Device d3dDevice)
+        {
+            GuiController.Instance.CustomRenderEnabled = true;
+            time += elapsedTime;
+            effect.SetValue("time", time);
+            pOldRT = d3dDevice.GetRenderTarget(0);
+            Surface pSurf = renderTarget2D.GetSurfaceLevel(0);
+            d3dDevice.SetRenderTarget(0, pSurf);
+            Surface pOldDS = d3dDevice.DepthStencilSurface;
+            // Probar de comentar esta linea, para ver como se produce el fallo en el ztest
+            // por no soportar usualmente el multisampling en el render to texture.
+            d3dDevice.DepthStencilSurface = g_pDepthStencil;
+            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
 
+            //Dibujamos la escena comun, pero en vez de a la pantalla al Render Target
+            drawSceneToRenderTargetVictoria(d3dDevice, elapsedTime);
+
+            //Liberar memoria de surface de Render Target
+            pSurf.Dispose();
+
+            //Ahora volvemos a restaurar el Render Target original (osea dibujar a la pantalla)
+            d3dDevice.SetRenderTarget(0, pOldRT);
+            d3dDevice.DepthStencilSurface = pOldDS;
+
+            //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de alarma
+            drawPostProcessVictoria(d3dDevice);
+        }
+        private void drawSceneToRenderTargetVictoria(Device d3dDevice, float elapsedTime)
+        {
+            //Arrancamos el renderizado. Esto lo tenemos que hacer nosotros a mano porque estamos en modo CustomRenderEnabled = true
+            //d3dDevice.BeginScene();
+
+
+            //Como estamos en modo CustomRenderEnabled, tenemos que dibujar todo nosotros, incluso el contador de FPS
+            GuiController.Instance.Text3d.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
+
+            //Tambien hay que dibujar el indicador de los ejes cartesianos
+            GuiController.Instance.AxisLines.render();
+
+            //Dibujamos todos los meshes del escenario
+            renderTotal(elapsedTime);
+            //Terminamos manualmente el renderizado de esta escena. Esto manda todo a dibujar al GPU al Render Target que cargamos antes
+            // d3dDevice.EndScene();
+        }
+        private void drawPostProcessVictoria(Device d3dDevice)
+        {
+            //Arrancamos la escena
+            //d3dDevice.BeginScene();
+
+            //Cargamos para renderizar el unico modelo que tenemos, un Quad que ocupa toda la pantalla, con la textura de todo lo dibujado antes
+            d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
+            d3dDevice.SetStreamSource(0, screenQuadVB, 0);
+
+
+            //Cargamos parametros en el shader de Post-Procesado
+            efectoVictoria.SetValue("posCam", TgcParserUtils.vector3ToFloat4Array(camara.getPosition()));
+            efectoVictoria.SetValue("posicion", TgcParserUtils.vector3ToFloat4Array(posVictoria));
+            efectoVictoria.SetValue("render_target2D", renderTarget2D);
+            //Limiamos la pantalla y ejecutamos el render del shader
+            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            efectoVictoria.Begin(FX.None);
+            efectoVictoria.BeginPass(0);
+            d3dDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+            efectoVictoria.EndPass();
+            efectoVictoria.End();
+
+            //Terminamos el renderizado de la escena
+            //d3dDevice.EndScene();
+        }
+        #endregion
+        //Fin efectos post procesado victoria
         public enum EstadoMenu
         {
             Menu = 0,
@@ -701,10 +787,10 @@ namespace AlumnoEjemplos.MiGrupo
             //Cargar shader con efectos de Post-Procesado
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
             effect = TgcShaders.loadEffect(alumnoMediaFolder + "CucarachaJugosita\\blurPersecucion.fx");
-
+            efectoVictoria = TgcShaders.loadEffect(alumnoMediaFolder + "CucarachaJugosita\\shaderVictoria.fx");
             //Configurar Technique dentro del shader
             effect.Technique = "BlurTechnique";
-
+            efectoVictoria.Technique = "OscurecerTechnique";
         }
         public void colisionesConEscondites()
         {
