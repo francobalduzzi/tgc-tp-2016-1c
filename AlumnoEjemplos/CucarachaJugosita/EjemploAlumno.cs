@@ -46,6 +46,7 @@ namespace AlumnoEjemplos.MiGrupo
         ArrayList listaPuertas;
         ArrayList listaRecargas;
         ArrayList listaElementoMapa;
+        List<LuzNormal> listaLuces;
         ElementoMapa esqueleto;
         ElementoMapa antorcha1;
         ArrayList listaEscondites;
@@ -61,6 +62,7 @@ namespace AlumnoEjemplos.MiGrupo
         TgcSprite manual;
         TgcSprite gameOver;
         EstadoMenu estadoMenu;
+        ManejoIluminacion manejoI;
         float time = 0;
 
         /// <summary>
@@ -215,6 +217,31 @@ namespace AlumnoEjemplos.MiGrupo
             listaElementoMapa = new ArrayList();
             listaElementoMapa.Add(antorcha1);
             listaElementoMapa.Add(esqueleto);
+
+            manejoI = new ManejoIluminacion();
+            manejoI.setEscena(escena);
+
+            listaLuces = new List<LuzNormal>();
+            
+            LuzNormal luz2 = new LuzNormal();
+            luz2.Intensity = 20;
+            luz2.lightColor = Color.White;
+            luz2.Posicion = new Vector3(1948, 78, 697);
+            luz2.Attenuation = 0.3f;
+            listaLuces.Add(luz2);
+            LuzNormal luz = new LuzNormal();
+            luz.Intensity = 20;
+            luz.lightColor = Color.Red;
+            luz.Posicion = new Vector3(750, 120, 1188);
+            luz.Attenuation = 0.3f;
+            listaLuces.Add(luz);
+            LuzNormal luz3 = new LuzNormal();
+            luz3.Intensity = 20;
+            luz3.lightColor = Color.White;
+            luz3.Posicion = new Vector3(2542, 110, 97);
+            luz3.Attenuation = 0.3f;
+            listaLuces.Add(luz3);
+            manejoI.setListaLuces(listaLuces);
             ///////////////USER VARS//////////////////
 
             //Crear una UserVar
@@ -328,7 +355,8 @@ namespace AlumnoEjemplos.MiGrupo
                     break;
                 case EstadoMenu.Juego:
                     Device d3dDevice = GuiController.Instance.D3dDevice;
-                    objeto.actualizarEscenario(escena, camara); // Atencion aca, esto es como moo de prueba baja mucho ls FPS, lo ideal seria tener ls meshes cocinados y en el init del programa estos se carguen a cada uno de los objetos
+                    
+                    //objeto.actualizarEscenario(escena, camara); // Atencion aca, esto es como moo de prueba baja mucho ls FPS, lo ideal seria tener ls meshes cocinados y en el init del programa estos se carguen a cada uno de los objetos
                                                                 //Obtener valor de UserVar (hay que castear)
                     int valor = (int)GuiController.Instance.UserVars.getValue("variablePrueba");
 
@@ -364,6 +392,7 @@ namespace AlumnoEjemplos.MiGrupo
                     {
                         //Boton izq apretado
                     }
+                    manejoI.iluminar(objeto, camara);
                     postProcesado(elapsedTime, d3dDevice);
                     break;
             }
@@ -401,6 +430,7 @@ namespace AlumnoEjemplos.MiGrupo
             colisionesConEscondites();
             renderEnemigos(camara.getPosition()); //saco el render para poder investigar bien el mapa
             renderElementosMapa();
+            
         }
         public void cargarImagenes2D()
         {

@@ -56,7 +56,10 @@ namespace AlumnoEjemplos.MiGrupo
         public TgcBoundingSphere camaraColision;
         public Boolean escondido = false;
         public Vector3 posicionAntesDeEsconderse;
-
+        public float contadorYMerlusa = 0;
+        public Boolean merlusaY = false;
+        public float contadorXZMerlusa = 0;
+        public Boolean merlusaXZ = true;
 
         public Camara()
         {
@@ -247,14 +250,46 @@ namespace AlumnoEjemplos.MiGrupo
 
             if (lockCam)
                 Cursor.Position = mouseCenter;
-
+            //efectoMerlusa();
             viewMatrix = Matrix.LookAtLH(eye, target, up);
-
             updateViewMatrix(GuiController.Instance.D3dDevice);
 
 
         }
 
+        public void efectoMerlusa()
+        {
+            if(contadorYMerlusa < 10f && !merlusaY)
+            {
+                rotateY(8f * GuiController.Instance.ElapsedTime);
+                contadorYMerlusa += 8f * GuiController.Instance.ElapsedTime;
+            }
+            else
+            {
+                merlusaY = true;
+                rotateY(-8f * GuiController.Instance.ElapsedTime);
+                contadorYMerlusa += -8f * GuiController.Instance.ElapsedTime;
+                if(contadorYMerlusa < -10f)
+                {
+                    merlusaY = false;
+                }
+            }
+            if (contadorXZMerlusa < 7f && !merlusaXZ)
+            {
+                rotateXZ(8f * GuiController.Instance.ElapsedTime);
+                contadorXZMerlusa += 8f * GuiController.Instance.ElapsedTime;
+            }
+            else
+            {
+                merlusaXZ = true;
+                rotateXZ(-8f * GuiController.Instance.ElapsedTime);
+                contadorXZMerlusa += -8f * GuiController.Instance.ElapsedTime;
+                if (contadorXZMerlusa < -7f)
+                {
+                    merlusaXZ = false;
+                }
+            }
+        }
         public bool ChequearColisiones()
         {
             camaraColision = new TgcBoundingSphere(eye, 5f);

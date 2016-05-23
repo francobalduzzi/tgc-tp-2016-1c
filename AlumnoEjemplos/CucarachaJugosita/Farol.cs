@@ -18,9 +18,8 @@ namespace AlumnoEjemplos.MiGrupo
         private TgcText2d text2;
         public TgcScene farol;
         private float movimientoFarol;
-        const float VALORMAXIMOINTENSIDAD = 20;
+        const float VALORMAXIMOINTENSIDAD = 30;
         Barra barra;
-        float Intensity;
         override public void mover(float elapsedTime)
         {
             movimientoFarol += elapsedTime;
@@ -30,6 +29,7 @@ namespace AlumnoEjemplos.MiGrupo
         }
         override public void init()
         {
+            tipo = Tipo.Farol;
             text2 = new TgcText2d();
             text2.Text = "100%";
             text2.Color = Color.DarkSalmon;
@@ -43,6 +43,8 @@ namespace AlumnoEjemplos.MiGrupo
             farol.Meshes[0].Scale = new Vector3(0.8f, 0.8f, 0.8f);
             farol.Meshes[0].Position = Posicion + new Vector3(-10f, -20f, 17f);
             Intensity = VALORMAXIMOINTENSIDAD;
+            Attenuation = 0.3f;
+            this.color = Color.Yellow;
             barra = new Barra();
             Encendida = true;
         }
@@ -84,60 +86,7 @@ namespace AlumnoEjemplos.MiGrupo
                 this.Intensity = (Intensity - (0.2f * elapsedTime));//si es necesario modificar velocidad de reduccion  
             }
         }
-        override public void actualizarEscenario(TgcScene escena, Camara camara)
-        {
-            Effect currentShader;
-            //Con luz: Cambiar el shader actual por el shader default que trae el framework para iluminacion dinamica con SpotLight
-            //currentShader = GuiController.Instance.Shaders.TgcMeshPointLightShader;
-            currentShader = GuiController.Instance.Shaders.TgcMeshShader;
-
-            //Aplicar a cada mesh el shader actual
-            foreach (TgcMesh mesh in escena.Meshes)
-            {
-                mesh.Effect = currentShader;
-                //El Technique depende del tipo RenderType del mesh
-                mesh.Technique = GuiController.Instance.Shaders.getTgcMeshTechnique(mesh.RenderType);
-            }
-
-
-            //Renderizar meshes
-            /*foreach (TgcMesh mesh in escena.Meshes)
-            {
-                if (this.Encendida)
-                {
-                    //Cargar variables shader de la luz
-                    mesh.Effect.SetValue("lightColor", ColorValue.FromColor(Color.White));
-                    mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(camara.getPosition()));
-                    mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(camara.getPosition()));
-                    mesh.Effect.SetValue("lightIntensity", Intensity);
-                    mesh.Effect.SetValue("lightAttenuation", (float)0.3);
-
-                    //Cargar variables de shader de Material. El Material en realidad deberia ser propio de cada mesh. Pero en este ejemplo se simplifica con uno comun para todos
-                    mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(Color.Black));
-                    mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(Color.White));
-                    mesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor(Color.White));
-                    mesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor(Color.White));
-                    mesh.Effect.SetValue("materialSpecularExp", (float)9f);
-                }
-                else
-                {
-                    //Cargar variables shader de la luz
-                    mesh.Effect.SetValue("lightColor", ColorValue.FromColor(Color.Black));
-                    mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(camara.getPosition()));
-                    mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(camara.getPosition()));
-                    mesh.Effect.SetValue("lightIntensity", (float)30);
-                    mesh.Effect.SetValue("lightAttenuation", (float)0.3);
-
-                    //Cargar variables de shader de Material. El Material en realidad deberia ser propio de cada mesh. Pero en este ejemplo se simplifica con uno comun para todos
-                    mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(Color.Black));
-                    mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(Color.White));
-                    mesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor(Color.White));
-                    mesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor(Color.White));
-                    mesh.Effect.SetValue("materialSpecularExp", (float)9f);
-                }
-            }*/
-
-        }
+       
     }
 
 }

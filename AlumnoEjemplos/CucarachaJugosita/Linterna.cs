@@ -26,6 +26,7 @@ namespace AlumnoEjemplos.MiGrupo
             this.SpotExponent = 40f;
             this.Intensity = VALORMAXIMOINTENSIDAD;
             this.Encendida = false;
+            this.color = Color.White;
             this.Attenuation = 0.1f;
             this.SpecularEx = 9f;
             barra = new Barra();
@@ -39,6 +40,7 @@ namespace AlumnoEjemplos.MiGrupo
         }
         override public void init()
         {
+            tipo = Tipo.Linterna;
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
             var loader = new TgcSceneLoader();
             linterna = loader.loadSceneFromFile(alumnoMediaFolder + "CucarachaJugosita\\Media\\Linterna-TgcScene.xml");
@@ -91,65 +93,6 @@ namespace AlumnoEjemplos.MiGrupo
 
 
 
-        override public void actualizarEscenario(TgcScene escena, Camara camara)
-        {
-            this.Posicion = camara.getPosition();
-            this.Direccion = camara.getLookAt();
-            Vector3 lightDir;
-            lightDir = this.Direccion - this.Posicion;
-            lightDir.Normalize();
-            Effect currentShader;
-            currentShader = GuiController.Instance.Shaders.TgcMeshSpotLightShader;
-            foreach (TgcMesh mesh in escena.Meshes)
-            {
-                mesh.Effect = currentShader;
-                //El Technique depende del tipo RenderType del mesh
-                mesh.Technique = GuiController.Instance.Shaders.getTgcMeshTechnique(mesh.RenderType);
-            }
-            //Renderizar meshes
-            foreach (TgcMesh mesh in escena.Meshes)
-            {
-                if (this.Encendida)
-                {
-                    //Cargar variables shader de la luz
-                    mesh.Effect.SetValue("lightColor", ColorValue.FromColor(Color.White));
-                    mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(this.Posicion));
-                    mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(this.Posicion));
-                    mesh.Effect.SetValue("spotLightDir", TgcParserUtils.vector3ToFloat4Array(lightDir));
-                    mesh.Effect.SetValue("lightIntensity", this.Intensity);
-                    mesh.Effect.SetValue("lightAttenuation", this.Attenuation);
-                    mesh.Effect.SetValue("spotLightAngleCos", FastMath.ToRad(this.SpotAngle));
-                    mesh.Effect.SetValue("spotLightExponent", this.SpotExponent);
-
-                    //Cargar variables de shader de Material. El Material en realidad deberia ser propio de cada mesh. Pero en este ejemplo se simplifica con uno comun para todos
-                    mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(Color.Black));
-                    mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(Color.White));
-                    mesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor(Color.White));
-                    mesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor(Color.White));
-                    mesh.Effect.SetValue("materialSpecularExp", this.SpecularEx);
-                }
-                else
-                {
-                    //Cargar variables shader de la luz
-                    mesh.Effect.SetValue("lightColor", ColorValue.FromColor(Color.Black));
-                    mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(this.Posicion));
-                    mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(this.Posicion));
-                    mesh.Effect.SetValue("spotLightDir", TgcParserUtils.vector3ToFloat4Array(lightDir));
-                    mesh.Effect.SetValue("lightIntensity", this.Intensity);
-                    mesh.Effect.SetValue("lightAttenuation", this.Attenuation);
-                    mesh.Effect.SetValue("spotLightAngleCos", FastMath.ToRad(this.SpotAngle));
-                    mesh.Effect.SetValue("spotLightExponent", this.SpotExponent);
-
-                    //Cargar variables de shader de Material. El Material en realidad deberia ser propio de cada mesh. Pero en este ejemplo se simplifica con uno comun para todos
-                    mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(Color.Black));
-                    mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(Color.White));
-                    mesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor(Color.White));
-                    mesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor(Color.White));
-                    mesh.Effect.SetValue("materialSpecularExp", this.SpecularEx);
-                }
-
-                //No renderizar aca porque hace una caja negra loca
-            }
-        }
+        
     }
 }

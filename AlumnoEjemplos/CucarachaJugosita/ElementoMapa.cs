@@ -12,7 +12,7 @@ namespace AlumnoEjemplos.MiGrupo
     class ElementoMapa
     {
         private TgcScene escena;
-        TgcMesh mesh;
+        public TgcMesh mesh;
 
 
 
