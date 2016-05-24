@@ -37,6 +37,7 @@ namespace AlumnoEjemplos.MiGrupo
         LinternaRecarga recarga;
         VelaRecarga recargaVela;
         FarolRecarga recargaFarol;
+        Llave llave;
         Puerta puerta1;
         Puerta puerta2;
         Sonidos pasos;
@@ -46,6 +47,7 @@ namespace AlumnoEjemplos.MiGrupo
         ArrayList listaPuertas;
         ArrayList listaRecargas;
         ArrayList listaElementoMapa;
+        ArrayList listaLlaves;
         List<LuzNormal> listaLuces;
         ElementoMapa esqueleto;
         ElementoMapa antorcha1;
@@ -65,6 +67,8 @@ namespace AlumnoEjemplos.MiGrupo
         TgcSprite gameOver;
         EstadoMenu estadoMenu;
         ManejoIluminacion manejoI;
+        NumerosLlaves numeroLLaves;
+        Trofeo trofeo;
         float time = 0;
 
         /// <summary>
@@ -99,7 +103,7 @@ namespace AlumnoEjemplos.MiGrupo
         /// </summary>
         public override void init()
         {
-            
+
             cargarShaderPostProcesado();
             camara = new Camara();
             camara.setCamera(new Vector3(359f, 60f, 1000f), new Vector3(289f, 30f, 90f));
@@ -132,8 +136,8 @@ namespace AlumnoEjemplos.MiGrupo
             objeto = farol; //Empieza con la linterna en mano.
             //vela.Meshes[0].Rotation = new Vector3(-5f, -14f, 0f);
             //Camara en primera persona:
-            Vector3 mira = new Vector3(0,0,0);
-            Vector3 vector = new Vector3(0,0,20);
+            Vector3 mira = new Vector3(0, 0, 0);
+            Vector3 vector = new Vector3(0, 0, 20);
             listaPuertas = new ArrayList();
             puerta1 = new Puerta();
             puerta1.init(new Vector3(260f, 57f, 770f));
@@ -165,7 +169,7 @@ namespace AlumnoEjemplos.MiGrupo
             enemigo.setCamara(camara);
 
 
-            esqueleto = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3 (359f, 0f, 940f));
+            esqueleto = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3(359f, 0f, 940f));
             esqueleto.rotateY(3.14f);
 
             antorcha1 = new ElementoMapa("Antorcha-TgcScene.xml", new Vector3(359f, 80f, 925f));
@@ -185,7 +189,7 @@ namespace AlumnoEjemplos.MiGrupo
             enemigo2 = new Enemigo2(); //Cargamos un enemigo
             enemigo2.setEscena(escena);
             enemigo2.getCaminoOriginal().SetValue(new Vector3(965f, 5.02f, 842f), 0);
-            enemigo2.getCaminoOriginal().SetValue(new Vector3(931f, 5.02f, 835f), 1);;
+            enemigo2.getCaminoOriginal().SetValue(new Vector3(931f, 5.02f, 835f), 1); ;
             enemigo2.setCantidadWP(2);
             enemigo2.setEscena(escena);
             enemigo2.setEstado(Enemigo.Estado.Parado);
@@ -197,7 +201,7 @@ namespace AlumnoEjemplos.MiGrupo
             listaEnemigos.Add(enemigo2); //Cargamos los enemigos
 
             recargaVela = new VelaRecarga(new Vector3(359f, 7f, 964f), vela1);
-            recargaFarol = new FarolRecarga(new Vector3(379f,2f,964f), farol);
+            recargaFarol = new FarolRecarga(new Vector3(379f, 2f, 964f), farol);
             recarga = new LinternaRecarga(new Vector3(457f, 5f, 964f), linterna);// se carga la/s recarga con la posicion
 
             pasos = new Sonidos();
@@ -215,6 +219,18 @@ namespace AlumnoEjemplos.MiGrupo
             listaRecargas.Add(recargaVela);
             listaRecargas.Add(recarga);
 
+            //Añadimos llaves al mapa
+            llave = new Llave(new Vector3(570f, 50f, 1030f));
+
+            //Añadimos llaves a la lista
+            listaLlaves = new ArrayList();
+            listaLlaves.Add(llave);
+            numeroLLaves = new NumerosLlaves();
+            numeroLLaves.setNumeroLLaves(listaLlaves.Count);
+
+            //Añado el unico trofeo
+            trofeo = new Trofeo(new Vector3(1477f, 50f, 1141f));
+
             //Añadimos elementos del mapa
             listaElementoMapa = new ArrayList();
             listaElementoMapa.Add(antorcha1);
@@ -224,7 +240,7 @@ namespace AlumnoEjemplos.MiGrupo
             manejoI.setEscena(escena);
 
             listaLuces = new List<LuzNormal>();
-            
+
             LuzNormal luz2 = new LuzNormal();
             luz2.Intensity = 20;
             luz2.lightColor = Color.White;
@@ -264,7 +280,7 @@ namespace AlumnoEjemplos.MiGrupo
             GuiController.Instance.Modifiers.addVertex3f("rotation", new Vector3(-angle, -angle, -angle), new Vector3(angle, angle, angle), new Vector3(0, 0, 0));
 
             //Crear un modifier para un ComboBox con opciones
-            string[] opciones = new string[]{"opcion1", "opcion2", "opcion3"};
+            string[] opciones = new string[] { "opcion1", "opcion2", "opcion3" };
             GuiController.Instance.Modifiers.addInterval("valorIntervalo", opciones, 0);
 
             //Crear un modifier para modificar un vértice
@@ -357,9 +373,9 @@ namespace AlumnoEjemplos.MiGrupo
                     break;
                 case EstadoMenu.Juego:
                     Device d3dDevice = GuiController.Instance.D3dDevice;
-                    
+
                     //objeto.actualizarEscenario(escena, camara); // Atencion aca, esto es como moo de prueba baja mucho ls FPS, lo ideal seria tener ls meshes cocinados y en el init del programa estos se carguen a cada uno de los objetos
-                                                                //Obtener valor de UserVar (hay que castear)
+                    //Obtener valor de UserVar (hay que castear)
                     int valor = (int)GuiController.Instance.UserVars.getValue("variablePrueba");
 
                     ///////////////INPUT//////////////////
@@ -399,8 +415,8 @@ namespace AlumnoEjemplos.MiGrupo
                     break;
             }
 
-           
-            
+
+
         }
 
         /// <summary>
@@ -432,7 +448,11 @@ namespace AlumnoEjemplos.MiGrupo
             colisionesConEscondites();
             renderEnemigos(camara.getPosition()); //saco el render para poder investigar bien el mapa
             renderElementosMapa();
-            
+            verificarLlaves();
+            renderLlaves(elapsedTime);
+            numeroLLaves.render();
+            renderTrofeo(elapsedTime);
+
         }
         public void cargarImagenes2D()
         {
@@ -452,7 +472,7 @@ namespace AlumnoEjemplos.MiGrupo
             objetivo.Texture = TgcTexture.createTexture(alumnoMediaFolder + "CucarachaJugosita\\Media\\Objetivo.jpg");
             manual.Texture = TgcTexture.createTexture(alumnoMediaFolder + "CucarachaJugosita\\Media\\Manual.jpg");
             gameOver.Texture = TgcTexture.createTexture(alumnoMediaFolder + "CucarachaJugosita\\Media\\GameOver.jpg");
-            
+
             Size screenSize = GuiController.Instance.Panel3d.Size;
             Size textureSize = menu.Texture.Size;
             menu.Position = new Vector2(FastMath.Max(screenSize.Width / 2 - textureSize.Width / 2, 0), FastMath.Max(screenSize.Height / 2 - textureSize.Height / 2, 0));
@@ -482,16 +502,42 @@ namespace AlumnoEjemplos.MiGrupo
             estadoMenu = EstadoMenu.Menu;
 
         }
+        public void renderTrofeo(float elapsedTime)
+        {
+            if (numeroLLaves.juntoTodas())
+            {
+                trofeo.verificarColision(camara);
+            }
+            trofeo.render(elapsedTime);
+        }
+        public void verificarLlaves()
+        {
+            foreach (Llave llave in listaLlaves)
+            {
+                if (llave.verificarColision(camara))
+                {
+                    numeroLLaves.recolectoLlave();
+                }
+
+            }
+        }
+        public void renderLlaves(float elapsedTime)
+        {
+            foreach (Llave llave in listaLlaves)
+            {
+                llave.render(elapsedTime);
+            }
+        }
         public void renderRecargas(float elapsedTime)
         {
-            foreach(Recarga recarga in listaRecargas)
+            foreach (Recarga recarga in listaRecargas)
             {
                 recarga.render(elapsedTime);
             }
         }
         public void verificarRegargas()
         {
-            foreach(Recarga recarga in listaRecargas)
+            foreach (Recarga recarga in listaRecargas)
             {
                 if (recarga.verificarColision(camara))
                 {
@@ -501,7 +547,7 @@ namespace AlumnoEjemplos.MiGrupo
         }
         public void renderElementosMapa()
         {
-            foreach(ElementoMapa elemento in listaElementoMapa)
+            foreach (ElementoMapa elemento in listaElementoMapa)
             {
                 elemento.render();
             }
@@ -517,21 +563,21 @@ namespace AlumnoEjemplos.MiGrupo
         }
         public void renderPuertas()
         {
-            foreach(Puerta puerta in listaPuertas)
+            foreach (Puerta puerta in listaPuertas)
             {
                 puerta.render();
             }
         }
         public void renderEscondites()
         {
-            foreach(Escondite escondite in listaEscondites)
+            foreach (Escondite escondite in listaEscondites)
             {
                 escondite.render();
             }
         }
         public void renderEnemigos(Vector3 posCam)
         {
-            foreach(Enemigo enemigo in listaEnemigos)
+            foreach (Enemigo enemigo in listaEnemigos)
             {
                 enemigo.render(posCam);
             }
@@ -542,10 +588,10 @@ namespace AlumnoEjemplos.MiGrupo
             int contador = 0;
             foreach (Enemigo enemigo in listaEnemigos)
             {
-                if(enemigo.getEstado() == Enemigo.Estado.Persiguiendo)
+                if (enemigo.getEstado() == Enemigo.Estado.Persiguiendo)
                 {
                     contador++;
-                }               
+                }
             }
             if (contador > 0)
             {
@@ -553,7 +599,7 @@ namespace AlumnoEjemplos.MiGrupo
             }
             else
             {
-                efectoPostProcesadoVictoria(elapsedTime,d3dDevice);
+                efectoPostProcesadoVictoria(elapsedTime, d3dDevice);
                 //renderTotal(elapsedTime); --->>> Comentamos xq se hace el render en el post procesado si abro esto se renderiza 2 veces y duplica tiempo
             }
         }
@@ -603,7 +649,7 @@ namespace AlumnoEjemplos.MiGrupo
             //Dibujamos todos los meshes del escenario
             renderTotal(elapsedTime);
             //Terminamos manualmente el renderizado de esta escena. Esto manda todo a dibujar al GPU al Render Target que cargamos antes
-           // d3dDevice.EndScene();
+            // d3dDevice.EndScene();
         }
         private void drawPostProcessPersecucion(Device d3dDevice)
         {
@@ -724,7 +770,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         public void colisionesConPuerta()
         {
-            foreach(Puerta puerta in listaPuertas)
+            foreach (Puerta puerta in listaPuertas)
             {
                 if (puerta.verificarColision(camara))
                 {
@@ -742,17 +788,17 @@ namespace AlumnoEjemplos.MiGrupo
                         }
                     }
                 }
-                
-                
-                    foreach(Enemigo enemigo in listaEnemigos)
+
+
+                foreach (Enemigo enemigo in listaEnemigos)
+                {
+                    if (puerta.verificarColision(enemigo))
                     {
-                        if (puerta.verificarColision(enemigo))
-                        {
-                            puerta.seAbrio();
-                            enemigo.bloqueado();
-                        }
+                        puerta.seAbrio();
+                        enemigo.bloqueado();
                     }
-                
+                }
+
             }
         }
 
@@ -794,7 +840,7 @@ namespace AlumnoEjemplos.MiGrupo
         }
         public void colisionesConEscondites()
         {
-            foreach(Escondite escondite in listaEscondites)
+            foreach (Escondite escondite in listaEscondites)
             {
                 if (escondite.verificarColision(camara))
                 {
@@ -808,7 +854,7 @@ namespace AlumnoEjemplos.MiGrupo
                         {
                             escondite.esconder(camara);
                         }
-                        
+
                     }
                 }
             }
@@ -817,7 +863,7 @@ namespace AlumnoEjemplos.MiGrupo
         {
             Vector3 Aux = camara.getPosition();
             camara.updateCamera();
-            if(camara.getPosition() != Aux)
+            if (camara.getPosition() != Aux)
             {
                 objeto.mover(elapsedTime);
             }

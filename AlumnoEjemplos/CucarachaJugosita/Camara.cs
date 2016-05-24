@@ -166,6 +166,11 @@ namespace AlumnoEjemplos.MiGrupo
         {
             camBloqueada = true;
         }
+        public void bloqueadaPermanente()
+        {
+            this.tiempoBloqueado = 9999999999999f;
+            this.bloqueada();
+        }
         public void updateCamera()
         {
             float elapsedTime = GuiController.Instance.ElapsedTime;
