@@ -53,6 +53,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 }
             }
             return luzCerca;
+
         }
 
         public void iluminar(TipoIluminador objeto, Camara camara)
@@ -88,6 +89,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     mesh.Effect.SetValue("lightPositionP", TgcParserUtils.vector3ToFloat4Array(luzDelMesh.Posicion));
                     mesh.Effect.SetValue("lightIntensityP", luzDelMesh.Intensity);
                     mesh.Effect.SetValue("lightAttenuationP", luzDelMesh.Attenuation);
+                    mesh.render();
                 }
             }
             else
@@ -115,6 +117,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     mesh.Effect.SetValue("lightPositionP", TgcParserUtils.vector3ToFloat4Array(luzDelMesh.Posicion));
                     mesh.Effect.SetValue("lightIntensityP", luzDelMesh.Intensity);
                     mesh.Effect.SetValue("lightAttenuationP", luzDelMesh.Attenuation);
+                    mesh.render();
                 }
             }
         }

@@ -410,7 +410,6 @@ namespace AlumnoEjemplos.MiGrupo
                     {
                         //Boton izq apretado
                     }
-                    manejoI.iluminar(objeto, camara);
                     postProcesado(elapsedTime, d3dDevice);
                     break;
             }
@@ -435,7 +434,7 @@ namespace AlumnoEjemplos.MiGrupo
             moverCamaraConVela(elapsedTime); //Actualizamos el valor de la camara y vemos si generar efecto de vela
             // vela1.render();
             objeto.render();
-            escena.renderAll();
+            manejoI.iluminar(objeto, camara);
             colisionesConPuerta();
             renderPuertas();
             verificarRegargas();
