@@ -41,6 +41,10 @@ namespace AlumnoEjemplos.MiGrupo
         {
             this.camara = camara;
         }
+        public TgcSkeletalMesh getMesh()
+        {
+            return this.mesh;
+        }
         public void bloqueado()
         {
             bloqueadoMov = true;

@@ -16,29 +16,6 @@ sampler2D diffuseMap = sampler_state
 	MIPFILTER = LINEAR;
 };
 
-
-
-//Cosas de sombras
-#define SMAP_SIZE 1024
-#define EPSILON 0.05f
-
-float4x4 g_mViewLightProj;
-float4x4 g_mProjLight;
-
-texture  g_txShadow;	// textura para el shadow map
-sampler2D g_samShadow =
-sampler_state
-{
-    Texture = <g_txShadow>;
-    MinFilter = Point;
-    MagFilter = Point;
-    MipFilter = Point;
-    AddressU = Clamp;
-    AddressV = Clamp;
-};
-
-
-//Fin cosas sombras
 //Textura para Lightmap
 texture texLightMap;
 sampler2D lightMap = sampler_state
@@ -77,69 +54,6 @@ float lightIntensityP; //Intensidad de la luz
 float lightAttenuationP; //Factor de atenuacion de la luz
 
 
-
-
-
-/**************************************************************************************/
-/* SOMBRAS */
-/**************************************************************************************/
-
-
-
-//Output del Vertex Shader
-struct VS_OUTPUT 
-{
-   float4 Position :        POSITION0;
-   float2 Texcoord :        TEXCOORD0;
-   float3 Norm :			TEXCOORD1;		// Normales
-   float3 Pos :   			TEXCOORD2;		// Posicion real 3d
-};
-
-//-----------------------------------------------------------------------------
-// Vertex Shader que implementa un shadow map
-//-----------------------------------------------------------------------------
-void VertShadow( float4 Pos : POSITION,
-                 float3 Normal : NORMAL,
-                 out float4 oPos : POSITION,
-                 out float2 Depth : TEXCOORD0 )
-{
-	// transformacion estandard 
-    oPos = mul( Pos, matWorld);					// uso el del mesh
-    oPos = mul( oPos, g_mViewLightProj );		// pero visto desde la pos. de la luz
-    
-    // devuelvo: profundidad = z/w 
-    Depth.xy = oPos.zw;
-}
-
-//-----------------------------------------------------------------------------
-// Pixel Shader para el shadow map, dibuja la "profundidad" 
-//-----------------------------------------------------------------------------
-void PixShadow( float2 Depth : TEXCOORD0,out float4 Color : COLOR )
-{
-	// parche para ver el shadow map
-	//float k = Depth.x/Depth.y;
-	//Color = (1-k);
-    Color = Depth.x/Depth.y;
-
-}
-
-technique RenderShadow
-{
-    pass p0
-    {
-        VertexShader = compile vs_3_0 VertShadow();
-        PixelShader = compile ps_3_0 PixShadow();
-    }
-}
-
-
-/**************************************************************************************/
-/* FIN SOMBRAS */
-/**************************************************************************************/
-
-
-
-
 /**************************************************************************************/
 /* VERTEX_COLOR */
 /**************************************************************************************/
@@ -150,9 +64,6 @@ struct VS_INPUT_VERTEX_COLOR
 	float4 Position : POSITION0;
 	float3 Normal : NORMAL0;
 	float4 Color : COLOR;
-	float2 Texcoord :        TEXCOORD0;
-    float3 Norm :			TEXCOORD1;		// Normales
-    float3 Pos :   			TEXCOORD2;		// Posicion real 3d
 };
 
 //Output del Vertex Shader

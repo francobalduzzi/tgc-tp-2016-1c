@@ -81,7 +81,14 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(camara.getPosition()));
                     mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(camara.getPosition()));
                     mesh.Effect.SetValue("spotLightDir", TgcParserUtils.vector3ToFloat4Array(lightDir));
-                    mesh.Effect.SetValue("lightIntensity", objeto.Intensity);
+                    if (objeto.Encendida)
+                    {
+                        mesh.Effect.SetValue("lightIntensity", objeto.Intensity);
+                    }
+                    else
+                    {
+                        mesh.Effect.SetValue("lightIntensity", 0);
+                    }
                     mesh.Effect.SetValue("lightAttenuation", objeto.Attenuation);
                     mesh.Effect.SetValue("spotLightAngleCos", FastMath.ToRad(objeto.SpotAngle));
                     mesh.Effect.SetValue("spotLightExponent", objeto.SpotExponent);
@@ -111,7 +118,14 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     mesh.Effect.SetValue("lightColor", ColorValue.FromColor(objeto.color));
                     mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(camara.getPosition()));
                     mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(camara.getPosition()));
-                    mesh.Effect.SetValue("lightIntensity",objeto.Intensity);
+                    if (objeto.Encendida)
+                    {
+                        mesh.Effect.SetValue("lightIntensity", objeto.Intensity);
+                    }
+                    else
+                    {
+                        mesh.Effect.SetValue("lightIntensity", 0);
+                    }
                     mesh.Effect.SetValue("lightAttenuation", objeto.Attenuation);
                     mesh.Effect.SetValue("lightColorP", ColorValue.FromColor(luzDelMesh.lightColor));
                     mesh.Effect.SetValue("lightPositionP", TgcParserUtils.vector3ToFloat4Array(luzDelMesh.Posicion));

@@ -59,6 +59,7 @@ namespace AlumnoEjemplos.MiGrupo
         Surface g_pDepthStencil;     // Depth-stencil buffer
         Effect effect;
         Effect efectoVictoria;
+        Effect efectoMerlusa;
         TgcSprite menu;
         TgcSprite ganado;
         TgcSprite objetivo;
@@ -69,7 +70,7 @@ namespace AlumnoEjemplos.MiGrupo
         NumerosLlaves numeroLLaves;
         Trofeo trofeo;
         float time = 0;
-
+        public float timeMerlusa = 0f; // Vuevle a 0 cada vez que se le termina la merlusa
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
         /// Influye en donde se va a haber en el árbol de la derecha de la pantalla.
@@ -259,6 +260,9 @@ namespace AlumnoEjemplos.MiGrupo
             luz3.Attenuation = 0.3f;
             listaLuces.Add(luz3);
             manejoI.setListaLuces(listaLuces);
+            camara.setEnemigos(listaEnemigos);
+
+            GuiController.Instance.FullScreenEnable = true;
             ///////////////USER VARS//////////////////
 
             //Crear una UserVar
@@ -500,6 +504,9 @@ namespace AlumnoEjemplos.MiGrupo
             estadoMenu = EstadoMenu.Menu;
 
         }
+
+        //Renders individuales de las listas de cosas
+        #region
         public void renderTrofeo(float elapsedTime)
         {
             if (numeroLLaves.juntoTodas())
@@ -580,10 +587,13 @@ namespace AlumnoEjemplos.MiGrupo
                 enemigo.render(posCam);
             }
         }
+        #endregion
+        //Fin render individuales de listas de cosas
 
         public void postProcesado(float elapsedTime, Device d3dDevice)
         {
             int contador = 0;
+            Boolean merlusa = false;
             foreach (Enemigo enemigo in listaEnemigos)
             {
                 if (enemigo.getEstado() == Enemigo.Estado.Persiguiendo)
@@ -597,7 +607,18 @@ namespace AlumnoEjemplos.MiGrupo
             }
             else
             {
-                efectoPostProcesadoVictoria(elapsedTime, d3dDevice);
+                merlusa = camara.activarEfectoMerlusa();
+                if (merlusa || timeMerlusa != 0)
+                {
+                    camara.efectoMerlusa();
+                    efectoPostProcesadoMerlusa(elapsedTime, d3dDevice, merlusa);
+                }
+                else
+                {
+                    timeMerlusa = 0;
+                    efectoPostProcesadoVictoria(elapsedTime, d3dDevice); // Este es el render Generico que se hace siempre, podriamos separarlo en 2, para evitar hacer postProcesado innecesario
+                }
+                
                 //renderTotal(elapsedTime); --->>> Comentamos xq se hace el render en el post procesado si abro esto se renderiza 2 veces y duplica tiempo
             }
         }
@@ -682,6 +703,7 @@ namespace AlumnoEjemplos.MiGrupo
         }
         #endregion
         //Fin efectos post procesado persecucion
+
         // Efectos de post procesado difuminado victoria
         #region
         public void efectoPostProcesadoVictoria(float elapsedTime, Device d3dDevice)
@@ -756,6 +778,93 @@ namespace AlumnoEjemplos.MiGrupo
         }
         #endregion
         //Fin efectos post procesado victoria
+
+        //Efectos post procesado merlusa
+        #region
+        public void efectoPostProcesadoMerlusa(float elapsedTime, Device d3dDevice, Boolean merlusa)
+        {
+            GuiController.Instance.CustomRenderEnabled = true;
+            if (merlusa)
+            {
+                timeMerlusa += elapsedTime;
+            }
+            else
+            {
+                timeMerlusa -= elapsedTime;
+                if(timeMerlusa>= -0.05f && timeMerlusa <= 0.05f)
+                {
+                    timeMerlusa = 0;
+                }
+            }
+            
+            effect.SetValue("time", time);
+            pOldRT = d3dDevice.GetRenderTarget(0);
+            Surface pSurf = renderTarget2D.GetSurfaceLevel(0);
+            d3dDevice.SetRenderTarget(0, pSurf);
+            Surface pOldDS = d3dDevice.DepthStencilSurface;
+            // Probar de comentar esta linea, para ver como se produce el fallo en el ztest
+            // por no soportar usualmente el multisampling en el render to texture.
+            d3dDevice.DepthStencilSurface = g_pDepthStencil;
+            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+
+
+            //Dibujamos la escena comun, pero en vez de a la pantalla al Render Target
+            drawSceneToRenderTargetMerlusa(d3dDevice, elapsedTime);
+
+            //Liberar memoria de surface de Render Target
+            pSurf.Dispose();
+
+            //Ahora volvemos a restaurar el Render Target original (osea dibujar a la pantalla)
+            d3dDevice.SetRenderTarget(0, pOldRT);
+            d3dDevice.DepthStencilSurface = pOldDS;
+
+            //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de alarma
+            drawPostProcessMerlusa(d3dDevice);
+        }
+        private void drawSceneToRenderTargetMerlusa(Device d3dDevice, float elapsedTime)
+        {
+            //Arrancamos el renderizado. Esto lo tenemos que hacer nosotros a mano porque estamos en modo CustomRenderEnabled = true
+            //d3dDevice.BeginScene();
+
+
+            //Como estamos en modo CustomRenderEnabled, tenemos que dibujar todo nosotros, incluso el contador de FPS
+            GuiController.Instance.Text3d.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
+
+            //Tambien hay que dibujar el indicador de los ejes cartesianos
+            GuiController.Instance.AxisLines.render();
+
+            //Dibujamos todos los meshes del escenario
+            renderTotal(elapsedTime);
+            //Terminamos manualmente el renderizado de esta escena. Esto manda todo a dibujar al GPU al Render Target que cargamos antes
+            // d3dDevice.EndScene();
+        }
+        private void drawPostProcessMerlusa(Device d3dDevice)
+        {
+            //Arrancamos la escena
+            //d3dDevice.BeginScene();
+
+            //Cargamos para renderizar el unico modelo que tenemos, un Quad que ocupa toda la pantalla, con la textura de todo lo dibujado antes
+            d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
+            d3dDevice.SetStreamSource(0, screenQuadVB, 0);
+
+
+            //Cargamos parametros en el shader de Post-Procesado
+            efectoMerlusa.SetValue("time", timeMerlusa);
+            efectoMerlusa.SetValue("blur_intensity", 0.01f);
+            efectoMerlusa.SetValue("render_target2D", renderTarget2D);
+            //Limiamos la pantalla y ejecutamos el render del shader
+            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            efectoMerlusa.Begin(FX.None);
+            efectoMerlusa.BeginPass(0);
+            d3dDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+            efectoMerlusa.EndPass();
+            efectoMerlusa.End();
+
+            //Terminamos el renderizado de la escena
+            //d3dDevice.EndScene();
+        }
+        #endregion
+       //Fin efectos post procesado merlusa
         public enum EstadoMenu
         {
             Menu = 0,
@@ -832,9 +941,11 @@ namespace AlumnoEjemplos.MiGrupo
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
             effect = TgcShaders.loadEffect(alumnoMediaFolder + "CucarachaJugosita\\blurPersecucion.fx");
             efectoVictoria = TgcShaders.loadEffect(alumnoMediaFolder + "CucarachaJugosita\\shaderVictoria.fx");
+            efectoMerlusa = TgcShaders.loadEffect(alumnoMediaFolder + "CucarachaJugosita\\shaderMerlusa.fx");
             //Configurar Technique dentro del shader
             effect.Technique = "BlurTechnique";
             efectoVictoria.Technique = "OscurecerTechnique";
+            efectoMerlusa.Technique = "BlurTechnique";
         }
         public void colisionesConEscondites()
         {

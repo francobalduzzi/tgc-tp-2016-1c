@@ -9,6 +9,7 @@ using TgcViewer.Utils.Input;
 using TgcViewer;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcGeometry;
+using System.Collections;
 
 namespace AlumnoEjemplos.MiGrupo
 {
@@ -60,7 +61,7 @@ namespace AlumnoEjemplos.MiGrupo
         public Boolean merlusaY = false;
         public float contadorXZMerlusa = 0;
         public Boolean merlusaXZ = true;
-
+        public ArrayList enemigos;
         public Camara()
         {
             Control focusWindows = GuiController.Instance.D3dDevice.CreationParameters.FocusWindow;
@@ -71,6 +72,10 @@ namespace AlumnoEjemplos.MiGrupo
                     );
         }
 
+        public void setEnemigos(ArrayList enemigos)
+        {
+            this.enemigos = enemigos;
+        }
         public void SetEscena(TgcScene unaEscena)
         {
             escena = unaEscena;
@@ -255,7 +260,8 @@ namespace AlumnoEjemplos.MiGrupo
 
             if (lockCam)
                 Cursor.Position = mouseCenter;
-            //efectoMerlusa();
+            //
+            //activarEfectoMerlusa();
             viewMatrix = Matrix.LookAtLH(eye, target, up);
             updateViewMatrix(GuiController.Instance.D3dDevice);
 
@@ -466,6 +472,44 @@ namespace AlumnoEjemplos.MiGrupo
             //return realMovement;
             move(v); //Dejo esto para poder atravesar paredes con A y D asi podemos salir del mapa y testear mas facil
             return v;
+        }
+
+        public Boolean activarEfectoMerlusa()
+        {                   
+            foreach(Enemigo enemigo in enemigos)
+            {
+                int contador = 0;
+                Ray rayo = new Ray(eye, enemigo.getMesh().Position);
+                foreach (TgcMesh mesh in escena.Meshes)
+                {
+                    if (rayo.intersectAABB(mesh.BoundingBox))
+                    {
+                        contador++;
+                    }
+                    
+                }
+                if (contador == 0 && calculo(enemigo.getMesh().Position))
+                {
+                    //efectoMerlusa(enemigo.getMesh().Position);
+                    return true;
+                }
+            }
+
+            return false;
+
+        }
+        public Boolean calculo(Vector3 posicion)
+        {
+            Vector3 director = target - eye;
+            director.Y = 0;
+            director.Normalize();
+            Vector3 calculito;
+            Vector3 distancia;
+            calculito = posicion - eye;
+            calculito.Y = 0;
+            calculito.Normalize();
+            distancia = posicion - eye;
+            return (Vector3.Dot(director, calculito) >= 0.7 && distancia.Length() <= 500);
         }
 
         public void rotateY(float movimiento)
