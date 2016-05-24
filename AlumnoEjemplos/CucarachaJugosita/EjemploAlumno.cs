@@ -59,7 +59,6 @@ namespace AlumnoEjemplos.MiGrupo
         Surface g_pDepthStencil;     // Depth-stencil buffer
         Effect effect;
         Effect efectoVictoria;
-        Vector3 posVictoria = new Vector3(444, 60, 623);
         TgcSprite menu;
         TgcSprite ganado;
         TgcSprite objetivo;
@@ -742,7 +741,7 @@ namespace AlumnoEjemplos.MiGrupo
 
             //Cargamos parametros en el shader de Post-Procesado
             efectoVictoria.SetValue("posCam", TgcParserUtils.vector3ToFloat4Array(camara.getPosition()));
-            efectoVictoria.SetValue("posicion", TgcParserUtils.vector3ToFloat4Array(posVictoria));
+            efectoVictoria.SetValue("posicion", TgcParserUtils.vector3ToFloat4Array(trofeo.posicion));
             efectoVictoria.SetValue("render_target2D", renderTarget2D);
             //Limiamos la pantalla y ejecutamos el render del shader
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);

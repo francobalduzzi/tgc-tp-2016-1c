@@ -42,7 +42,7 @@ namespace AlumnoEjemplos
             if ((TgcCollisionUtils.testSphereAABB(camara.camaraColision, colision.BoundingBox)) && (bandera == false))
             {
                 bandera = true;
-                camara.bloqueadaPermanente();
+                //camara.bloqueadaPermanente();
                 return true;
             }
             return false;
