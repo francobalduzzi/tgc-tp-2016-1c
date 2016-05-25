@@ -13,7 +13,7 @@ using TgcViewer.Utils._2D;
 using System.IO;
 
 
-namespace AlumnoEjemplos.MiGrupo
+namespace AlumnoEjemplos.CucarachaJugosita
 {
     class Sonidos
     {

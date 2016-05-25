@@ -12,7 +12,7 @@ using TgcViewer.Utils.TgcGeometry;
 using System.Collections;
 using Microsoft.DirectX.Direct3D;
 
-namespace AlumnoEjemplos.MiGrupo
+namespace AlumnoEjemplos.CucarachaJugosita
 {
     /// <summary>
     /// Camara en primera persona personalizada para niveles de Quake 3.

@@ -8,9 +8,8 @@ using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer;
 using AlumnoEjemplos.CucarachaJugosita;
-using AlumnoEjemplos.MiGrupo;
 
-namespace AlumnoEjemplos
+namespace AlumnoEjemplos.CucarachaJugosita
 {
     class Trofeo
     {
@@ -36,7 +35,9 @@ namespace AlumnoEjemplos
             var loader = new TgcSceneLoader();
             llave = loader.loadSceneFromFile(alumnoMediaFolder + "CucarachaJugosita\\Media\\trofeo-TgcScene.xml");
             meshTrofeo = llave.Meshes[0];
+            meshTrofeo.Scale=(new Vector3(0.7f, 0.7f, 0.7f));
         }
+
         public Boolean verificarColision(Camara camara)
         {
             if ((TgcCollisionUtils.testSphereAABB(camara.camaraColision, colision.BoundingBox)) && (bandera == false))

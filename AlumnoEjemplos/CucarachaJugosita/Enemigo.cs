@@ -11,7 +11,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcSkeletalAnimation;
 using System.Drawing;
 
-namespace AlumnoEjemplos.MiGrupo
+namespace AlumnoEjemplos.CucarachaJugosita
 {
     public class Enemigo
     {

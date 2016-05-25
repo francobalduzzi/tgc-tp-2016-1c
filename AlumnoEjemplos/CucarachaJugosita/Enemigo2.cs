@@ -12,7 +12,7 @@ using TgcViewer.Utils.TgcSkeletalAnimation;
 using System.Drawing;
 using System.IO;
 
-namespace AlumnoEjemplos.MiGrupo
+namespace AlumnoEjemplos.CucarachaJugosita
 {
     public class Enemigo2 : Enemigo
     {

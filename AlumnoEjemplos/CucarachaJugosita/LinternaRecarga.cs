@@ -9,7 +9,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer;
 using AlumnoEjemplos.CucarachaJugosita;
 
-namespace AlumnoEjemplos.MiGrupo
+namespace AlumnoEjemplos.CucarachaJugosita
 {
     class LinternaRecarga : Recarga
     {

@@ -10,7 +10,7 @@
       <specular>[0,0,0,0]</specular>
       <opacity>1</opacity>
       <alphaBlendEnable>False</alphaBlendEnable>
-      <bitmap uvTiling="[1,1]" uvOffset="[1,1]">brick3_5.jpg</bitmap>
+      <bitmap uvTiling="[1,1]" uvOffset="[1,1]">Secret Lover-Texturas Grunge 01.jpg</bitmap>
     </m>
   </materials>
   <meshes count="1">

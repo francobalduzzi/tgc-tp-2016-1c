@@ -8,7 +8,6 @@ using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer;
 using AlumnoEjemplos.CucarachaJugosita;
-using AlumnoEjemplos.MiGrupo;
 
 namespace AlumnoEjemplos.CucarachaJugosita
 {

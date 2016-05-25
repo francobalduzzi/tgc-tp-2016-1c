@@ -6,7 +6,7 @@ using TgcViewer;
 using System.Drawing;
 using TgcViewer.Utils._2D;
 
-namespace AlumnoEjemplos.MiGrupo
+namespace AlumnoEjemplos.CucarachaJugosita
 {
     public class Linterna : TipoIluminador
     {

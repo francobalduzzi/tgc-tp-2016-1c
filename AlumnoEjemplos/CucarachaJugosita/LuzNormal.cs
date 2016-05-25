@@ -1,5 +1,4 @@
-﻿using AlumnoEjemplos.MiGrupo;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

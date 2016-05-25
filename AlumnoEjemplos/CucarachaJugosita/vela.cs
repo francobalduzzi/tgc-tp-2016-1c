@@ -8,7 +8,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils._2D;
 using System.Drawing;
 
-namespace AlumnoEjemplos.MiGrupo
+namespace AlumnoEjemplos.CucarachaJugosita
 {
     class Vela : TipoIluminador
     {

@@ -19,7 +19,7 @@ using TgcViewer.Utils.Shaders;
 using TgcViewer.Utils;
 using AlumnoEjemplos.CucarachaJugosita;
 
-namespace AlumnoEjemplos.MiGrupo
+namespace AlumnoEjemplos.CucarachaJugosita
 {
     /// <summary>
     /// Ejemplo del alumno
@@ -40,6 +40,9 @@ namespace AlumnoEjemplos.MiGrupo
         Llave llave;
         Puerta puerta1;
         Puerta puerta2;
+        Puerta puerta3;
+        Puerta puerta4;
+        Puerta puerta5;
         Sonidos pasos;
         float contador = 0;
         Barra barra;
@@ -106,7 +109,7 @@ namespace AlumnoEjemplos.MiGrupo
 
             cargarShaderPostProcesado();
             camara = new Camara();
-            camara.setCamera(new Vector3(359f, 60f, 1000f), new Vector3(289f, 30f, 90f));
+            camara.setCamera(new Vector3(60f, 60f, 183f), new Vector3(289f, 30f, 90f));
             camara.MovementSpeed = 200f;
             camara.RotationSpeed = 5f;
             camara.JumpSpeed = 80f;
@@ -140,14 +143,28 @@ namespace AlumnoEjemplos.MiGrupo
             Vector3 vector = new Vector3(0, 0, 20);
             listaPuertas = new ArrayList();
             puerta1 = new Puerta();
-            puerta1.init(new Vector3(260f, 57f, 770f));
+            puerta1.init(new Vector3(960f, 57f, 396f));
+            puerta1.rotateY(-1.57f);
             puerta2 = new Puerta();
-            puerta2.init(new Vector3(1400f, 57f, 1363f));
-            puerta2.escalar(new Vector3(1.3f, 1f, 1f));
+            puerta2.init(new Vector3(1699f, 45f, 855f));
+            puerta2.rotateY(-3.14f);
+            puerta2.escalar(new Vector3(0.8f, 0.8f, 0.8f));
+            puerta3 = new Puerta();
+            puerta3.init(new Vector3(2457f, 57f, 1130f));
+            puerta3.rotateY(-1.57f);
+            puerta4 = new Puerta();
+            puerta4.init(new Vector3(3193f, 57f, 1300f));
+            puerta4.rotateY(-3.14f);
+            puerta5 = new Puerta();
+            puerta5.init(new Vector3(1425f, 57f, 1363f));
+            puerta5.rotateY(-3.14f);
 
             //Añadimos puertas a la lista
             listaPuertas.Add(puerta1);
             listaPuertas.Add(puerta2);
+            listaPuertas.Add(puerta3);
+            listaPuertas.Add(puerta4);
+            listaPuertas.Add(puerta5);
 
             foreach (Puerta puerta in listaPuertas) //Aca añadimos los meshes correspondiente a cada puerta a la escena
             {
@@ -229,7 +246,7 @@ namespace AlumnoEjemplos.MiGrupo
             numeroLLaves.setNumeroLLaves(listaLlaves.Count);
 
             //Añado el unico trofeo
-            trofeo = new Trofeo(new Vector3(1477f, 50f, 1141f));
+            trofeo = new Trofeo(new Vector3(4373f, 10f, 1609f));
 
             //Añadimos elementos del mapa
             listaElementoMapa = new ArrayList();
@@ -262,7 +279,7 @@ namespace AlumnoEjemplos.MiGrupo
             manejoI.setListaLuces(listaLuces);
             camara.setEnemigos(listaEnemigos);
 
-            GuiController.Instance.FullScreenEnable = true;
+            GuiController.Instance.FullScreenEnable = false;
             ///////////////USER VARS//////////////////
 
             //Crear una UserVar
@@ -413,7 +430,8 @@ namespace AlumnoEjemplos.MiGrupo
                     {
                         //Boton izq apretado
                     }
-                    postProcesado(elapsedTime, d3dDevice);
+                    //postProcesado(elapsedTime, d3dDevice);
+                    renderTotal(elapsedTime);
                     break;
             }
 
@@ -448,7 +466,7 @@ namespace AlumnoEjemplos.MiGrupo
             GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition()); //Actualizamos la user var, nos va a servir
             renderEscondites();
             colisionesConEscondites();
-            renderEnemigos(camara.getPosition()); //saco el render para poder investigar bien el mapa
+            //renderEnemigos(camara.getPosition()); //saco el render para poder investigar bien el mapa
             renderElementosMapa();
             verificarLlaves();
             renderLlaves(elapsedTime);
@@ -607,7 +625,7 @@ namespace AlumnoEjemplos.MiGrupo
             }
             else
             {
-                merlusa = camara.activarEfectoMerlusa();
+                //merlusa = camara.activarEfectoMerlusa();
                 if (merlusa || timeMerlusa != 0)
                 {
                     camara.efectoMerlusa(timeMerlusa);

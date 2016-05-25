@@ -8,7 +8,7 @@ using TgcViewer;
 using TgcViewer.Utils._2D;
 using TgcViewer.Utils.TgcSceneLoader;
 
-namespace AlumnoEjemplos.MiGrupo
+namespace AlumnoEjemplos.CucarachaJugosita
 {
     class Escondite
     {

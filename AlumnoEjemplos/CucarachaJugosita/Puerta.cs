@@ -15,23 +15,23 @@ using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils._2D;
 
 
-namespace AlumnoEjemplos.MiGrupo
+namespace AlumnoEjemplos.CucarachaJugosita
 {
     public class Puerta
     {
-        private TgcScene puerta1;
-        private TgcScene cobertura1;
-        private TgcScene cobertura2;
-        private TgcScene cobertura3;
-        TgcMesh meshC1;
-        TgcMesh meshC2;
-        TgcMesh meshC3;
-        TgcMesh meshP;
-        private float contador = 0;
+        protected TgcScene puerta1;
+        protected TgcScene cobertura1;
+        protected TgcScene cobertura2;
+        protected TgcScene cobertura3;
+        protected TgcMesh meshC1;
+        protected TgcMesh meshC2;
+        protected TgcMesh meshC3;
+        protected TgcMesh meshP;
+        protected float contador = 0;
         public Estado estado;
-        private TgcText2d text2;
-        private float contadorAbierta;
-        private Boolean abiertaJugador;
+        protected TgcText2d text2;
+        protected float contadorAbierta;
+        protected Boolean abiertaJugador;
         public enum Estado
         {
             Cerrado = 0,
@@ -219,6 +219,14 @@ namespace AlumnoEjemplos.MiGrupo
             meshC1.Scale = v;
             meshC2.Scale = v;
             meshC3.Scale = v;
+        }
+
+        public void rotateY(float angulo)
+        {
+            meshP.rotateY(angulo);
+            meshC1.rotateY(angulo);
+            meshC2.rotateY(angulo);
+            meshC3.rotateY(angulo);
         }
     }
 }

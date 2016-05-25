@@ -1,5 +1,4 @@
-﻿using AlumnoEjemplos.MiGrupo;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections;
@@ -87,7 +86,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     }
                     else
                     {
-                        mesh.Effect.SetValue("lightIntensity", 0);
+                        mesh.Effect.SetValue("lightIntensity", 50);
                     }
                     mesh.Effect.SetValue("lightAttenuation", objeto.Attenuation);
                     mesh.Effect.SetValue("spotLightAngleCos", FastMath.ToRad(objeto.SpotAngle));
@@ -124,7 +123,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     }
                     else
                     {
-                        mesh.Effect.SetValue("lightIntensity", 0);
+                        mesh.Effect.SetValue("lightIntensity", 50);
                     }
                     mesh.Effect.SetValue("lightAttenuation", objeto.Attenuation);
                     mesh.Effect.SetValue("lightColorP", ColorValue.FromColor(luzDelMesh.lightColor));
