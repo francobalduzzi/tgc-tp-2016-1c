@@ -7,6 +7,7 @@ using System.Text;
 using TgcViewer;
 using TgcViewer.Utils._2D;
 using System.Text;
+using Microsoft.DirectX;
 
 namespace AlumnoEjemplos.CucarachaJugosita
 {
@@ -25,9 +26,9 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
            textoActual = new TgcText2d();
            textoActual.Text = "Llaves:"+recolectadas+"/"+numeroDeLlaves;
-            textoActual.Align = TgcText2d.TextAlign.LEFT;
-           textoActual.Position = new Point(100, 530);
-           textoActual.Color = Color.DarkRed;
+            //textoActual.Position = new Point(GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth * 3/16, GuiController.Instance.D3dDevice.PresentationParameters.BackBufferHeight * 18/20);  <-- Relacion si se quiere a la izquierda de la barra
+            textoActual.Position = new Point(GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth * 11/32, GuiController.Instance.D3dDevice.PresentationParameters.BackBufferHeight * 8/10);
+            textoActual.Color = Color.DarkRed;
            textoActual.changeFont(new System.Drawing.Font("Chiller", 30, FontStyle.Regular));
         }
         public void setNumeroLLaves(int tamañoLista)

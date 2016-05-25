@@ -610,7 +610,7 @@ namespace AlumnoEjemplos.MiGrupo
                 merlusa = camara.activarEfectoMerlusa();
                 if (merlusa || timeMerlusa != 0)
                 {
-                    camara.efectoMerlusa();
+                    camara.efectoMerlusa(timeMerlusa);
                     efectoPostProcesadoMerlusa(elapsedTime, d3dDevice, merlusa);
                 }
                 else
@@ -790,7 +790,7 @@ namespace AlumnoEjemplos.MiGrupo
             }
             else
             {
-                timeMerlusa -= elapsedTime;
+                timeMerlusa -= 3*elapsedTime;
                 if(timeMerlusa>= -0.05f && timeMerlusa <= 0.05f)
                 {
                     timeMerlusa = 0;

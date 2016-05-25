@@ -10,6 +10,7 @@ using TgcViewer;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcGeometry;
 using System.Collections;
+using Microsoft.DirectX.Direct3D;
 
 namespace AlumnoEjemplos.MiGrupo
 {
@@ -268,39 +269,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         }
 
-        public void efectoMerlusa()
-        {
-            if(contadorYMerlusa < 10f && !merlusaY)
-            {
-                rotateY(8f * GuiController.Instance.ElapsedTime);
-                contadorYMerlusa += 8f * GuiController.Instance.ElapsedTime;
-            }
-            else
-            {
-                merlusaY = true;
-                rotateY(-8f * GuiController.Instance.ElapsedTime);
-                contadorYMerlusa += -8f * GuiController.Instance.ElapsedTime;
-                if(contadorYMerlusa < -10f)
-                {
-                    merlusaY = false;
-                }
-            }
-            if (contadorXZMerlusa < 7f && !merlusaXZ)
-            {
-                rotateXZ(8f * GuiController.Instance.ElapsedTime);
-                contadorXZMerlusa += 8f * GuiController.Instance.ElapsedTime;
-            }
-            else
-            {
-                merlusaXZ = true;
-                rotateXZ(-8f * GuiController.Instance.ElapsedTime);
-                contadorXZMerlusa += -8f * GuiController.Instance.ElapsedTime;
-                if (contadorXZMerlusa < -7f)
-                {
-                    merlusaXZ = false;
-                }
-            }
-        }
+        
         public bool ChequearColisiones()
         {
             camaraColision = new TgcBoundingSphere(eye, 5f);
@@ -473,7 +442,40 @@ namespace AlumnoEjemplos.MiGrupo
             move(v); //Dejo esto para poder atravesar paredes con A y D asi podemos salir del mapa y testear mas facil
             return v;
         }
-
+        // Inicio Merluseria
+        public void efectoMerlusa(float tiempo)
+        {
+            if (contadorYMerlusa < (10f*tiempo) && !merlusaY)
+            {
+                rotateY(8f * GuiController.Instance.ElapsedTime);
+                contadorYMerlusa += 8f * GuiController.Instance.ElapsedTime;
+            }
+            else
+            {
+                merlusaY = true;
+                rotateY(-8f * GuiController.Instance.ElapsedTime);
+                contadorYMerlusa += -8f * GuiController.Instance.ElapsedTime;
+                if (contadorYMerlusa < (-10f * tiempo))
+                {
+                    merlusaY = false;
+                }
+            }
+            if (contadorXZMerlusa < (7f*tiempo) && !merlusaXZ)
+            {
+                rotateXZ(8f * GuiController.Instance.ElapsedTime);
+                contadorXZMerlusa += 8f * GuiController.Instance.ElapsedTime;
+            }
+            else
+            {
+                merlusaXZ = true;
+                rotateXZ(-8f * GuiController.Instance.ElapsedTime);
+                contadorXZMerlusa += -8f * GuiController.Instance.ElapsedTime;
+                if (contadorXZMerlusa < (-7f * tiempo))
+                {
+                    merlusaXZ = false;
+                }
+            }
+        }
         public Boolean activarEfectoMerlusa()
         {                   
             foreach(Enemigo enemigo in enemigos)
@@ -490,7 +492,6 @@ namespace AlumnoEjemplos.MiGrupo
                 }
                 if (contador == 0 && calculo(enemigo.getMesh().Position))
                 {
-                    //efectoMerlusa(enemigo.getMesh().Position);
                     return true;
                 }
             }
@@ -498,6 +499,7 @@ namespace AlumnoEjemplos.MiGrupo
             return false;
 
         }
+        //Fin Merluseria
         public Boolean calculo(Vector3 posicion)
         {
             Vector3 director = target - eye;
