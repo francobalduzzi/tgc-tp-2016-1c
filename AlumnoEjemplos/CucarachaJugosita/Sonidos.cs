@@ -11,16 +11,18 @@ using TgcViewer.Utils.Modifiers;
 using TgcViewer.Utils.Sound;
 using TgcViewer.Utils._2D;
 using System.IO;
-
+using System.Collections;
 
 namespace AlumnoEjemplos.CucarachaJugosita
 {
     class Sonidos
     {
-        TgcStaticSound pasoDerecho;
-        TgcStaticSound pasoIzquierdo;
-        TgcStaticSound puerta;
+        //TgcStaticSound pasoDerecho;
+        //TgcStaticSound pasoIzquierdo;
+        TgcStaticSound respiro;
         bool tipoPaso = true;
+        string respiracionMerlusa;
+        string respiracionPersecucion;
         public Sonidos()
         {
             init();
@@ -29,38 +31,21 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public void init()
         {
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
-            GuiController.Instance.Modifiers.addFile("WAV-FilePD", alumnoMediaFolder + "CucarachaJugosita\\Media\\pisada calle dcha.wav", "WAVs|*.wav");
-            GuiController.Instance.Modifiers.addBoolean("PlayLoopPD", "Play LoopPD", false);
-            GuiController.Instance.Modifiers.addFile("WAV-FilePI", alumnoMediaFolder + "CucarachaJugosita\\Media\\pisada calle izda.wav", "WAVs|*.wav");
-            GuiController.Instance.Modifiers.addBoolean("PlayLoopPI", "Play LoopPI", false);
-            GuiController.Instance.Modifiers.addFile("WAV-FilePu", alumnoMediaFolder + "CucarachaJugosita\\Media\\puerta ruidosa,abrir.wav", "WAVs|*.wav");
-            GuiController.Instance.Modifiers.addBoolean("PlayLoopPu", "Play LoopPu", false);
+            respiracionMerlusa = alumnoMediaFolder + "CucarachaJugosita\\Media\\respiracion1.wav";
+            respiracionPersecucion = alumnoMediaFolder + "CucarachaJugosita\\Media\\respiracion2.wav";
+            respiro = new TgcStaticSound();
+            respiro.loadSound(respiracionMerlusa);
         }
-        public void play()
+        public void playMerlusa()
         {
-            
-            if ((GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.W) || GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.A) || GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.D) || GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.S)) && (tipoPaso==true))
-            {
-                 Device d3dDevice = GuiController.Instance.D3dDevice;
-                 string filePath = (string)GuiController.Instance.Modifiers["WAV-FilePD"];
-                 pasoDerecho = new TgcStaticSound();
-                 pasoDerecho.loadSound(filePath);
-                 bool playLoopPD = (bool)GuiController.Instance.Modifiers["PlayLoopPD"];
-                 pasoDerecho.play(playLoopPD);
-            }
-            if ((GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.W) || GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.A) || GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.D) || GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.S)) && (tipoPaso == false))
-            {
-                Device d3dDevice = GuiController.Instance.D3dDevice;
-                string filePath = (string)GuiController.Instance.Modifiers["WAV-FilePI"];
-                pasoIzquierdo = new TgcStaticSound();
-                pasoIzquierdo.loadSound(filePath);
-                bool playLoopPI = (bool)GuiController.Instance.Modifiers["PlayLoopPI"];
-                pasoIzquierdo.play(playLoopPI);
-                
-            }
-            tipoPaso = !tipoPaso;
+            respiro.play(true);
+        }
+        public void stopMerlusa()
+        {
+            respiro.stop();
         }
 
+
     }
-    
+
 }

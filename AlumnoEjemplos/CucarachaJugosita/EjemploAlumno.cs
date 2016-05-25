@@ -43,7 +43,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         Puerta puerta3;
         Puerta puerta4;
         Puerta puerta5;
-        Sonidos pasos;
+        Sonidos sonidos;
         float contador = 0;
         Barra barra;
         ArrayList listaEnemigos;
@@ -74,6 +74,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         Trofeo trofeo;
         float time = 0;
         public float timeMerlusa = 0f; // Vuevle a 0 cada vez que se le termina la merlusa
+        TgcMesh meshInservible;
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
         /// Influye en donde se va a haber en el árbol de la derecha de la pantalla.
@@ -221,7 +222,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             recargaFarol = new FarolRecarga(new Vector3(379f, 2f, 964f), farol);
             recarga = new LinternaRecarga(new Vector3(457f, 5f, 964f), linterna);// se carga la/s recarga con la posicion
 
-            pasos = new Sonidos();
+            sonidos = new Sonidos();
             barra = new Barra();
 
             //Añadimos los escondite a la lista
@@ -280,6 +281,16 @@ namespace AlumnoEjemplos.CucarachaJugosita
             camara.setEnemigos(listaEnemigos);
 
             GuiController.Instance.FullScreenEnable = false;
+
+
+            //Hacer que el Listener del sonido 3D siga al personaje
+            TgcScene escena2;
+            escena2 = loader.loadSceneFromFile(alumnoMediaFolder + "CucarachaJugosita\\Media\\mapitaFinal1-TgcScene.xml"); // Esto es una meirda que no sirve para nada, solo xq sonido3d trabajo con mehshes y no con vectores
+            meshInservible = escena2.Meshes[0];
+            meshInservible.Position = camara.getPosition();
+            GuiController.Instance.DirectSound.ListenerTracking = meshInservible;
+
+
             ///////////////USER VARS//////////////////
 
             //Crear una UserVar
@@ -461,18 +472,17 @@ namespace AlumnoEjemplos.CucarachaJugosita
             verificarRegargas();
             renderRecargas(elapsedTime);
             objeto.bajarIntensidad(elapsedTime);// bajo la intensidad
-            verificarSonidos(elapsedTime);
             // barra.render(linterna.damePorcentaje());
             GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition()); //Actualizamos la user var, nos va a servir
             renderEscondites();
             colisionesConEscondites();
-            //renderEnemigos(camara.getPosition()); //saco el render para poder investigar bien el mapa
+            renderEnemigos(camara.getPosition()); //saco el render para poder investigar bien el mapa
             renderElementosMapa();
             verificarLlaves();
             renderLlaves(elapsedTime);
             numeroLLaves.render();
             renderTrofeo(elapsedTime);
-
+            meshInservible.Position = camara.getPosition();
         }
         public void cargarImagenes2D()
         {
@@ -575,15 +585,6 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 elemento.render();
             }
         }
-        public void verificarSonidos(float elapsedTime)
-        {
-            contador = contador + ((1) * elapsedTime);
-            if (contador >= (45 * elapsedTime))
-            {
-                pasos.play();
-                contador = 0;
-            }
-        }
         public void renderPuertas()
         {
             foreach (Puerta puerta in listaPuertas)
@@ -625,14 +626,16 @@ namespace AlumnoEjemplos.CucarachaJugosita
             }
             else
             {
-                //merlusa = camara.activarEfectoMerlusa();
+                merlusa = camara.activarEfectoMerlusa();
                 if (merlusa || timeMerlusa != 0)
                 {
+                    sonidos.playMerlusa();
                     camara.efectoMerlusa(timeMerlusa);
                     efectoPostProcesadoMerlusa(elapsedTime, d3dDevice, merlusa);
                 }
                 else
                 {
+                    sonidos.stopMerlusa();
                     timeMerlusa = 0;
                     efectoPostProcesadoVictoria(elapsedTime, d3dDevice); // Este es el render Generico que se hace siempre, podriamos separarlo en 2, para evitar hacer postProcesado innecesario
                 }

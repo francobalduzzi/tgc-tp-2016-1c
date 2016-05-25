@@ -104,11 +104,12 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 {
                     mesh.Effect = effectPointYPoint;
                     //mesh.Effect = GuiController.Instance.Shaders.TgcMeshPointLightShader;
+                    mesh.Effect = GuiController.Instance.Shaders.TgcMeshShader;
                     mesh.Technique = GuiController.Instance.Shaders.getTgcMeshTechnique(mesh.RenderType);
                 }
                 foreach (TgcMesh mesh in escena.Meshes)
                 {
-                    luzDelMesh = luzMasCercana(mesh.BoundingBox.calculateBoxCenter());
+                    /*luzDelMesh = luzMasCercana(mesh.BoundingBox.calculateBoxCenter());
                     mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(Color.Black));
                     mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(Color.White));
                     mesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor(Color.White));
@@ -123,13 +124,13 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     }
                     else
                     {
-                        mesh.Effect.SetValue("lightIntensity", 50);
+                        mesh.Effect.SetValue("lightIntensity", 0);
                     }
                     mesh.Effect.SetValue("lightAttenuation", objeto.Attenuation);
                     mesh.Effect.SetValue("lightColorP", ColorValue.FromColor(luzDelMesh.lightColor));
                     mesh.Effect.SetValue("lightPositionP", TgcParserUtils.vector3ToFloat4Array(luzDelMesh.Posicion));
                     mesh.Effect.SetValue("lightIntensityP", luzDelMesh.Intensity);
-                    mesh.Effect.SetValue("lightAttenuationP", luzDelMesh.Attenuation);
+                    mesh.Effect.SetValue("lightAttenuationP", luzDelMesh.Attenuation);*/
                     mesh.render();
                 }
             }

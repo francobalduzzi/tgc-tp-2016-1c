@@ -27,6 +27,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         protected TgcMesh meshC2;
         protected TgcMesh meshC3;
         protected TgcMesh meshP;
+        protected Tgc3dSound sonidoAbrir;
         protected float contador = 0;
         public Estado estado;
         protected TgcText2d text2;
@@ -56,6 +57,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
         public void init(Vector3 posP)
         {
+            //sonidoAbrir = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosDir + "CucarachaJugosita\\Media\\puerta ruidosa, abrir.wav", meshP.Position);
+            /*sonidoAbrir = new Tgc3dSound();
+            sonidoAbrir.loadSound(GuiController.Instance.AlumnoEjemplosDir + "CucarachaJugosita\\Media\\puerta ruidosa, abrir.wav");
+            sonidoAbrir.Position = meshP.Position;*/
+            
             text2 = new TgcText2d();
             text2.Text = "";
             text2.Color = Color.DarkRed;
@@ -79,6 +85,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
             meshC3.Position = posP;
             estado = Estado.Cerrado;
             contadorAbierta = 500f;
+            sonidoAbrir = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosDir + "CucarachaJugosita\\Media\\puerta ruidosa, abrir.wav", meshP.Position);
+            sonidoAbrir.MinDistance = 10f;
         }
 
         public void moverPuerta()
@@ -113,10 +121,12 @@ namespace AlumnoEjemplos.CucarachaJugosita
         }
         public void seAbrio()
         {
+            sonidoAbrir.play();
             estado = Estado.Abierta;
         }
         public void seAbrioJugador()
         {
+            sonidoAbrir.play();
             estado = Estado.Abierta;
             abiertaJugador = true;
         }
