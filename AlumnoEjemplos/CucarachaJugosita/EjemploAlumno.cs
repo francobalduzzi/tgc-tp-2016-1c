@@ -34,6 +34,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         TipoIluminador objeto; //Este sera el objeto que tenga en la mano el jugador
         Enemigo enemigo; // Uno solo para las pruebas dsps abra que hacer una lista. Hay que pasarla las coordenadas para que pueda arrancar y el estado. Camino ida necesita minimo 1 parametro aunque se quede quieto
         Enemigo enemigo2;
+        EnemigoAnimacion enemigoAnimado;
         LinternaRecarga recarga;
         VelaRecarga recargaVela;
         FarolRecarga recargaFarol;
@@ -214,10 +215,19 @@ namespace AlumnoEjemplos.CucarachaJugosita
             enemigo2.init();
             enemigo2.setCamara(camara);
 
+            enemigoAnimado = new EnemigoAnimacion(new Vector3(338f, 60f, 160f));
+            enemigoAnimado.getCaminoOriginal().SetValue(new Vector3(672.27f, 5.02f, -0.13f), 0);
+            enemigoAnimado.getCaminoOriginal().SetValue(new Vector3(679.675f, 5.02f, 448.91f), 1);
+            enemigoAnimado.setCantidadWP(2);
+            //enemigoAnimado.setEscena(escena);
+            enemigoAnimado.setEstado(Enemigo.Estado.Parado);
+            enemigoAnimado.init();
             //Añadimos enemigos a la lista
+            listaEnemigos.Add(enemigoAnimado);
             listaEnemigos.Add(enemigo);
             listaEnemigos.Add(enemigo2); //Cargamos los enemigos
-
+            enemigo2.getCaminoOriginal().SetValue(new Vector3(965f, 5.02f, 842f), 0);
+            enemigo2.getCaminoOriginal().SetValue(new Vector3(931f, 5.02f, 835f), 1);
             recargaVela = new VelaRecarga(new Vector3(359f, 7f, 964f), vela1);
             recargaFarol = new FarolRecarga(new Vector3(379f, 2f, 964f), farol);
             recarga = new LinternaRecarga(new Vector3(457f, 5f, 964f), linterna);// se carga la/s recarga con la posicion
@@ -441,8 +451,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     {
                         //Boton izq apretado
                     }
-                    //postProcesado(elapsedTime, d3dDevice);
-                    renderTotal(elapsedTime);
+                    postProcesado(elapsedTime, d3dDevice);
                     break;
             }
 
@@ -622,6 +631,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             }
             if (contador > 0)
             {
+                sonidos.stopMerlusa();
                 efectoPostProcesadoPersecucion(elapsedTime, d3dDevice);
             }
             else

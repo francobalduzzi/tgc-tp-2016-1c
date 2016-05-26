@@ -119,7 +119,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             bounding.move(new Vector3(15, 0, -170));
         }
 
-        public void init()
+        public virtual void init()
         {
             mesh.Position = caminoOriginal[0];
             caminoIda = caminoOriginal;
@@ -376,7 +376,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 return false;
             }
         }
-        public void render(Vector3 posCam)
+        public virtual void render(Vector3 posCam)
         {
             //bounding.Rotation = ((Vector3)GuiController.Instance.Modifiers.getValue("rotation"));
             verSiPerseguir(posCam);
