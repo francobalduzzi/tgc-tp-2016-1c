@@ -218,7 +218,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
             enemigoAnimado = new EnemigoAnimacion(new Vector3(338f, 60f, 160f), new Vector3(10, 100, 400));
             enemigoAnimado.getCaminoOriginal().SetValue(new Vector3(672.27f, 5.02f, -0.13f), 0);
             enemigoAnimado.getCaminoOriginal().SetValue(new Vector3(679.675f, 5.02f, 448.91f), 1);
-            enemigoAnimado.setCantidadWP(2);
+            enemigoAnimado.getCaminoOriginal().SetValue(new Vector3(431f, 5.02f, 406f), 2);
+            enemigoAnimado.getCaminoOriginal().SetValue(new Vector3(412f, 5.02f, 948f), 3);
+            enemigoAnimado.getCaminoOriginal().SetValue(new Vector3(305f, 5.02f, 953f), 4);
+            enemigoAnimado.setCantidadWP(5);
             //enemigoAnimado.setEscena(escena);
             enemigoAnimado.setEstado(Enemigo.Estado.Parado);
             

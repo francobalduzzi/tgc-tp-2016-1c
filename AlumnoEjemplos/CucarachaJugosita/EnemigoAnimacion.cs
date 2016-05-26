@@ -10,7 +10,7 @@ using TgcViewer.Utils.TgcSkeletalAnimation;
 
 namespace AlumnoEjemplos.CucarachaJugosita
 {
-    class EnemigoAnimacion : Enemigo
+    class EnemigoAnimacion : Enemigo  //Hacemos que herede para que cuando el pj lo vea merlusee un rato, MERLUSA MERLUSA
     {
         public Vector3 cercania;
         public Boolean animada;
@@ -85,7 +85,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 float elapsedTime = GuiController.Instance.ElapsedTime;
                 while (caminoIda[contador] != null && i)
                 {
-                    if ((mesh.Position - caminoIda[contador]).Length() < 0.5f)
+                    if ((mesh.Position - caminoIda[contador]).Length() < 1f)
                     {
                         contador++;
                         if (contador == cantidadWP)

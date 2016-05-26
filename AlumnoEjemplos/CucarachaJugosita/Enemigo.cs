@@ -221,7 +221,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 case Estado.RecorriendoIda:
                     while(caminoIda[contador] != null && i )
                     {
-                        if((mesh.Position - caminoIda[contador]).Length() < 0.5f)
+                        if((mesh.Position - caminoIda[contador]).Length() < 1f)
                         {
                             contador++;
                             if (contador == cantidadWP)
@@ -258,7 +258,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 case Estado.RecorriendoVuelta:
                     while (caminoVuelta[contador] != null && i)
                     {
-                        if ((mesh.Position - caminoVuelta[contador]).Length() < 0.5f)
+                        if ((mesh.Position - caminoVuelta[contador]).Length() < 1f)
                         {
                             contador++;
                             if (contador == cantidadWP)
