@@ -18,6 +18,7 @@ using System.Collections;
 using TgcViewer.Utils.Shaders;
 using TgcViewer.Utils;
 using AlumnoEjemplos.CucarachaJugosita;
+using System.Windows.Forms;
 
 namespace AlumnoEjemplos.CucarachaJugosita
 {
@@ -52,6 +53,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
         ArrayList listaRecargas;
         ArrayList listaElementoMapa;
         ArrayList listaLlaves;
+        ArrayList todosElementosARenderizar; //Hay que separar en 2 xq los enemigos son skeletical
+        ArrayList enemigosARenderizar;
         List<LuzNormal> listaLuces;
         ElementoMapa esqueleto;
         ElementoMapa antorcha1;
@@ -59,11 +62,15 @@ namespace AlumnoEjemplos.CucarachaJugosita
         Escondite escondite1;
         VertexBuffer screenQuadVB;
         Texture renderTarget2D;
+        Texture g_pGlowMap;
+        Texture g_pRenderTarget4;
+        Texture g_pRenderTarget4Aux;
         Surface pOldRT;
         Surface g_pDepthStencil;     // Depth-stencil buffer
         Effect effect;
         Effect efectoVictoria;
         Effect efectoMerlusa;
+        Effect efectoNightVision;
         TgcSprite menu;
         TgcSprite ganado;
         TgcSprite objetivo;
@@ -75,6 +82,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
         Trofeo trofeo;
         float time = 0;
         public float timeMerlusa = 0f; // Vuevle a 0 cada vez que se le termina la merlusa
+        Boolean nightVision = false;
+        float contadorNight =  30f;
         TgcMesh meshInservible;
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
@@ -294,7 +303,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             manejoI.setListaLuces(listaLuces);
             camara.setEnemigos(listaEnemigos);
 
-            GuiController.Instance.FullScreenEnable = false;
+            GuiController.Instance.FullScreenEnable = true;
 
 
             //Hacer que el Listener del sonido 3D siga al personaje
@@ -305,6 +314,35 @@ namespace AlumnoEjemplos.CucarachaJugosita
             GuiController.Instance.DirectSound.ListenerTracking = meshInservible;
 
 
+            //Aca vamos a cargar todos los elementos a renderizar en una lista generica -- Para la iluminacion
+            todosElementosARenderizar = new ArrayList();
+            enemigosARenderizar = new ArrayList();
+            foreach(TgcMesh mesh in escena.Meshes)  //En la escena ya estan cargadas los de las puertas
+            {
+                todosElementosARenderizar.Add(mesh);
+            }
+            foreach(Enemigo enemigo in listaEnemigos)
+            {
+                enemigosARenderizar.Add(enemigo.getMesh());
+            }
+            foreach(Escondite escondite in listaEscondites)
+            {
+                todosElementosARenderizar.Add(escondite.getMesh());
+            }
+            foreach(Llave llave in listaLlaves)
+            {
+                todosElementosARenderizar.Add(llave.getMesh());
+            }
+            foreach(ElementoMapa elemento in listaElementoMapa)
+            {
+                todosElementosARenderizar.Add(elemento.mesh);
+            }
+            foreach(Recarga recarga in listaRecargas)
+            {
+                todosElementosARenderizar.Add(recarga.getMesh());
+            }
+            manejoI.setTodosLosElementos(todosElementosARenderizar);
+            manejoI.setEnemigosARenderizar(enemigosARenderizar);
             ///////////////USER VARS//////////////////
 
             //Crear una UserVar
@@ -449,6 +487,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
                         objeto.Encendida = false;
                         objeto = farol;
                         objeto.Encendida = true;
+                    }
+                    if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.N))
+                    {
+                        nightVision = true;
                     }
                     //Capturar Input Mouse
                     if (GuiController.Instance.D3dInput.buttonPressed(TgcViewer.Utils.Input.TgcD3dInput.MouseButtons.BUTTON_LEFT))
@@ -624,38 +666,47 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
         public void postProcesado(float elapsedTime, Device d3dDevice)
         {
-            int contador = 0;
-            Boolean merlusa = false;
-            foreach (Enemigo enemigo in listaEnemigos)
+            if (nightVision && contadorNight >0)
             {
-                if (enemigo.getEstado() == Enemigo.Estado.Persiguiendo)
-                {
-                    contador++;
-                }
-            }
-            if (contador > 0)
-            {
-                sonidos.stopMerlusa();
-                efectoPostProcesadoPersecucion(elapsedTime, d3dDevice);
+                contadorNight -= elapsedTime;
+                renderConEfectos(elapsedTime); // Efecto del nightVision
             }
             else
             {
-                merlusa = camara.activarEfectoMerlusa();
-                if (merlusa || timeMerlusa != 0)
+                int contador = 0;
+                Boolean merlusa = false;
+                foreach (Enemigo enemigo in listaEnemigos)
                 {
-                    sonidos.playMerlusa();
-                    camara.efectoMerlusa(timeMerlusa);
-                    efectoPostProcesadoMerlusa(elapsedTime, d3dDevice, merlusa);
+                    if (enemigo.getEstado() == Enemigo.Estado.Persiguiendo)
+                    {
+                        contador++;
+                    }
+                }
+                if (contador > 0)
+                {
+                    sonidos.stopMerlusa();
+                    efectoPostProcesadoPersecucion(elapsedTime, d3dDevice);
                 }
                 else
                 {
-                    sonidos.stopMerlusa();
-                    timeMerlusa = 0;
-                    efectoPostProcesadoVictoria(elapsedTime, d3dDevice); // Este es el render Generico que se hace siempre, podriamos separarlo en 2, para evitar hacer postProcesado innecesario
+                    merlusa = camara.activarEfectoMerlusa();
+                    if (merlusa || timeMerlusa != 0)
+                    {
+                        sonidos.playMerlusa();
+                        camara.efectoMerlusa(timeMerlusa);
+                        efectoPostProcesadoMerlusa(elapsedTime, d3dDevice, merlusa);
+                    }
+                    else
+                    {
+                        sonidos.stopMerlusa();
+                        timeMerlusa = 0;
+                        efectoPostProcesadoVictoria(elapsedTime, d3dDevice); // Este es el render Generico que se hace siempre, podriamos separarlo en 2, para evitar hacer postProcesado innecesario
+                    }
+
+                    //renderTotal(elapsedTime); --->>> Comentamos xq se hace el render en el post procesado si abro esto se renderiza 2 veces y duplica tiempo
                 }
-                
-                //renderTotal(elapsedTime); --->>> Comentamos xq se hace el render en el post procesado si abro esto se renderiza 2 veces y duplica tiempo
             }
+            
         }
 
         //Efectos de post procesado en persecucion
@@ -899,7 +950,190 @@ namespace AlumnoEjemplos.CucarachaJugosita
             //d3dDevice.EndScene();
         }
         #endregion
-       //Fin efectos post procesado merlusa
+        //Fin efectos post procesado merlusa
+        //Inicio efectos nightVision
+        #region
+        public void renderConEfectos(float elapsedTime)
+        {
+            GuiController.Instance.CustomRenderEnabled = true;
+            Device device = GuiController.Instance.D3dDevice;
+            Control panel3d = GuiController.Instance.Panel3d;
+            float aspectRatio = (float)panel3d.Width / (float)panel3d.Height;
+
+            // dibujo la escena una textura 
+            efectoNightVision.Technique = "DefaultTechnique";
+            // guardo el Render target anterior y seteo la textura como render target
+            Surface pOldRT = device.GetRenderTarget(0);
+            Surface pSurf = renderTarget2D.GetSurfaceLevel(0);
+            device.SetRenderTarget(0, pSurf);
+            // hago lo mismo con el depthbuffer, necesito el que no tiene multisampling
+            Surface pOldDS = device.DepthStencilSurface;
+            device.DepthStencilSurface = g_pDepthStencil;
+            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            //device.BeginScene();
+            //Dibujamos todos los meshes del escenario
+            renderScene(elapsedTime, "DefaultTechnique");
+
+            //Render personames enemigos
+            foreach (Enemigo enemigo in listaEnemigos)
+                enemigo.getMesh().render();
+
+            //device.EndScene();
+            pSurf.Dispose();
+
+
+            // dibujo el glow map
+            efectoNightVision.Technique = "DefaultTechnique";
+            pSurf = g_pGlowMap.GetSurfaceLevel(0);
+            device.SetRenderTarget(0, pSurf);
+            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            //device.BeginScene();
+
+            //Dibujamos SOLO los meshes que tienen glow brillantes
+            //Render personaje brillante
+            //Render personames enemigos
+            foreach (Enemigo enemigo in listaEnemigos)
+            {
+                Ray rayo = new Ray(camara.getPosition(), enemigo.getMesh().Position);
+                int contador = 0;
+                foreach (TgcMesh mesh in escena.Meshes)
+                {
+                    if (rayo.intersectAABB(mesh.BoundingBox))
+                    {
+                        contador++;
+                    }
+
+                }
+                if(contador == 0)
+                {
+                    enemigo.getMesh().render();
+                }
+                
+            }
+                
+
+            // El resto opacos
+            //renderScene(elapsedTime, "DibujarObjetosOscuros");
+
+            //device.EndScene();
+            pSurf.Dispose();
+
+            // Hago un blur sobre el glow map
+            // 1er pasada: downfilter x 4
+            // -----------------------------------------------------
+            pSurf = g_pRenderTarget4.GetSurfaceLevel(0);
+            device.SetRenderTarget(0, pSurf);
+            //device.BeginScene();
+            efectoNightVision.Technique = "DownFilter4";
+            device.VertexFormat = CustomVertex.PositionTextured.Format;
+            device.SetStreamSource(0, screenQuadVB, 0);
+            efectoNightVision.SetValue("g_RenderTarget", g_pGlowMap);
+
+            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            efectoNightVision.Begin(FX.None);
+            efectoNightVision.BeginPass(0);
+            device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+            efectoNightVision.EndPass();
+            efectoNightVision.End();
+            pSurf.Dispose();
+            //device.EndScene();
+            device.DepthStencilSurface = pOldDS;
+
+            // Pasadas de blur
+            for (int P = 0; P < 3; ++P)
+            {
+                // Gaussian blur Horizontal
+                // -----------------------------------------------------
+                pSurf = g_pRenderTarget4Aux.GetSurfaceLevel(0);
+                device.SetRenderTarget(0, pSurf);
+                // dibujo el quad pp dicho :
+                //device.BeginScene();
+                efectoNightVision.Technique = "GaussianBlurSeparable";
+                device.VertexFormat = CustomVertex.PositionTextured.Format;
+                device.SetStreamSource(0, screenQuadVB, 0);
+                efectoNightVision.SetValue("g_RenderTarget", g_pRenderTarget4);
+
+                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+                efectoNightVision.Begin(FX.None);
+                efectoNightVision.BeginPass(0);
+                device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+                efectoNightVision.EndPass();
+                efectoNightVision.End();
+                pSurf.Dispose();
+                //device.EndScene();
+
+                pSurf = g_pRenderTarget4.GetSurfaceLevel(0);
+                device.SetRenderTarget(0, pSurf);
+                pSurf.Dispose();
+
+                //  Gaussian blur Vertical
+                // -----------------------------------------------------
+                //device.BeginScene();
+                efectoNightVision.Technique = "GaussianBlurSeparable";
+                device.VertexFormat = CustomVertex.PositionTextured.Format;
+                device.SetStreamSource(0, screenQuadVB, 0);
+                efectoNightVision.SetValue("g_RenderTarget", g_pRenderTarget4Aux);
+
+                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+                efectoNightVision.Begin(FX.None);
+                efectoNightVision.BeginPass(1);
+                device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+                efectoNightVision.EndPass();
+                efectoNightVision.End();
+                //device.EndScene();
+
+            }
+
+
+            //  To Gray Scale
+            // -----------------------------------------------------
+            // Ultima pasada vertical va sobre la pantalla pp dicha
+            device.SetRenderTarget(0, pOldRT);
+            //pSurf = g_pRenderTarget4Aux.GetSurfaceLevel(0);
+            //device.SetRenderTarget(0, pSurf);
+
+            //device.BeginScene();
+            efectoNightVision.Technique = "GrayScale";
+            device.VertexFormat = CustomVertex.PositionTextured.Format;
+            device.SetStreamSource(0, screenQuadVB, 0);
+            efectoNightVision.SetValue("g_RenderTarget", renderTarget2D);
+            efectoNightVision.SetValue("g_GlowMap", g_pRenderTarget4Aux);
+            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            efectoNightVision.Begin(FX.None);
+            efectoNightVision.BeginPass(0);
+            device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+            efectoNightVision.EndPass();
+            efectoNightVision.End();
+
+            GuiController.Instance.Text3d.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
+            //device.EndScene();
+        }
+
+        public void renderScene(float elapsedTime, String Technique)
+        {
+            //Dibujamos todos los meshes del escenario
+
+            foreach (TgcMesh m in todosElementosARenderizar)
+            {
+                m.Effect = efectoNightVision;
+                m.Technique = Technique;
+                //m.render();
+            }
+
+            renderTotal(elapsedTime);
+            TgcText2d textoActual;
+            textoActual = new TgcText2d();
+            textoActual.Text = ((int) contadorNight).ToString();
+            //textoActual.Position = new Point(GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth * 3/16, GuiController.Instance.D3dDevice.PresentationParameters.BackBufferHeight * 18/20);  <-- Relacion si se quiere a la izquierda de la barra
+            textoActual.Position = new Point(GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth * 1 / 60, GuiController.Instance.D3dDevice.PresentationParameters.BackBufferHeight * 3 / 10);
+            textoActual.Size = new Size(GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth, GuiController.Instance.D3dDevice.PresentationParameters.BackBufferHeight);
+            textoActual.Color = Color.DarkGreen;
+            textoActual.changeFont(new System.Drawing.Font("Chiller", 200, FontStyle.Regular));
+            textoActual.render();
+
+        }
+        #endregion
+        //Fin efectos nightVision
         public enum EstadoMenu
         {
             Menu = 0,
@@ -971,17 +1205,37 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
                         Format.X8R8G8B8, Pool.Default);
 
+            
+            g_pGlowMap = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
+                    , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
+                        Format.X8R8G8B8, Pool.Default);
+
+            g_pRenderTarget4 = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth / 4
+                    , d3dDevice.PresentationParameters.BackBufferHeight / 4, 1, Usage.RenderTarget,
+                        Format.X8R8G8B8, Pool.Default);
+
+            g_pRenderTarget4Aux = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth / 4
+                    , d3dDevice.PresentationParameters.BackBufferHeight / 4, 1, Usage.RenderTarget,
+                        Format.X8R8G8B8, Pool.Default);
 
             //Cargar shader con efectos de Post-Procesado
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
             effect = TgcShaders.loadEffect(alumnoMediaFolder + "CucarachaJugosita\\blurPersecucion.fx");
             efectoVictoria = TgcShaders.loadEffect(alumnoMediaFolder + "CucarachaJugosita\\shaderVictoria.fx");
             efectoMerlusa = TgcShaders.loadEffect(alumnoMediaFolder + "CucarachaJugosita\\shaderMerlusa.fx");
+            efectoNightVision = TgcShaders.loadEffect(alumnoMediaFolder + "CucarachaJugosita\\GaussianBlur.fx");
+            efectoNightVision.SetValue("g_RenderTarget", renderTarget2D);
+            efectoNightVision.SetValue("screen_dx", d3dDevice.PresentationParameters.BackBufferWidth);
+            efectoNightVision.SetValue("screen_dy", d3dDevice.PresentationParameters.BackBufferHeight);
             //Configurar Technique dentro del shader
             effect.Technique = "BlurTechnique";
             efectoVictoria.Technique = "OscurecerTechnique";
             efectoMerlusa.Technique = "BlurTechnique";
         }
+
+        
+
+
         public void colisionesConEscondites()
         {
             foreach (Escondite escondite in listaEscondites)

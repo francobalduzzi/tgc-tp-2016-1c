@@ -28,6 +28,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
             this.meshLR.Position = posicion;
 
         }
+        public override TgcMesh getMesh()
+        {
+            return meshLR;
+        }
         override public void init()
         {
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;

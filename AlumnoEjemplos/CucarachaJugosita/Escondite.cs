@@ -30,6 +30,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
             text2.Size = new Size(300, 100);
             text2.changeFont(new System.Drawing.Font("Chiller", 30, FontStyle.Regular));
         }
+        public TgcMesh getMesh()
+        {
+            return mesh;
+        }
         public void setEnemigos(List<Enemigo> enemigos)
         {
             this.enemigos = enemigos;

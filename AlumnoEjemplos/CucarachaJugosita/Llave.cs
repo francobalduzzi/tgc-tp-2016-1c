@@ -30,6 +30,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
             this.meshLlave.Scale = new Vector3(0.5f, 0.5f, 0.5f);
             
         }
+        public TgcMesh getMesh()
+        {
+            return meshLlave;
+        }
         public void init()
         {
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;

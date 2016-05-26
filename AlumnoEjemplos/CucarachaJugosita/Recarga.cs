@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.CucarachaJugosita
 {
@@ -11,5 +12,6 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public abstract void render(float elapsedTime);
         public abstract Boolean verificarColision(Camara camara);
         public abstract void recarga();
+        public abstract TgcMesh getMesh();
     }
 }
