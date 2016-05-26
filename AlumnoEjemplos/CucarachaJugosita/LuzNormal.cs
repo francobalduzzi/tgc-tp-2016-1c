@@ -14,5 +14,9 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public float Intensity { get; set; }
         public float Attenuation { get; set; }
         public Color lightColor { get; set; }
+        public virtual void titilar()
+        {
+
+        }
     }
 }

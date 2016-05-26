@@ -279,7 +279,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             luz2.Posicion = new Vector3(1948, 78, 697);
             luz2.Attenuation = 0.3f;
             listaLuces.Add(luz2);
-            LuzNormal luz = new LuzNormal();
+            LuzTitilante luz = new LuzTitilante();
             luz.Intensity = 20;
             luz.lightColor = Color.Red;
             luz.Posicion = new Vector3(750, 120, 1188);
