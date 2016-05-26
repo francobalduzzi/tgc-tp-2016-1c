@@ -1,5 +1,6 @@
 ﻿using Microsoft.DirectX;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public Vector3 cercania;
         public Boolean animada;
         public Boolean activarAnimacion;
-        public EnemigoAnimacion(Vector3 cercania)
+        public TgcBox box; //caja para ver cuando lanzar la animacion
+        public EnemigoAnimacion(Vector3 cercania, Vector3 dimensionesCaja)
         {
             this.cercania = cercania;
               animada = false;
@@ -58,6 +60,9 @@ namespace AlumnoEjemplos.CucarachaJugosita
             bounding = new TgcBox();
             bounding = TgcBox.fromSize(mesh.Position, new Vector3(100f, 100f, 300f));
             bounding.move(new Vector3(15, 0, -170));
+            box = new TgcBox();
+            box.Position = cercania;
+            box.Size = dimensionesCaja;
             
         }
 
@@ -101,7 +106,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
         public void animacion(Vector3 posCam)
         {
-            if((cercania - posCam).Length() < 30f)
+            TgcBox cajita = new TgcBox();
+            cajita.Position = posCam;
+            cajita.Size = new Vector3(10f, 10f, 10f);
+            if(TgcCollisionUtils.testAABBAABB(cajita.BoundingBox,box.BoundingBox))
             {
                 activarAnimacion = true;
             }
@@ -119,9 +127,18 @@ namespace AlumnoEjemplos.CucarachaJugosita
              {
                  mesh.animateAndRender();
              }
+            if (animada)
+            {
+                morir();
+            }
+            //box.BoundingBox.render();   -->>> Descomentar cuando se quiera ubicar un plano de deteccion de efecto fantasmal
             //bounding.render();
             //bounding.BoundingBox.render();
             //mesh.BoundingBox.render();
+        }
+        public void morir()
+        {
+            mesh.Position = new Vector3(0, -200, 0); //Hacemos esto, ya que la posicion del mesh, por mas que no se renderize, afecta al comportamiento de muchos algoritmos, y sacarlo de la lista de enemigos mientras la misma se esta ejecutando, rompe
         }
     }
 }

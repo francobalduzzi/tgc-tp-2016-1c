@@ -178,10 +178,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
             listaEnemigos = new ArrayList(); //Creamos lista de enemigos
             enemigo = new Enemigo(); //Cargamos un enemigo  Toda la carga de enemigos se hace en una funcion cargar enemigos, etc
             enemigo.setEscena(escena);
-            enemigo.getCaminoOriginal().SetValue(new Vector3(718.5f, 5.02f, 1493.4f), 0);
-            enemigo.getCaminoOriginal().SetValue(new Vector3(1360.2f, 5.02f, 1493.4f), 1);
-            enemigo.getCaminoOriginal().SetValue(new Vector3(1360.2f, 5.02f, 503.2f), 2);
-            enemigo.setCantidadWP(3);
+            enemigo.getCaminoOriginal().SetValue(new Vector3(1454f, 5.02f, 1490f), 0);
+            enemigo.getCaminoOriginal().SetValue(new Vector3(1451f, 5.02f, 1273f), 1);
+            //enemigo.getCaminoOriginal().SetValue(new Vector3(1360.2f, 5.02f, 503.2f), 2);
+            enemigo.setCantidadWP(2);
             enemigo.setEscena(escena);
             enemigo.setEstado(Enemigo.Estado.RecorriendoIda);
             enemigo.init();
@@ -215,12 +215,13 @@ namespace AlumnoEjemplos.CucarachaJugosita
             enemigo2.init();
             enemigo2.setCamara(camara);
 
-            enemigoAnimado = new EnemigoAnimacion(new Vector3(338f, 60f, 160f));
+            enemigoAnimado = new EnemigoAnimacion(new Vector3(338f, 60f, 160f), new Vector3(10, 100, 400));
             enemigoAnimado.getCaminoOriginal().SetValue(new Vector3(672.27f, 5.02f, -0.13f), 0);
             enemigoAnimado.getCaminoOriginal().SetValue(new Vector3(679.675f, 5.02f, 448.91f), 1);
             enemigoAnimado.setCantidadWP(2);
             //enemigoAnimado.setEscena(escena);
             enemigoAnimado.setEstado(Enemigo.Estado.Parado);
+            
             enemigoAnimado.init();
             //Añadimos enemigos a la lista
             listaEnemigos.Add(enemigoAnimado);
@@ -822,7 +823,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             else
             {
                 timeMerlusa -= 3*elapsedTime;
-                if(timeMerlusa>= -0.05f && timeMerlusa <= 0.05f)
+                if(timeMerlusa <= 0.05f)
                 {
                     timeMerlusa = 0;
                 }

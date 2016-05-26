@@ -182,6 +182,23 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     return mesh.Position;
             }
         }
+        public Vector3 meDirijoA()
+        {
+            switch (estado)
+            {
+                case Estado.Parado:
+                    return  caminoOriginal[1];
+                    break;
+                case Estado.RecorriendoIda:
+                    return caminoIda[contador];
+                    break;
+                case Estado.RecorriendoVuelta:
+                    return caminoVuelta[contador];
+                    break;
+                default:
+                    return mesh.Position;
+            }
+        }
         public void seguirA(Vector3 posJugador, float elapsedTime, float velocidad)
         {
             Vector3 direccion = posJugador - mesh.Position;

@@ -105,13 +105,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
             {
                 meshP.rotateY(Geometry.DegreeToRadian(-1f));
                 contador++;
-                meshP.BoundingBox.transform(meshP.Transform);
             }
             if (contador > 0 && estado == Estado.Cerrado)
             {
                 meshP.rotateY(Geometry.DegreeToRadian(1f));
                 contador--;
-                meshP.BoundingBox.transform(meshP.Transform);
             }
         }
 
@@ -193,13 +191,33 @@ namespace AlumnoEjemplos.CucarachaJugosita
             }
         }
 
-        public Boolean verificarColision(Enemigo enemigo)
+        /* public Boolean verificarColision(Enemigo enemigo)
+         {
+             Vector3 direccion = enemigo.getDirector();
+             direccion = direccion * 2;
+             if (estado == Estado.Cerrado && enemigo.getEstado() != Enemigo.Estado.Persiguiendo)
+             {
+                 if (TgcCollisionUtils.intersectSegmentAABB(enemigo.getPosicion(), direccion, meshP.BoundingBox, out direccion))
+                 {
+                     return true;
+                 }
+                 else
+                 {
+                     return false;
+                 }
+             }
+             else
+             {
+                 return false;
+             }
+         }*/
+
+        public Boolean verificarColision(Enemigo enemigo) //Prueba verificar colision con mi rayo
         {
-            Vector3 direccion = enemigo.getDirector();
-            direccion = direccion * 2;
+            Ray rayo = new Ray(enemigo.getMesh().Position, enemigo.meDirijoA());
             if (estado == Estado.Cerrado && enemigo.getEstado() != Enemigo.Estado.Persiguiendo)
             {
-                if (TgcCollisionUtils.intersectSegmentAABB(enemigo.getPosicion(), direccion, meshP.BoundingBox, out direccion))
+                if(rayo.intersectAABB(meshP.BoundingBox) && (meshP.Position - enemigo.getMesh().Position).Length() < 100f)
                 {
                     return true;
                 }
@@ -213,6 +231,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 return false;
             }
         }
+
         public void render()
         {
             text2.render();
@@ -221,6 +240,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
             cobertura1.renderAll();
             cobertura3.renderAll();
             cobertura2.renderAll();
+            meshP.BoundingBox.transform(meshP.Transform);
+            meshC1.BoundingBox.transform(meshC1.Transform);
+            meshC2.BoundingBox.transform(meshC2.Transform);
+            meshC3.BoundingBox.transform(meshC3.Transform);
         }
 
         public void escalar(Vector3 v)
@@ -229,6 +252,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
             meshC1.Scale = v;
             meshC2.Scale = v;
             meshC3.Scale = v;
+            meshP.BoundingBox.transform(meshP.Transform);
+            meshC1.BoundingBox.transform(meshC1.Transform);
+            meshC2.BoundingBox.transform(meshC2.Transform);
+            meshC3.BoundingBox.transform(meshC3.Transform);
         }
 
         public void rotateY(float angulo)
@@ -237,6 +264,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
             meshC1.rotateY(angulo);
             meshC2.rotateY(angulo);
             meshC3.rotateY(angulo);
+            meshP.BoundingBox.transform(meshP.Transform);
+            meshC1.BoundingBox.transform(meshC1.Transform);
+            meshC2.BoundingBox.transform(meshC2.Transform);
+            meshC3.BoundingBox.transform(meshC3.Transform);
         }
     }
 }
