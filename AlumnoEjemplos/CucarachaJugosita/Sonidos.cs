@@ -21,23 +21,31 @@ namespace AlumnoEjemplos.CucarachaJugosita
         //TgcStaticSound pasoIzquierdo;
         TgcStaticSound respiro;
         TgcStaticSound respiroPersecucion;
+        TgcStaticSound monstruo;
         bool tipoPaso = true;
         string respiracionMerlusa;
         string respiracionPersecucion;
+        string dirMonstruo;
+        float contador;
         public Sonidos()
         {
             init();
+            contador = 300f;
             Device d3dDevice = GuiController.Instance.D3dDevice;
         }
         public void init()
         {
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
             respiracionMerlusa = alumnoMediaFolder + "CucarachaJugosita\\Media\\juego felipe respiracion corta susto .wav";
-            respiracionPersecucion = alumnoMediaFolder + "CucarachaJugosita\\Media\\respiracion_corriendo.wav";
+            respiracionPersecucion = alumnoMediaFolder + "CucarachaJugosita\\Media\\respiracion1.wav";
+            dirMonstruo = alumnoMediaFolder + "CucarachaJugosita\\Media\\Juego felipe monstruo algo enojado.wav";
             respiro = new TgcStaticSound();
             respiro.loadSound(respiracionMerlusa);
             respiroPersecucion = new TgcStaticSound();
             respiroPersecucion.loadSound(respiracionPersecucion);
+            monstruo = new TgcStaticSound();
+            monstruo.loadSound(dirMonstruo);
+            //monstruo.SoundBuffer.
         }
         public void playMerlusa()
         {
@@ -54,6 +62,15 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public void stopPersecucion()
         {
             respiroPersecucion.stop();
+        }
+        public void sonidoMonstruo(float elapsedTime)
+        {
+            contador -= elapsedTime;
+            if(contador <= 0)
+            {
+                contador = 300f;
+                monstruo.play();
+            }
         }
 
     }

@@ -518,7 +518,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             calculito.Y = 0;
             calculito.Normalize();
             distancia = posicion - eye;
-            return (Vector3.Dot(director, calculito) >= 0.7 && distancia.Length() <= 500);
+            return (Vector3.Dot(director, calculito) >= 0.7 && distancia.Length() <= 1000);
         }
 
         public void rotateY(float movimiento)

@@ -10,6 +10,7 @@ using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcSkeletalAnimation;
 using System.Drawing;
+using TgcViewer.Utils.Sound;
 
 namespace AlumnoEjemplos.CucarachaJugosita
 {
@@ -37,6 +38,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         protected Estado estadoAux;
         protected Sliding slidin = new Sliding();
         protected Camara camara;
+        protected Tgc3dSound sonidoCaminar;
         public void setCamara(Camara camara)
         {
             this.camara = camara;
@@ -117,6 +119,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
             bounding = new TgcBox();
             bounding = TgcBox.fromSize(mesh.Position, new Vector3(100f, 100f, 300f));
             bounding.move(new Vector3(15, 0, -170));
+            sonidoCaminar = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosDir + "CucarachaJugosita\\Media\\risa de maníaco.wav", mesh.Position);
+            //sonidoCaminar.play(true);
         }
 
         public virtual void init()
@@ -395,12 +399,12 @@ namespace AlumnoEjemplos.CucarachaJugosita
         }
         public virtual void render(Vector3 posCam)
         {
+            sonidoCaminar.Position = mesh.Position;
             //bounding.Rotation = ((Vector3)GuiController.Instance.Modifiers.getValue("rotation"));
             verSiPerseguir(posCam);
             recorrerCamino(posCam);
             mesh.animateAndRender();
             //bounding.render();
-            bounding.BoundingBox.render();
             //mesh.BoundingBox.render();
         }
     }

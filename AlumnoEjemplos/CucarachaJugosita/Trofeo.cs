@@ -15,13 +15,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
     {
         public Vector3 posicion;
         public TgcBox colision;
-        public TgcScene trofeo;
-        public TgcScene mesa;
+        public TgcScene llave;
         public TgcMesh meshTrofeo;
-        public TgcMesh meshMesa;
         public Boolean bandera = false;
         public float velocidad = 0;
-
 
 
         public Trofeo(Vector3 pos)
@@ -30,23 +27,15 @@ namespace AlumnoEjemplos.CucarachaJugosita
             this.posicion = pos;
             this.colision = TgcBox.fromSize(posicion, new Vector3(300, 100, 300));
             this.meshTrofeo.Position = posicion;
-            this.meshMesa.Position = posicion;
-            
-            meshMesa.move(new Vector3(0,-60f,0));
-            meshTrofeo.move(new Vector3(0,5,0));
             
         }
         public void init()
         {
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
             var loader = new TgcSceneLoader();
-            trofeo = loader.loadSceneFromFile(alumnoMediaFolder + "CucarachaJugosita\\Media\\trophy-TgcScene.xml");
-            meshTrofeo = trofeo.Meshes[0];
-            meshTrofeo.Scale=(new Vector3(0.2f, 0.2f, 0.2f));
-            mesa= loader.loadSceneFromFile(alumnoMediaFolder + "CucarachaJugosita\\Media\\mesaRedonda-TgcScene.xml");
-            meshMesa = mesa.Meshes[0];
-            meshMesa.Scale=(new Vector3(0.9f,0.9f,0.9f));
-
+            llave = loader.loadSceneFromFile(alumnoMediaFolder + "CucarachaJugosita\\Media\\trofeo-TgcScene.xml");
+            meshTrofeo = llave.Meshes[0];
+            meshTrofeo.Scale=(new Vector3(0.7f, 0.7f, 0.7f));
         }
 
         public Boolean verificarColision(Camara camara)
@@ -59,7 +48,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             }
             return false;
         }
-
+      
         public void render(float elapsedTime)
         {
             var matrizView = GuiController.Instance.D3dDevice.Transform.View;
@@ -69,13 +58,12 @@ namespace AlumnoEjemplos.CucarachaJugosita
             }
             else
             {
-                meshTrofeo.rotateY(elapsedTime * velocidad);
-                velocidad = velocidad + (2 * elapsedTime);
-                meshTrofeo.move(new Vector3(0, 0.001f * velocidad, 0));
+                meshTrofeo.rotateY(elapsedTime *velocidad);
+                velocidad=velocidad + (2*elapsedTime);
+                meshTrofeo.move(new Vector3(0,0.001f*velocidad,0));
                 meshTrofeo.render();
 
             }
-            meshMesa.render();
         }
     }
     

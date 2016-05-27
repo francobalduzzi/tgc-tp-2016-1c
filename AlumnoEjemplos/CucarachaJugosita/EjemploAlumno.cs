@@ -33,13 +33,27 @@ namespace AlumnoEjemplos.CucarachaJugosita
         Linterna linterna;
         Farol farol;
         TipoIluminador objeto; //Este sera el objeto que tenga en la mano el jugador
-        Enemigo enemigo; // Uno solo para las pruebas dsps abra que hacer una lista. Hay que pasarla las coordenadas para que pueda arrancar y el estado. Camino ida necesita minimo 1 parametro aunque se quede quieto
+        Enemigo enemigo1; // Uno solo para las pruebas dsps abra que hacer una lista. Hay que pasarla las coordenadas para que pueda arrancar y el estado. Camino ida necesita minimo 1 parametro aunque se quede quieto
         Enemigo enemigo2;
+        Enemigo enemigo3;
+        Enemigo enemigo4;
         EnemigoAnimacion enemigoAnimado;
         LinternaRecarga recarga;
-        VelaRecarga recargaVela;
-        FarolRecarga recargaFarol;
+        LinternaRecarga recarga1;
+        LinternaRecarga recarga2;
+        LinternaRecarga recarga3;
+        VelaRecarga recargaVela1;
+        VelaRecarga recargaVela2;
+        VelaRecarga recargaVela3;
+        FarolRecarga recargaFarol1;
+        FarolRecarga recargaFarol2;
+        FarolRecarga recargaFarol3;
         Llave llave;
+        Llave llave2;
+        Llave llave3;
+        Llave llave4;
+        Llave llave5;
+        Llave llave6;
         Puerta puerta1;
         Puerta puerta2;
         Puerta puerta3;
@@ -90,6 +104,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         Trofeo trofeo;
         float time = 0;
         public float timeMerlusa = 0f; // Vuevle a 0 cada vez que se le termina la merlusa
+        public Boolean merlusaPostPersecucion = false;
         public float contadorSecundarioMerlusa = 9f;
         public Boolean reproducidoMerlusa = false;
         Boolean nightVision = false;
@@ -196,41 +211,59 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 escena.Meshes.Add(puerta.getMeshP());
             }
             listaEnemigos = new ArrayList(); //Creamos lista de enemigos
-            enemigo = new Enemigo(); //Cargamos un enemigo  Toda la carga de enemigos se hace en una funcion cargar enemigos, etc
-            enemigo.setEscena(escena);
-            enemigo.getCaminoOriginal().SetValue(new Vector3(1454f, 5.02f, 1490f), 0);
-            enemigo.getCaminoOriginal().SetValue(new Vector3(1451f, 5.02f, 1273f), 1);
+            enemigo1 = new Enemigo(); //Cargamos un enemigo  Toda la carga de enemigos se hace en una funcion cargar enemigos, etc
+            enemigo1.setEscena(escena);
+            enemigo1.getCaminoOriginal().SetValue(new Vector3(376f, 5.02f, 967f), 0);
+            enemigo1.getCaminoOriginal().SetValue(new Vector3(376f, 5.02f, 1500f), 1);
+            enemigo1.getCaminoOriginal().SetValue(new Vector3(1458f, 5.02f, 1490f), 2);
+            enemigo1.getCaminoOriginal().SetValue(new Vector3(1470f, 5.02f, 1047f), 3);
             //enemigo.getCaminoOriginal().SetValue(new Vector3(1360.2f, 5.02f, 503.2f), 2);
-            enemigo.setCantidadWP(2);
-            enemigo.setEscena(escena);
-            enemigo.setEstado(Enemigo.Estado.RecorriendoIda);
-            enemigo.init();
-            enemigo.setCamara(camara);
+            enemigo1.setCantidadWP(4);
+            enemigo1.setEscena(escena);
+            enemigo1.setEstado(Enemigo.Estado.RecorriendoIda);
+            enemigo1.init();
+            enemigo1.setCamara(camara);
 
 
             esqueleto = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3(359f, 0f, 940f));
             esqueleto.rotateY(3.14f);
 
-            /*enemigo2 = new Enemigo2(); //Cargamos un enemigo
-            enemigo2.setEscena(escena);
-            enemigo2.getCaminoOriginal().SetValue(new Vector3(227.5f, 5.02f, 861.67f), 0);
-            enemigo2.getCaminoOriginal().SetValue(new Vector3(231.5f, 5.02f, 708.3f), 1);
-            enemigo2.getCaminoOriginal().SetValue(new Vector3(118.4f, 5.02f, 700f), 2);
-            enemigo2.getCaminoOriginal().SetValue(new Vector3(123.4f, 5.02f, 290.15f), 3);
-            enemigo2.setCantidadWP(4);
-            enemigo2.setEscena(escena);
-            enemigo2.setEstado(Enemigo.Estado.RecorriendoIda);
-            enemigo2.init();*/
 
             enemigo2 = new Enemigo2(); //Cargamos un enemigo
             enemigo2.setEscena(escena);
-            enemigo2.getCaminoOriginal().SetValue(new Vector3(965f, 5.02f, 842f), 0);
-            enemigo2.getCaminoOriginal().SetValue(new Vector3(931f, 5.02f, 835f), 1); ;
-            enemigo2.setCantidadWP(2);
+            enemigo2.getCaminoOriginal().SetValue(new Vector3(2075f, 5.02f, 396f), 0);
+            enemigo2.getCaminoOriginal().SetValue(new Vector3(1396f, 5.02f, 392f), 1);
+            enemigo2.getCaminoOriginal().SetValue(new Vector3(1413f, 5.02f, 178f), 2);
+            enemigo2.getCaminoOriginal().SetValue(new Vector3(2055f, 5.02f, 194f), 3);
+            enemigo2.getCaminoOriginal().SetValue(new Vector3(2075f, 5.02f, 396f), 4);
+            enemigo2.setCantidadWP(5);
             enemigo2.setEscena(escena);
-            enemigo2.setEstado(Enemigo.Estado.Parado);
+            enemigo2.setEstado(Enemigo.Estado.RecorriendoIda);
             enemigo2.init();
             enemigo2.setCamara(camara);
+
+            enemigo3 = new Enemigo(); //Cargamos un enemigo
+            enemigo3.setEscena(escena);
+            enemigo3.getCaminoOriginal().SetValue(new Vector3(3027f, 5.02f, 289f), 0);
+            enemigo3.getCaminoOriginal().SetValue(new Vector3(3027f, 5.02f, 1092f), 1);
+            enemigo3.getCaminoOriginal().SetValue(new Vector3(3433f, 5.02f, 1108f), 2);
+            enemigo3.getCaminoOriginal().SetValue(new Vector3(3433f, 5.02f, 378f), 3);
+            enemigo3.getCaminoOriginal().SetValue(new Vector3(3027f, 5.02f, 289f), 4);
+            enemigo3.setCantidadWP(5);
+            enemigo3.setEscena(escena);
+            enemigo3.setEstado(Enemigo.Estado.RecorriendoIda);
+            enemigo3.init();
+            enemigo3.setCamara(camara);
+
+            enemigo4 = new Enemigo(); //Cargamos un enemigo
+            enemigo4.setEscena(escena);
+            enemigo4.getCaminoOriginal().SetValue(new Vector3(1254f, 5.02f, 1049f), 0);
+            enemigo4.getCaminoOriginal().SetValue(new Vector3(597f, 5.02f, 1035f), 1);
+            enemigo4.setCantidadWP(2);
+            enemigo4.setEscena(escena);
+            enemigo4.setEstado(Enemigo.Estado.RecorriendoIda);
+            enemigo4.init();
+            enemigo4.setCamara(camara);
 
             enemigoAnimado = new EnemigoAnimacion(new Vector3(338f, 60f, 160f), new Vector3(10, 100, 400));
             enemigoAnimado.getCaminoOriginal().SetValue(new Vector3(672.27f, 5.02f, -0.13f), 0);
@@ -245,13 +278,22 @@ namespace AlumnoEjemplos.CucarachaJugosita
             enemigoAnimado.init();
             //Añadimos enemigos a la lista
             listaEnemigos.Add(enemigoAnimado);
-            listaEnemigos.Add(enemigo);
+            listaEnemigos.Add(enemigo1);
             listaEnemigos.Add(enemigo2); //Cargamos los enemigos
+            listaEnemigos.Add(enemigo3);
+            listaEnemigos.Add(enemigo4);
             enemigo2.getCaminoOriginal().SetValue(new Vector3(965f, 5.02f, 842f), 0);
             enemigo2.getCaminoOriginal().SetValue(new Vector3(931f, 5.02f, 835f), 1);
-            recargaVela = new VelaRecarga(new Vector3(359f, 7f, 964f), vela1);
-            recargaFarol = new FarolRecarga(new Vector3(379f, 2f, 964f), farol);
-            recarga = new LinternaRecarga(new Vector3(457f, 5f, 964f), linterna);// se carga la/s recarga con la posicion
+            recargaVela1 = new VelaRecarga(new Vector3(1388f, 32f, 294f), vela1);
+            recargaVela2 = new VelaRecarga(new Vector3(4247f, 32f, 1637f), vela1);
+            recargaVela3 = new VelaRecarga(new Vector3(2870f, 32f, 2224f), vela1);
+            recargaFarol1 = new FarolRecarga(new Vector3(1405f, 27f, 807f), farol);
+            recargaFarol2 = new FarolRecarga(new Vector3(3895f, 27f, 565f), farol);
+            recargaFarol3 = new FarolRecarga(new Vector3(3034f, 27f, 1802f), farol);
+            recarga = new LinternaRecarga(new Vector3(961f, 30f, 2020f), linterna);
+            recarga1 = new LinternaRecarga(new Vector3(3434f, 30f, 661f), linterna);
+            recarga2 = new LinternaRecarga(new Vector3(4716f, 30f, 1656f), linterna);
+            recarga3 = new LinternaRecarga(new Vector3(2428f, 30f, 2245f), linterna);
 
             sonidos = new Sonidos();
             barra = new Barra();
@@ -264,16 +306,32 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
             //Añadimos recargas a la lista
             listaRecargas = new ArrayList();
-            listaRecargas.Add(recargaFarol);
-            listaRecargas.Add(recargaVela);
+            listaRecargas.Add(recargaFarol1);
+            listaRecargas.Add(recargaFarol2);
+            listaRecargas.Add(recargaFarol3);
+            listaRecargas.Add(recargaVela1);
+            listaRecargas.Add(recargaVela2);
+            listaRecargas.Add(recargaVela3);
             listaRecargas.Add(recarga);
+            listaRecargas.Add(recarga1);
+            listaRecargas.Add(recarga2);
+            listaRecargas.Add(recarga3);
 
             //Añadimos llaves al mapa
-            llave = new Llave(new Vector3(570f, 50f, 1030f));
-
+            llave = new Llave(new Vector3(570f, 40f, 1030f));
+            llave2 = new Llave(new Vector3(1676f, 40f, 614f));
+            llave3 = new Llave(new Vector3(2437f, 40f, 98f));
+            llave4 = new Llave(new Vector3(3228f, 40f, 1061f));
+            llave5 = new Llave(new Vector3(1759f, 40f, 1986f));
+            llave6 = new Llave(new Vector3(4485f, 40f, 1524f));
             //Añadimos llaves a la lista
             listaLlaves = new ArrayList();
             listaLlaves.Add(llave);
+            listaLlaves.Add(llave2);
+            listaLlaves.Add(llave3);
+            listaLlaves.Add(llave4);
+            listaLlaves.Add(llave5);
+            listaLlaves.Add(llave6);
             numeroLLaves = new NumerosLlaves();
             numeroLLaves.setNumeroLLaves(listaLlaves.Count);
 
@@ -313,13 +371,6 @@ namespace AlumnoEjemplos.CucarachaJugosita
             listaLuces.Add(antorcha7);
             listaLuces.Add(antorcha8);
             listaLuces.Add(antorcha9);
-
-
-            /*LuzTitilante luz = new LuzTitilante(new Vector3(750, 120, 1188));
-            luz.Intensity = 20;
-            luz.lightColor = Color.Red;
-            luz.Attenuation = 0.3f;
-            listaLuces.Add(luz)*/
             manejoI.setListaLuces(listaLuces);
             camara.setEnemigos(listaEnemigos);
 
@@ -572,7 +623,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition()); //Actualizamos la user var, nos va a servir
             renderEscondites();
             colisionesConEscondites();
-            //renderEnemigos(camara.getPosition());
+            renderEnemigos(camara.getPosition()); //saco el render para poder investigar bien el mapa
             renderElementosMapa();
             verificarLlaves();
             renderLlaves(elapsedTime);
@@ -581,6 +632,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             meshInservible.Position = camara.getPosition();
             colisionPuertaF();
             puertaF.render();
+            sonidos.sonidoMonstruo(elapsedTime);
         }
         public void cargarImagenes2D()
         {
@@ -727,13 +779,20 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 }
                 if (contador > 0)
                 {
-                    //sonidos.stopMerlusa();
+                    sonidos.stopMerlusa();
                     sonidos.playPersecucion();
                     efectoPostProcesadoPersecucion(elapsedTime, d3dDevice);
+                    merlusaPostPersecucion = true;
                 }
                 else
                 {
+                    sonidos.stopPersecucion();
                     merlusa = camara.activarEfectoMerlusa();
+                    if (merlusaPostPersecucion)
+                    {
+                        merlusa = merlusaPostPersecucion;
+                        merlusaPostPersecucion = false;
+                    }
                     if (merlusa || timeMerlusa != 0)
                     {
                         if (!reproducidoMerlusa)
