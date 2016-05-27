@@ -547,6 +547,26 @@ namespace AlumnoEjemplos.CucarachaJugosita
                         estadoMenu = EstadoMenu.Menu;
                     }
                     break;
+                case EstadoMenu.GameOver:
+                    GuiController.Instance.Drawer2D.beginDrawSprite();
+                    gameOver.render();
+                    GuiController.Instance.Drawer2D.endDrawSprite();
+                    if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.V))
+                    {
+                        estadoMenu = EstadoMenu.Menu;
+                        //this.init();
+                    }
+                    break;
+                case EstadoMenu.Ganado:
+                    GuiController.Instance.Drawer2D.beginDrawSprite();
+                    ganado.render();
+                    GuiController.Instance.Drawer2D.endDrawSprite();
+                    if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.V))
+                    {
+                        estadoMenu = EstadoMenu.Menu;
+                        //this.init();
+                    }
+                    break;
                 case EstadoMenu.Juego:
                     Device d3dDevice = GuiController.Instance.D3dDevice;
 
@@ -644,6 +664,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
             renderTrofeo(elapsedTime);
             meshInservible.Position = camara.getPosition();
             colisionPuertaF();
+            colisionEnemigoCamara();
+            colisionVictoria();
             puertaF.render();
             sonidos.sonidoMonstruo(elapsedTime);
         }
@@ -1277,6 +1299,28 @@ namespace AlumnoEjemplos.CucarachaJugosita
             Juego = 3,
             Ganado = 4,
             GameOver = 5,
+        }
+        public void colisionVictoria()
+        {
+            TgcBox bounding = new TgcBox();
+            bounding = TgcBox.fromSize(camara.getPosition(), new Vector3(5f, 5f, 5f));
+            if (TgcCollisionUtils.testAABBAABB(trofeo.meshTrofeo.BoundingBox, bounding.BoundingBox))
+            {
+                estadoMenu = EstadoMenu.Ganado;
+            }
+        }
+        public void colisionEnemigoCamara()
+        {
+            TgcBox bounding = new TgcBox();
+            bounding = TgcBox.fromSize(camara.getPosition(), new Vector3(5f, 5f, 5f));
+            foreach (Enemigo enemigo in listaEnemigos)
+            {
+                if (TgcCollisionUtils.testAABBAABB(enemigo.getMesh().BoundingBox, bounding.BoundingBox))
+                {
+                    estadoMenu = EstadoMenu.GameOver;
+                }
+                return;
+            }
         }
         public void colisionPuertaF()
         {
