@@ -55,9 +55,17 @@ namespace AlumnoEjemplos.CucarachaJugosita
         ArrayList listaLlaves;
         ArrayList todosElementosARenderizar; //Hay que separar en 2 xq los enemigos son skeletical
         ArrayList enemigosARenderizar;
+        LuzNormal antorcha1;
+        LuzNormal antorcha2;
+        LuzNormal antorcha3;
+        LuzNormal antorcha4;
+        LuzNormal antorcha5;
+        LuzNormal antorcha6;
+        LuzNormal antorcha7;
+        LuzNormal antorcha8;
+        LuzNormal antorcha9;
         List<LuzNormal> listaLuces;
         ElementoMapa esqueleto;
-        ElementoMapa antorcha1;
         ArrayList listaEscondites;
         Escondite escondite1;
         VertexBuffer screenQuadVB;
@@ -203,9 +211,6 @@ namespace AlumnoEjemplos.CucarachaJugosita
             esqueleto = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3(359f, 0f, 940f));
             esqueleto.rotateY(3.14f);
 
-            antorcha1 = new ElementoMapa("Antorcha-TgcScene.xml", new Vector3(359f, 80f, 925f));
-            antorcha1.rotateY(3.14f);
-
             /*enemigo2 = new Enemigo2(); //Cargamos un enemigo
             enemigo2.setEscena(escena);
             enemigo2.getCaminoOriginal().SetValue(new Vector3(227.5f, 5.02f, 861.67f), 0);
@@ -277,7 +282,6 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
             //Añadimos elementos del mapa
             listaElementoMapa = new ArrayList();
-            listaElementoMapa.Add(antorcha1);
             listaElementoMapa.Add(esqueleto);
 
             manejoI = new ManejoIluminacion();
@@ -285,24 +289,37 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
             listaLuces = new List<LuzNormal>();
 
-            LuzNormal luz2 = new LuzNormal();
-            luz2.Intensity = 20;
-            luz2.lightColor = Color.White;
-            luz2.Posicion = new Vector3(1948, 78, 697);
-            luz2.Attenuation = 0.3f;
-            listaLuces.Add(luz2);
-            LuzTitilante luz = new LuzTitilante();
+            antorcha1 = new LuzNormal(new Vector3(138f, 80f, 10f));
+            antorcha1.rotateY(3.14f);
+            antorcha2 = new LuzNormal(new Vector3(806f, 80f, 485f));
+            antorcha3 = new LuzNormal(new Vector3(1191f, 80f, 351f));
+            antorcha3.rotateY(1.57f);
+            antorcha4 = new LuzNormal(new Vector3(1689f, 80f, 343f));
+            antorcha4.rotateY(3.14f);
+            antorcha5 = new LuzNormal(new Vector3(1467f, 80f, 958f));
+            antorcha5.rotateY(3.14f);
+            antorcha6 = new LuzNormal(new Vector3(310f, 80f, 974f));
+            antorcha6.rotateY(-1.57f);
+            antorcha7 = new LuzNormal(new Vector3(2703f, 80f, 2342f));
+            antorcha8 = new LuzNormal(new Vector3(4485f, 80f, 1737f));
+            antorcha9 = new LuzNormal(new Vector3(2534f, 80f, 557f));
+            antorcha9.rotateY(3.14f);
+            listaLuces.Add(antorcha1);
+            listaLuces.Add(antorcha2);
+            listaLuces.Add(antorcha3);
+            listaLuces.Add(antorcha4);
+            listaLuces.Add(antorcha5);
+            listaLuces.Add(antorcha6);
+            listaLuces.Add(antorcha7);
+            listaLuces.Add(antorcha8);
+            listaLuces.Add(antorcha9);
+
+
+            /*LuzTitilante luz = new LuzTitilante(new Vector3(750, 120, 1188));
             luz.Intensity = 20;
             luz.lightColor = Color.Red;
-            luz.Posicion = new Vector3(750, 120, 1188);
             luz.Attenuation = 0.3f;
-            listaLuces.Add(luz);
-            LuzNormal luz3 = new LuzNormal();
-            luz3.Intensity = 20;
-            luz3.lightColor = Color.White;
-            luz3.Posicion = new Vector3(2542, 110, 97);
-            luz3.Attenuation = 0.3f;
-            listaLuces.Add(luz3);
+            listaLuces.Add(luz)*/
             manejoI.setListaLuces(listaLuces);
             camara.setEnemigos(listaEnemigos);
 
@@ -555,7 +572,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition()); //Actualizamos la user var, nos va a servir
             renderEscondites();
             colisionesConEscondites();
-            renderEnemigos(camara.getPosition()); //saco el render para poder investigar bien el mapa
+            //renderEnemigos(camara.getPosition());
             renderElementosMapa();
             verificarLlaves();
             renderLlaves(elapsedTime);

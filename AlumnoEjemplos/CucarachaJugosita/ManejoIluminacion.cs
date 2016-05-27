@@ -65,16 +65,21 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
         }
 
-        public void titilar()
+        /*public void titilar()
         {
             foreach(LuzNormal luz in listaLuces)
             {
                 luz.titilar();
             }
-        }
+        }*/
         public void iluminar(TipoIluminador objeto, Camara camara)
         {
-            titilar();
+            //titilar();
+            foreach(LuzNormal luz in listaLuces)
+            {
+                luz.getMesh().render();
+            }
+
             Vector3 lightDir;
             lightDir = camara.getLookAt() - camara.getPosition();
             lightDir.Normalize();
