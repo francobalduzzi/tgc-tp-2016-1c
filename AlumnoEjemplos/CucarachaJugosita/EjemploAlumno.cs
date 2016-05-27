@@ -37,6 +37,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         Enemigo enemigo2;
         Enemigo enemigo3;
         Enemigo enemigo4;
+        Enemigo enemigo5;
         EnemigoAnimacion enemigoAnimado;
         LinternaRecarga recarga;
         LinternaRecarga recarga1;
@@ -265,6 +266,19 @@ namespace AlumnoEjemplos.CucarachaJugosita
             enemigo4.init();
             enemigo4.setCamara(camara);
 
+
+            enemigo5 = new Enemigo2(); //Cargamos un enemigo
+            enemigo5.setEscena(escena);
+            enemigo5.getCaminoOriginal().SetValue(new Vector3(1144f, 5.02f, 301f), 0);
+            enemigo5.getCaminoOriginal().SetValue(new Vector3(1148f, 5.02f, 807f), 1);
+            enemigo5.getCaminoOriginal().SetValue(new Vector3(1682f, 5.02f, 812f), 2);
+            enemigo5.setCantidadWP(3);
+            enemigo5.setEscena(escena);
+            enemigo5.setEstado(Enemigo.Estado.RecorriendoIda);
+            enemigo5.init();
+            enemigo5.setCamara(camara);
+
+
             enemigoAnimado = new EnemigoAnimacion(new Vector3(338f, 60f, 160f), new Vector3(10, 100, 400));
             enemigoAnimado.getCaminoOriginal().SetValue(new Vector3(672.27f, 5.02f, -0.13f), 0);
             enemigoAnimado.getCaminoOriginal().SetValue(new Vector3(679.675f, 5.02f, 448.91f), 1);
@@ -282,8 +296,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             listaEnemigos.Add(enemigo2); //Cargamos los enemigos
             listaEnemigos.Add(enemigo3);
             listaEnemigos.Add(enemigo4);
-            enemigo2.getCaminoOriginal().SetValue(new Vector3(965f, 5.02f, 842f), 0);
-            enemigo2.getCaminoOriginal().SetValue(new Vector3(931f, 5.02f, 835f), 1);
+            listaEnemigos.Add(enemigo5);
             recargaVela1 = new VelaRecarga(new Vector3(1388f, 32f, 294f), vela1);
             recargaVela2 = new VelaRecarga(new Vector3(4247f, 32f, 1637f), vela1);
             recargaVela3 = new VelaRecarga(new Vector3(2870f, 32f, 2224f), vela1);
@@ -1001,7 +1014,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 }
             }
             
-            effect.SetValue("time", time);
+            effect.SetValue("time", time/2);
             pOldRT = d3dDevice.GetRenderTarget(0);
             Surface pSurf = renderTarget2D.GetSurfaceLevel(0);
             d3dDevice.SetRenderTarget(0, pSurf);
