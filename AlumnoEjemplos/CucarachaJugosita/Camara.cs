@@ -401,11 +401,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 lista.Add(meshito.BoundingBox);
             }
             Vector3 realMovement = slidin.moveCharacter(camaraColision, v, lista);
-             realMovement = new Vector3(realMovement.X, 0, realMovement.Z);
-             move(realMovement);
-            return realMovement;
-            /*move(v); //Dejo esto para poder atravesar paredes con A y D asi podemos salir del mapa y testear mas facil
-            return v;*/
+            /*realMovement = new Vector3(realMovement.X, 0, realMovement.Z);
+            move(realMovement);
+            return realMovement;*/
+            move(v); //Dejo esto para poder atravesar paredes con A y D asi podemos salir del mapa y testear mas facil
+            return v;
         }
 
         public Vector3 moveSide(float movimiento)
@@ -418,11 +418,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 lista.Add(meshito.BoundingBox);
             }
             Vector3 realMovement = slidin.moveCharacter(camaraColision, v, lista);
-             realMovement = new Vector3(realMovement.X, 0, realMovement.Z);
+            /*realMovement = new Vector3(realMovement.X, 0, realMovement.Z);
             move(realMovement);
-            return realMovement;
-           /* move(v); //Dejo esto para poder atravesar paredes con A y D asi podemos salir del mapa y testear mas facil
-            return v;*/
+            return realMovement;*/
+            move(v); //Dejo esto para poder atravesar paredes con A y D asi podemos salir del mapa y testear mas facil
+            return v;
         }
 
         public Vector3 moveUp(float movimiento)
@@ -436,11 +436,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 lista.Add(meshito.BoundingBox);
             }
             Vector3 realMovement = slidin.moveCharacter(camaraColision, v, lista);
-            realMovement = new Vector3(realMovement.X, realMovement.Y, realMovement.Z);
+            /*realMovement = new Vector3(realMovement.X, realMovement.Y, realMovement.Z);
             move(realMovement);
-            return realMovement;
-           /* move(v); //Dejo esto para poder atravesar paredes con A y D asi podemos salir del mapa y testear mas facil
-            return v;*/
+            return realMovement;*/
+            move(v); //Dejo esto para poder atravesar paredes con A y D asi podemos salir del mapa y testear mas facil
+            return v;
         }
         // Inicio Merluseria
         public void efectoMerlusa(float tiempo)

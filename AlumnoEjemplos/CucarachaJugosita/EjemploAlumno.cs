@@ -303,7 +303,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             manejoI.setListaLuces(listaLuces);
             camara.setEnemigos(listaEnemigos);
 
-            GuiController.Instance.FullScreenEnable = true;
+            GuiController.Instance.FullScreenEnable = false;
 
 
             //Hacer que el Listener del sonido 3D siga al personaje
