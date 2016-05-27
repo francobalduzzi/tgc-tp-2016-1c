@@ -1,4 +1,5 @@
 ﻿using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -15,13 +16,18 @@ namespace AlumnoEjemplos.CucarachaJugosita
         List<Enemigo> enemigos;
         TgcMesh mesh;
         private TgcText2d text2;
-
-        public void init(Vector3 posicion)
+        Vector3 direccion;
+        public void init(Vector3 posicion, Vector3 direccion)
         {
+            this.direccion = direccion;
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
             var loader = new TgcSceneLoader();
             mesh = loader.loadSceneFromFile(alumnoMediaFolder + "CucarachaJugosita\\Media\\LockerMetal-TgcScene.xml").Meshes[0];
             mesh.Position = posicion;
+            Vector3 direc = direccion - posicion;
+            direc.Y = 0;
+            direc.Normalize();
+            mesh.rotateY((float)Math.Atan2(direc.X, direc.Z) - mesh.Rotation.Y - Geometry.DegreeToRadian(180f));
             text2 = new TgcText2d();
             text2.Text = "";
             text2.Color = Color.DarkRed;
@@ -63,7 +69,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
         public void esconder(Camara camara)
         {
-            camara.esconder(mesh.Position);
+            camara.esconder(mesh.Position, direccion);
         }
 
         public void render()

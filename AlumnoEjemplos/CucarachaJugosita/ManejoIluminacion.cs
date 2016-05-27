@@ -104,7 +104,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     }
                     else
                     {
-                        mesh.Effect.SetValue("lightIntensity", 50);
+                        mesh.Effect.SetValue("lightIntensity", 0);
                     }
                     mesh.Effect.SetValue("lightAttenuation", objeto.Attenuation);
                     mesh.Effect.SetValue("spotLightAngleCos", FastMath.ToRad(objeto.SpotAngle));
@@ -138,7 +138,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     }
                     else
                     {
-                        mesh.Effect.SetValue("lightIntensity", 50);
+                        mesh.Effect.SetValue("lightIntensity", 0);
                     }
                     mesh.Effect.SetValue("lightAttenuation", objeto.Attenuation);
                     mesh.Effect.SetValue("spotLightAngleCos", FastMath.ToRad(objeto.SpotAngle));

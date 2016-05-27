@@ -82,9 +82,12 @@ namespace AlumnoEjemplos.CucarachaJugosita
         Trofeo trofeo;
         float time = 0;
         public float timeMerlusa = 0f; // Vuevle a 0 cada vez que se le termina la merlusa
+        public float contadorSecundarioMerlusa = 9f;
+        public Boolean reproducidoMerlusa = false;
         Boolean nightVision = false;
         float contadorNight =  30f;
         TgcMesh meshInservible;
+        PuertaFinal puertaF;
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
         /// Influye en donde se va a haber en el árbol de la derecha de la pantalla.
@@ -251,7 +254,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             //Añadimos los escondite a la lista
             listaEscondites = new ArrayList();
             escondite1 = new Escondite();
-            escondite1.init(new Vector3(1249f, 5.02f, 1211f));
+            escondite1.init(new Vector3(944f, 5.02f, 164f), new Vector3(904f, 5.02f, 164f));
             listaEscondites.Add(escondite1);
 
             //Añadimos recargas a la lista
@@ -303,7 +306,16 @@ namespace AlumnoEjemplos.CucarachaJugosita
             manejoI.setListaLuces(listaLuces);
             camara.setEnemigos(listaEnemigos);
 
-            GuiController.Instance.FullScreenEnable = false;
+
+            //Instanciamos puerta final
+            puertaF = new PuertaFinal();
+            puertaF.init(new Vector3(791, -300, 205), numeroLLaves);
+            escena.Meshes.Add(puertaF.getMeshP());
+            escena.Meshes.Add(puertaF.getMeshC1());
+            escena.Meshes.Add(puertaF.getMeshC2());
+            escena.Meshes.Add(puertaF.getMeshC3());
+
+            GuiController.Instance.FullScreenEnable =false;
 
 
             //Hacer que el Listener del sonido 3D siga al personaje
@@ -521,12 +533,24 @@ namespace AlumnoEjemplos.CucarachaJugosita
             moverCamaraConVela(elapsedTime); //Actualizamos el valor de la camara y vemos si generar efecto de vela
             // vela1.render();
             objeto.render();
-            manejoI.iluminar(objeto, camara);
+            if (nightVision && contadorNight > 0) //Hacemos esto para que el nightvision no arrastre valores de linterna etc.
+            {
+                foreach(TgcMesh mesh in todosElementosARenderizar)
+                {
+                    mesh.render();
+                }
+            }
+            else
+            {
+                manejoI.iluminar(objeto, camara);
+                objeto.bajarIntensidad(elapsedTime);// bajo la intensidad -->>> La bajamos solo si no esta el NightVision
+            }
+            
             colisionesConPuerta();
             renderPuertas();
             verificarRegargas();
             renderRecargas(elapsedTime);
-            objeto.bajarIntensidad(elapsedTime);// bajo la intensidad
+            
             // barra.render(linterna.damePorcentaje());
             GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition()); //Actualizamos la user var, nos va a servir
             renderEscondites();
@@ -538,6 +562,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
             numeroLLaves.render();
             renderTrofeo(elapsedTime);
             meshInservible.Position = camara.getPosition();
+            colisionPuertaF();
+            puertaF.render();
         }
         public void cargarImagenes2D()
         {
@@ -684,7 +710,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 }
                 if (contador > 0)
                 {
-                    sonidos.stopMerlusa();
+                    //sonidos.stopMerlusa();
+                    sonidos.playPersecucion();
                     efectoPostProcesadoPersecucion(elapsedTime, d3dDevice);
                 }
                 else
@@ -692,13 +719,17 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     merlusa = camara.activarEfectoMerlusa();
                     if (merlusa || timeMerlusa != 0)
                     {
-                        sonidos.playMerlusa();
-                        camara.efectoMerlusa(timeMerlusa);
+                        if (!reproducidoMerlusa)
+                        {
+                            reproducidoMerlusa = true;
+                            sonidos.playMerlusa();
+                        }                        
+                        camara.efectoMerlusa(timeMerlusa+contadorSecundarioMerlusa);
                         efectoPostProcesadoMerlusa(elapsedTime, d3dDevice, merlusa);
                     }
                     else
                     {
-                        sonidos.stopMerlusa();
+                        //sonidos.stopMerlusa();
                         timeMerlusa = 0;
                         efectoPostProcesadoVictoria(elapsedTime, d3dDevice); // Este es el render Generico que se hace siempre, podriamos separarlo en 2, para evitar hacer postProcesado innecesario
                     }
@@ -877,9 +908,20 @@ namespace AlumnoEjemplos.CucarachaJugosita
             else
             {
                 timeMerlusa -= 3*elapsedTime;
+                contadorSecundarioMerlusa -= elapsedTime;
                 if(timeMerlusa <= 0.05f)
                 {
-                    timeMerlusa = 0;
+                    if(contadorSecundarioMerlusa >= 0f)
+                    {
+                        timeMerlusa = FastMath.Sin(contadorSecundarioMerlusa);
+                    }
+                    else
+                    {
+                        timeMerlusa = 0;
+                        contadorSecundarioMerlusa = 9f;
+                        reproducidoMerlusa = false;
+                    }
+                    
                 }
             }
             
@@ -1143,7 +1185,25 @@ namespace AlumnoEjemplos.CucarachaJugosita
             Ganado = 4,
             GameOver = 5,
         }
-
+        public void colisionPuertaF()
+        {
+            if (puertaF.verificarColision(camara))
+            {
+                if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.E))
+                {
+                    if (puertaF.getEstado() == PuertaFinal.Estado.Cerrado)
+                    {
+                        puertaF.seAbrioJugador();
+                        camara.bloqueada();
+                    }
+                    else
+                    {
+                        puertaF.seCerroJugador();
+                        camara.bloqueada();
+                    }
+                }
+            }
+        }
         public void colisionesConPuerta()
         {
             foreach (Puerta puerta in listaPuertas)

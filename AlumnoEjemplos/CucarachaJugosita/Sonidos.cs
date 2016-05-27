@@ -20,6 +20,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         //TgcStaticSound pasoDerecho;
         //TgcStaticSound pasoIzquierdo;
         TgcStaticSound respiro;
+        TgcStaticSound respiroPersecucion;
         bool tipoPaso = true;
         string respiracionMerlusa;
         string respiracionPersecucion;
@@ -31,20 +32,29 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public void init()
         {
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
-            respiracionMerlusa = alumnoMediaFolder + "CucarachaJugosita\\Media\\respiracion1.wav";
-            respiracionPersecucion = alumnoMediaFolder + "CucarachaJugosita\\Media\\respiracion2.wav";
+            respiracionMerlusa = alumnoMediaFolder + "CucarachaJugosita\\Media\\juego felipe respiracion corta susto .wav";
+            respiracionPersecucion = alumnoMediaFolder + "CucarachaJugosita\\Media\\respiracion_corriendo.wav";
             respiro = new TgcStaticSound();
             respiro.loadSound(respiracionMerlusa);
+            respiroPersecucion = new TgcStaticSound();
+            respiroPersecucion.loadSound(respiracionPersecucion);
         }
         public void playMerlusa()
         {
-            respiro.play(true);
+            respiro.play();
         }
         public void stopMerlusa()
         {
             respiro.stop();
         }
-
+        public void playPersecucion()
+        {
+            respiroPersecucion.play();
+        }
+        public void stopPersecucion()
+        {
+            respiroPersecucion.stop();
+        }
 
     }
 

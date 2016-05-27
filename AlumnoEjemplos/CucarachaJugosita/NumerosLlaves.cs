@@ -11,7 +11,7 @@ using Microsoft.DirectX;
 
 namespace AlumnoEjemplos.CucarachaJugosita
 {
-    class NumerosLlaves
+    public class NumerosLlaves
     {
         TgcText2d textoActual;
         int numeroDeLlaves = 0;
