@@ -119,8 +119,9 @@ namespace AlumnoEjemplos.CucarachaJugosita
             bounding = new TgcBox();
             bounding = TgcBox.fromSize(mesh.Position, new Vector3(100f, 100f, 300f));
             bounding.move(new Vector3(15, 0, -170));
-            sonidoCaminar = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosDir + "CucarachaJugosita\\Media\\risa de maníaco.wav", mesh.Position);
-            //sonidoCaminar.play(true);
+            sonidoCaminar = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosDir + "CucarachaJugosita\\Media\\pasos_16.wav", mesh.Position);
+            sonidoCaminar.MinDistance = 30f;
+            sonidoCaminar.play(true);
         }
 
         public virtual void init()

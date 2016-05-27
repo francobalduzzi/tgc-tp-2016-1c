@@ -37,8 +37,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
         {
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
             respiracionMerlusa = alumnoMediaFolder + "CucarachaJugosita\\Media\\juego felipe respiracion corta susto .wav";
-            respiracionPersecucion = alumnoMediaFolder + "CucarachaJugosita\\Media\\respiracion1.wav";
-            dirMonstruo = alumnoMediaFolder + "CucarachaJugosita\\Media\\Juego felipe monstruo algo enojado.wav";
+            respiracionPersecucion = alumnoMediaFolder + "CucarachaJugosita\\Media\\respiracion_corriendo_16.wav";
+            dirMonstruo = alumnoMediaFolder + "CucarachaJugosita\\Media\\monstruoAlgoEnojado_16.wav";
             respiro = new TgcStaticSound();
             respiro.loadSound(respiracionMerlusa);
             respiroPersecucion = new TgcStaticSound();

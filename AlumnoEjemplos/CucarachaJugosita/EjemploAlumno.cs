@@ -992,7 +992,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
             GuiController.Instance.CustomRenderEnabled = true;
             if (merlusa)
             {
-                timeMerlusa += elapsedTime;
+                if(timeMerlusa <= 2f) //Aca marcamos el coeficiente maximo de la merluseria
+                {
+                    timeMerlusa += elapsedTime;
+                }
+                
             }
             else
             {
