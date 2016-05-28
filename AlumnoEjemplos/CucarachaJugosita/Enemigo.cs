@@ -39,6 +39,12 @@ namespace AlumnoEjemplos.CucarachaJugosita
         protected Sliding slidin = new Sliding();
         protected Camara camara;
         protected Tgc3dSound sonidoCaminar;
+
+        public void reiniciar()
+        {
+            mesh.Position = caminoOriginal[0];
+            contador = 0;
+        }
         public void setCamara(Camara camara)
         {
             this.camara = camara;

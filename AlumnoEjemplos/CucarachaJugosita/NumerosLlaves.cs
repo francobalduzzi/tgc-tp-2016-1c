@@ -15,7 +15,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
     {
         TgcText2d textoActual;
         int numeroDeLlaves = 0;
-        int recolectadas = 0;
+        public int recolectadas = 0;
         public NumerosLlaves()
         {
             this.init();
@@ -49,6 +49,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
         {
             Device d3dDevice = GuiController.Instance.D3dDevice;
             textoActual.render();
+        }
+        public void reiniciar()
+        {
+            recolectadas = 0;
         }
     }
 }

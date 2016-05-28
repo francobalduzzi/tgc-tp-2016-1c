@@ -63,5 +63,13 @@ namespace AlumnoEjemplos.CucarachaJugosita
         {
             linterna.recargar();
         }
+        public override Boolean desaparecer()
+        {
+            return bandera == false;
+        }
+        public override void reiniciar()
+        {
+            bandera = false;
+        }
     }
 }

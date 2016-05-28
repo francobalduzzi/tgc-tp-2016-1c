@@ -11,7 +11,7 @@ using AlumnoEjemplos.CucarachaJugosita;
 
 namespace AlumnoEjemplos.CucarachaJugosita
 {
-    class Llave
+    class Llave : ElementoDesaparecedor
     {
         public Vector3 posicion;
         public TgcBox colision;
@@ -30,7 +30,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             this.meshLlave.Scale = new Vector3(0.5f, 0.5f, 0.5f);
             
         }
-        public TgcMesh getMesh()
+        public override TgcMesh getMesh()
         {
             return meshLlave;
         }
@@ -61,6 +61,14 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 meshLlave.render();
             }
 
+        }
+        public override Boolean desaparecer()
+        {
+            return bandera == false;
+        }
+        public override void reiniciar()
+        {
+            bandera = false;
         }
     }
     

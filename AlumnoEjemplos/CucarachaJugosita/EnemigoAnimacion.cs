@@ -16,6 +16,17 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public Boolean animada;
         public Boolean activarAnimacion;
         public TgcBox box; //caja para ver cuando lanzar la animacion
+        /*public new void reiniciar()
+        {
+            base.reiniciar();
+            animada = false;
+            activarAnimacion = false;
+        }*/
+        public void reiniciarAnimacion()
+        {
+            animada = false;
+            activarAnimacion = false;
+        }
         public EnemigoAnimacion(Vector3 cercania, Vector3 dimensionesCaja)
         {
             this.cercania = cercania;

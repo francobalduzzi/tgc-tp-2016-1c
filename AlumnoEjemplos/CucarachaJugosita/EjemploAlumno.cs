@@ -70,6 +70,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         ArrayList listaLlaves;
         ArrayList todosElementosARenderizar; //Hay que separar en 2 xq los enemigos son skeletical
         ArrayList enemigosARenderizar;
+        ArrayList elementosDesaparecedores;
         LuzNormal antorcha1;
         LuzNormal antorcha2;
         LuzNormal antorcha3;
@@ -112,6 +113,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         float contadorNight =  30f;
         TgcMesh meshInservible;
         PuertaFinal puertaF;
+        Boolean finPartida;
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
         /// Influye en donde se va a haber en el árbol de la derecha de la pantalla.
@@ -144,6 +146,14 @@ namespace AlumnoEjemplos.CucarachaJugosita
         /// </summary>
         public override void init()
         {
+            time = 0;
+            timeMerlusa = 0f; // Vuevle a 0 cada vez que se le termina la merlusa
+            merlusaPostPersecucion = false;
+            contadorSecundarioMerlusa = 9f;
+            reproducidoMerlusa = false;
+            nightVision = false;
+            contadorNight = 30f;
+
 
             cargarShaderPostProcesado();
             camara = new Camara();
@@ -410,6 +420,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             //Aca vamos a cargar todos los elementos a renderizar en una lista generica -- Para la iluminacion
             todosElementosARenderizar = new ArrayList();
             enemigosARenderizar = new ArrayList();
+            elementosDesaparecedores = new ArrayList();
             foreach(TgcMesh mesh in escena.Meshes)  //En la escena ya estan cargadas los de las puertas
             {
                 todosElementosARenderizar.Add(mesh);
@@ -421,10 +432,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
             foreach(Escondite escondite in listaEscondites)
             {
                 todosElementosARenderizar.Add(escondite.getMesh());
+                escena.Meshes.Add(escondite.getMesh());
             }
             foreach(Llave llave in listaLlaves)
             {
-                todosElementosARenderizar.Add(llave.getMesh());
+                elementosDesaparecedores.Add(llave);
             }
             foreach(ElementoMapa elemento in listaElementoMapa)
             {
@@ -432,10 +444,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
             }
             foreach(Recarga recarga in listaRecargas)
             {
-                todosElementosARenderizar.Add(recarga.getMesh());
+                elementosDesaparecedores.Add(recarga);
             }
             manejoI.setTodosLosElementos(todosElementosARenderizar);
             manejoI.setEnemigosARenderizar(enemigosARenderizar);
+            manejoI.setElementosDesaparecedores(elementosDesaparecedores);
             ///////////////USER VARS//////////////////
 
             //Crear una UserVar
@@ -551,25 +564,30 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     GuiController.Instance.Drawer2D.beginDrawSprite();
                     gameOver.render();
                     GuiController.Instance.Drawer2D.endDrawSprite();
+                    this.reiniciar();
                     if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.V))
                     {
                         estadoMenu = EstadoMenu.Menu;
-                        //this.init();
                     }
                     break;
                 case EstadoMenu.Ganado:
                     GuiController.Instance.Drawer2D.beginDrawSprite();
                     ganado.render();
                     GuiController.Instance.Drawer2D.endDrawSprite();
+                    this.reiniciar();
                     if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.V))
                     {
                         estadoMenu = EstadoMenu.Menu;
-                        //this.init();
                     }
                     break;
                 case EstadoMenu.Juego:
                     Device d3dDevice = GuiController.Instance.D3dDevice;
-
+                    if (finPartida)
+                    {
+                        reiniciar();
+                        finPartida = false;
+                    }
+                    //sonidos.playFondo();  ---->> Musica de fondo en todo el juego probar si dejar esta
                     //objeto.actualizarEscenario(escena, camara); // Atencion aca, esto es como moo de prueba baja mucho ls FPS, lo ideal seria tener ls meshes cocinados y en el init del programa estos se carguen a cada uno de los objetos
                     //Obtener valor de UserVar (hay que castear)
                     int valor = (int)GuiController.Instance.UserVars.getValue("variablePrueba");
@@ -626,7 +644,6 @@ namespace AlumnoEjemplos.CucarachaJugosita
         {
 
         }
-
 
         public void renderTotal(float elapsedTime)
         {
@@ -817,7 +834,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     sonidos.stopMerlusa();
                     sonidos.playPersecucion();
                     efectoPostProcesadoPersecucion(elapsedTime, d3dDevice);
-                    merlusaPostPersecucion = true;
+                    if (!finPartida)
+                    {
+                        merlusaPostPersecucion = true;
+                    }
+                    
                 }
                 else
                 {
@@ -1161,10 +1182,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     }
 
                 }
-                if(contador == 0)
-                {
+                /*if(contador == 0)
+                {*/
                     enemigo.getMesh().render();
-                }
+                //}
                 
             }
                 
@@ -1313,13 +1334,23 @@ namespace AlumnoEjemplos.CucarachaJugosita
         {
             TgcBox bounding = new TgcBox();
             bounding = TgcBox.fromSize(camara.getPosition(), new Vector3(5f, 5f, 5f));
+            int contador1 = 0;
+            int contador2 = 0;
             foreach (Enemigo enemigo in listaEnemigos)
             {
                 if (TgcCollisionUtils.testAABBAABB(enemigo.getMesh().BoundingBox, bounding.BoundingBox))
                 {
-                    estadoMenu = EstadoMenu.GameOver;
+                    contador1++;
                 }
-                return;
+                if(enemigo.getEstado() == Enemigo.Estado.Persiguiendo)
+                {
+                    contador2++;
+                }
+            }
+            if(contador1>0 && contador2 > 0)
+            {
+                estadoMenu = EstadoMenu.GameOver;
+                finPartida = true;
             }
         }
         public void colisionPuertaF()
@@ -1462,6 +1493,67 @@ namespace AlumnoEjemplos.CucarachaJugosita
             {
                 objeto.mover(elapsedTime);
             }
+        }
+
+
+
+
+
+
+        public void reiniciar()  //Esta cosa horrible va abajo de todo
+        {
+            camara.setCamera(new Vector3(60f, 60f, 183f), new Vector3(289f, 30f, 90f));
+            camara.MovementSpeed = 200f;
+            camara.RotationSpeed = 5f;
+            camara.JumpSpeed = 80f;
+            //GuiController.Instance: acceso principal a todas las herramientas del Framework
+
+            //Device de DirectX para crear primitivas
+
+            //Carpeta de archivos Media del alumno
+            vela1.reiniciar();
+
+            //Cargamos la linterna
+            linterna.reiniciar();
+            farol.reiniciar();
+            objeto = farol; //Empieza con el farol
+            //vela.Meshes[0].Rotation = new Vector3(-5f, -14f, 0f);
+            //Camara en primera persona:
+            foreach(Puerta puerta in listaPuertas)
+            {
+                puerta.estado = Puerta.Estado.Cerrado;
+            }
+
+            foreach(Enemigo enemigo in listaEnemigos)
+            {
+                enemigo.reiniciar();
+            }
+            enemigoAnimado.reiniciarAnimacion(); //Hay que reiniciarle las banderas
+            foreach(ElementoDesaparecedor elemento in elementosDesaparecedores)
+            {
+                elemento.reiniciar();
+            }
+
+            numeroLLaves = new NumerosLlaves(); // Esto es una pija, hay que recrear el objeto sino no funca y no reinicia el contador
+            numeroLLaves.setNumeroLLaves(listaLlaves.Count);
+            trofeo.reiniciar();
+
+
+            //Instanciamos puerta final
+            puertaF.estado = PuertaFinal.Estado.Cerrado;
+
+
+             time = 0;
+             timeMerlusa = 0f; // Vuevle a 0 cada vez que se le termina la merlusa
+             merlusaPostPersecucion = false;
+             contadorSecundarioMerlusa = 9f;
+             reproducidoMerlusa = false;
+             nightVision = false;
+             contadorNight = 30f;
+             sonidos.stopFondo();
+             sonidos.stopMerlusa();
+             sonidos.stopPersecucion();
+
         }
     }
 }

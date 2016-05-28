@@ -23,6 +23,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         TgcScene escena;
         ArrayList todosLosElementos;
         ArrayList enemigosARenderizar;
+        ArrayList elementosDesaparecedores;
         public void setEscena(TgcScene escena)
         {
             this.escena = escena;
@@ -47,7 +48,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
             //effectSpotYPoint = GuiController.Instance.Shaders.TgcMeshPointLightShader; ;
             //effect.Technique = "MultiplesLuces";
         }
-
+        public void setElementosDesaparecedores(ArrayList elem)
+        {
+            elementosDesaparecedores = elem;
+        }
         public LuzNormal luzMasCercana(Vector3 pos)
         {
             float minDist = float.MaxValue;
@@ -119,6 +123,46 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     mesh.Effect.SetValue("lightIntensityP", luzDelMesh.Intensity);
                     mesh.Effect.SetValue("lightAttenuationP", luzDelMesh.Attenuation);
                     mesh.render();
+                }
+                foreach(ElementoDesaparecedor elemento in elementosDesaparecedores)
+                {
+                    if (elemento.desaparecer())
+                    {
+                        elemento.getMesh().Effect = effectSpotYPoint;
+                        elemento.getMesh().Technique = GuiController.Instance.Shaders.getTgcMeshTechnique(elemento.getMesh().RenderType);
+                    }
+                }
+                foreach (ElementoDesaparecedor elemento in elementosDesaparecedores)
+                {
+                    if (elemento.desaparecer())
+                    {
+                        luzDelMesh = luzMasCercana(elemento.getMesh().BoundingBox.calculateBoxCenter());
+                        elemento.getMesh().Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(Color.Black));
+                        elemento.getMesh().Effect.SetValue("materialAmbientColor", ColorValue.FromColor(Color.White));
+                        elemento.getMesh().Effect.SetValue("materialDiffuseColor", ColorValue.FromColor(Color.White));
+                        elemento.getMesh().Effect.SetValue("materialSpecularColor", ColorValue.FromColor(Color.White));
+                        elemento.getMesh().Effect.SetValue("materialSpecularExp", 9f);
+                        elemento.getMesh().Effect.SetValue("lightColor", ColorValue.FromColor(objeto.color));
+                        elemento.getMesh().Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(camara.getPosition()));
+                        elemento.getMesh().Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(camara.getPosition()));
+                        elemento.getMesh().Effect.SetValue("spotLightDir", TgcParserUtils.vector3ToFloat4Array(lightDir));
+                        if (objeto.Encendida)
+                        {
+                            elemento.getMesh().Effect.SetValue("lightIntensity", objeto.Intensity);
+                        }
+                        else
+                        {
+                            elemento.getMesh().Effect.SetValue("lightIntensity", 0);
+                        }
+                        elemento.getMesh().Effect.SetValue("lightAttenuation", objeto.Attenuation);
+                        elemento.getMesh().Effect.SetValue("spotLightAngleCos", FastMath.ToRad(objeto.SpotAngle));
+                        elemento.getMesh().Effect.SetValue("spotLightExponent", objeto.SpotExponent);
+                        elemento.getMesh().Effect.SetValue("lightColorP", ColorValue.FromColor(luzDelMesh.lightColor));
+                        elemento.getMesh().Effect.SetValue("lightPositionP", TgcParserUtils.vector3ToFloat4Array(luzDelMesh.Posicion));
+                        elemento.getMesh().Effect.SetValue("lightIntensityP", luzDelMesh.Intensity);
+                        elemento.getMesh().Effect.SetValue("lightAttenuationP", luzDelMesh.Attenuation);
+                        elemento.getMesh().render();
+                    }
                 }
                 /*foreach (TgcSkeletalMesh mesh in todosLosElementos)
                 {

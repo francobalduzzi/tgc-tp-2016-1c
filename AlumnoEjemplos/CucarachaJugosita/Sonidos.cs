@@ -22,10 +22,12 @@ namespace AlumnoEjemplos.CucarachaJugosita
         TgcStaticSound respiro;
         TgcStaticSound respiroPersecucion;
         TgcStaticSound monstruo;
+        TgcStaticSound fondoSonido;
         bool tipoPaso = true;
         string respiracionMerlusa;
         string respiracionPersecucion;
         string dirMonstruo;
+        string fondo;
         float contador;
         public Sonidos()
         {
@@ -39,12 +41,16 @@ namespace AlumnoEjemplos.CucarachaJugosita
             respiracionMerlusa = alumnoMediaFolder + "CucarachaJugosita\\Media\\juego felipe respiracion corta susto .wav";
             respiracionPersecucion = alumnoMediaFolder + "CucarachaJugosita\\Media\\respiracion_corriendo_16.wav";
             dirMonstruo = alumnoMediaFolder + "CucarachaJugosita\\Media\\monstruoAlgoEnojado_16.wav";
+            fondo = alumnoMediaFolder + "CucarachaJugosita\\Media\\Juego felipe sonido ambiente terror.wav";
+            
             respiro = new TgcStaticSound();
             respiro.loadSound(respiracionMerlusa);
             respiroPersecucion = new TgcStaticSound();
             respiroPersecucion.loadSound(respiracionPersecucion);
             monstruo = new TgcStaticSound();
             monstruo.loadSound(dirMonstruo);
+            fondoSonido = new TgcStaticSound();
+            fondoSonido.loadSound(fondo);
             //monstruo.SoundBuffer.
         }
         public void playMerlusa()
@@ -62,6 +68,14 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public void stopPersecucion()
         {
             respiroPersecucion.stop();
+        }
+        public void playFondo()
+        {
+            fondoSonido.play(true);
+        }
+        public void stopFondo()
+        {
+            fondoSonido.stop();
         }
         public void sonidoMonstruo(float elapsedTime)
         {

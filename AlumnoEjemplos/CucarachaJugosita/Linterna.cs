@@ -88,6 +88,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 this.Intensity = (Intensity - (0.2f * elapsedTime));//si es necesario modificar velocidad de reduccion  
             }
         }
+        public void reiniciar()
+        {
+            this.Intensity = VALORMAXIMOINTENSIDAD;
+            this.Encendida = false;
+        }
 
 
 

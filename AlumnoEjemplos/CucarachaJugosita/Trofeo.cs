@@ -65,6 +65,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
             }
         }
+        public void reiniciar()
+        {
+            bandera = false;
+            this.meshTrofeo.Position = posicion;
+        }
     }
     
 }

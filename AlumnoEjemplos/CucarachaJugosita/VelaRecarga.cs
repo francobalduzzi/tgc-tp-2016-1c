@@ -62,5 +62,13 @@ namespace AlumnoEjemplos.CucarachaJugosita
         {
             vela.recargar();
         }
+        public override Boolean desaparecer()
+        {
+            return bandera == false;
+        }
+        public override void reiniciar()
+        {
+            bandera = false;
+        }
     }
 }

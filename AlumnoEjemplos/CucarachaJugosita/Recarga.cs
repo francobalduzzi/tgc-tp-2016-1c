@@ -6,12 +6,11 @@ using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.CucarachaJugosita
 {
-    abstract class Recarga
+    abstract class Recarga : ElementoDesaparecedor
     {
         public abstract void init();
         public abstract void render(float elapsedTime);
         public abstract Boolean verificarColision(Camara camara);
         public abstract void recarga();
-        public abstract TgcMesh getMesh();
     }
 }

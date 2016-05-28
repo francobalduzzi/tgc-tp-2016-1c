@@ -76,7 +76,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
             return ((this.Intensity) / VALORMAXIMOINTENSIDAD);
         }
       
-       
+       public void reiniciar()
+        {
+            Intensity = VALORMAXIMOINTENSIDAD;
+            Encendida = false;
+        }
 
     }
 }
