@@ -16,29 +16,6 @@ sampler2D diffuseMap = sampler_state
 	MIPFILTER = LINEAR;
 };
 
-
-
-//Cosas de sombras
-#define SMAP_SIZE 1024
-#define EPSILON 0.05f
-
-float4x4 g_mViewLightProj;
-float4x4 g_mProjLight;
-
-texture  g_txShadow;	// textura para el shadow map
-sampler2D g_samShadow =
-sampler_state
-{
-    Texture = <g_txShadow>;
-    MinFilter = Point;
-    MagFilter = Point;
-    MipFilter = Point;
-    AddressU = Clamp;
-    AddressV = Clamp;
-};
-
-
-//Fin cosas sombras
 //Textura para Lightmap
 texture texLightMap;
 sampler2D lightMap = sampler_state
@@ -62,11 +39,6 @@ float4 eyePosition; //Posicion de la camara
 float lightIntensity; //Intensidad de la luz
 float lightAttenuation; //Factor de atenuacion de la luz
 
-//Parametros de Spot
-float3 spotLightDir; //Direccion del cono de luz
-float spotLightAngleCos; //Angulo de apertura del cono de luz (en radianes)
-float spotLightExponent; //Exponente de atenuacion dentro del cono de luz
-
 
 
 //POINT
@@ -75,69 +47,6 @@ float3 lightColorP; //Color RGB de la luz
 float4 lightPositionP; //Posicion de la luz
 float lightIntensityP; //Intensidad de la luz
 float lightAttenuationP; //Factor de atenuacion de la luz
-
-
-
-
-
-/**************************************************************************************/
-/* SOMBRAS */
-/**************************************************************************************/
-
-
-
-//Output del Vertex Shader
-struct VS_OUTPUT 
-{
-   float4 Position :        POSITION0;
-   float2 Texcoord :        TEXCOORD0;
-   float3 Norm :			TEXCOORD1;		// Normales
-   float3 Pos :   			TEXCOORD2;		// Posicion real 3d
-};
-
-//-----------------------------------------------------------------------------
-// Vertex Shader que implementa un shadow map
-//-----------------------------------------------------------------------------
-void VertShadow( float4 Pos : POSITION,
-                 float3 Normal : NORMAL,
-                 out float4 oPos : POSITION,
-                 out float2 Depth : TEXCOORD0 )
-{
-	// transformacion estandard 
-    oPos = mul( Pos, matWorld);					// uso el del mesh
-    oPos = mul( oPos, g_mViewLightProj );		// pero visto desde la pos. de la luz
-    
-    // devuelvo: profundidad = z/w 
-    Depth.xy = oPos.zw;
-}
-
-//-----------------------------------------------------------------------------
-// Pixel Shader para el shadow map, dibuja la "profundidad" 
-//-----------------------------------------------------------------------------
-void PixShadow( float2 Depth : TEXCOORD0,out float4 Color : COLOR )
-{
-	// parche para ver el shadow map
-	//float k = Depth.x/Depth.y;
-	//Color = (1-k);
-    Color = Depth.x/Depth.y;
-
-}
-
-technique RenderShadow
-{
-    pass p0
-    {
-        VertexShader = compile vs_3_0 VertShadow();
-        PixelShader = compile ps_3_0 PixShadow();
-    }
-}
-
-
-/**************************************************************************************/
-/* FIN SOMBRAS */
-/**************************************************************************************/
-
-
 
 
 /**************************************************************************************/
@@ -150,9 +59,6 @@ struct VS_INPUT_VERTEX_COLOR
 	float4 Position : POSITION0;
 	float3 Normal : NORMAL0;
 	float4 Color : COLOR;
-	float2 Texcoord :        TEXCOORD0;
-    float3 Norm :			TEXCOORD1;		// Normales
-    float3 Pos :   			TEXCOORD2;		// Posicion real 3d
 };
 
 //Output del Vertex Shader
@@ -226,14 +132,8 @@ float4 ps_VertexColor(PS_INPUT_VERTEX_COLOR input) : COLOR0
 	//Calcular atenuacion por distancia
 	float distAtten = length(lightPosition.xyz - input.WorldPosition) * lightAttenuation;
 	
-	//Calcular atenuacion por Spot Light. Si esta fuera del angulo del cono tiene 0 intensidad.
-	float spotAtten = dot(-spotLightDir, Ln);
-	spotAtten = (spotAtten > spotLightAngleCos) 
-					? pow(spotAtten, spotLightExponent)
-					: 0.0;
-	
 	//Calcular intensidad de la luz segun la atenuacion por distancia y si esta adentro o fuera del cono de luz
-	float intensity = lightIntensity * spotAtten / distAtten;
+	float intensity = lightIntensity / distAtten;
 	
 	//Componente Ambient
 	float3 ambientLight = intensity * lightColor * materialAmbientColor;
@@ -391,15 +291,10 @@ float4 ps_DiffuseMap(PS_DIFFUSE_MAP input) : COLOR0
 	
 	//Calcular atenuacion por distancia
 	float distAtten = length(lightPosition.xyz - input.WorldPosition) * lightAttenuation;
-	
-	//Calcular atenuacion por Spot Light. Si esta fuera del angulo del cono tiene 0 intensidad.
-	float spotAtten = dot(-spotLightDir, Ln);
-	spotAtten = (spotAtten > spotLightAngleCos) 
-					? pow(spotAtten, spotLightExponent)
-					: 0.0;
+
 	
 	//Calcular intensidad de la luz segun la atenuacion por distancia y si esta adentro o fuera del cono de luz
-	float intensity = lightIntensity * spotAtten / distAtten;
+	float intensity = lightIntensity / distAtten;
 	
 	//Obtener texel de la textura
 	float4 texelColor = tex2D(diffuseMap, input.Texcoord);
@@ -449,7 +344,7 @@ float4 ps_DiffuseMap(PS_DIFFUSE_MAP input) : COLOR0
 	
 	/* Color final: modular (Emissive + Ambient + Diffuse) por el color de la textura, y luego sumar Specular.
 	   El color Alpha sale del diffuse material */
-	float4 finalColorP = float4(saturate(materialEmissiveColor + ambientLightP + diffuseLightP) * texelColorP, materialDiffuseColor.a); //Le sacamos el specular por quedar feo
+	float4 finalColorP = float4(saturate(materialEmissiveColor + ambientLightP + diffuseLightP) * texelColorP + specularLightP, materialDiffuseColor.a);
 	return finalColorS + finalColorP;
 }
 
@@ -564,14 +459,8 @@ float4 ps_diffuseMapAndLightmap(PS_INPUT_DIFFUSE_MAP_AND_LIGHTMAP input) : COLOR
 	//Calcular atenuacion por distancia
 	float distAtten = length(lightPosition.xyz - input.WorldPosition) * lightAttenuation;
 	
-	//Calcular atenuacion por Spot Light. Si esta fuera del angulo del cono tiene 0 intensidad.
-	float spotAtten = dot(-spotLightDir, Ln);
-	spotAtten = (spotAtten > spotLightAngleCos) 
-					? pow(spotAtten, spotLightExponent)
-					: 0.0;
-	
 	//Calcular intensidad de la luz segun la atenuacion por distancia y si esta adentro o fuera del cono de luz
-	float intensity = lightIntensity * spotAtten / distAtten;
+	float intensity = lightIntensity / distAtten;
 	
 	//Obtener color de diffuseMap y de Lightmap
 	float4 texelColor = tex2D(diffuseMap, input.Texcoord);

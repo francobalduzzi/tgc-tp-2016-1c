@@ -9,6 +9,7 @@ using Microsoft.DirectX.Direct3D;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer;
 using AlumnoEjemplos.CucarachaJugosita;
+using TgcViewer.Utils.Shaders;
 
 namespace AlumnoEjemplos.CucarachaJugosita
 {
@@ -20,7 +21,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public Color lightColor { get; set; }
         public TgcMesh mesh;
         public TgcScene antorcha;
-
+        //public Effect efectoAntorcha;
+        //public float time;
         public virtual void titilar()
         {
 
@@ -28,16 +30,24 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
         public LuzNormal(Vector3 pos)
         {
+            //time = 0;
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
             var loader = new TgcSceneLoader();
             antorcha = loader.loadSceneFromFile(alumnoMediaFolder + "CucarachaJugosita\\Media\\Antorcha-TgcScene.xml");
+            //efectoAntorcha = TgcShaders.loadEffect(alumnoMediaFolder + "CucarachaJugosita\\efectoAntorcha.fx");
+            //efectoAntorcha.Technique = "MoverAntorcha";
             mesh = antorcha.Meshes[0];
             mesh.Position = pos;
+            Posicion = pos;
+            //mesh.Effect = efectoAntorcha;
+            //mesh.Technique =  "MoverAntorcha";
         }
 
         public void render()
         {
-            antorcha.renderAll();
+            //time += GuiController.Instance.ElapsedTime;
+            //mesh.Effect.SetValue("time", time);
+            mesh.render();
         }
 
         public void rotateY(float grados)

@@ -314,7 +314,7 @@ float4 ps_DiffuseMap(PS_DIFFUSE_MAP input) : COLOR0
 	
 	/* Color final: modular (Emissive + Ambient + Diffuse) por el color de la textura, y luego sumar Specular.
 	   El color Alpha sale del diffuse material */
-	float4 finalColorS = float4(saturate(materialEmissiveColor + ambientLight + diffuseLight) * texelColor + specularLight, materialDiffuseColor.a);
+	float4 finalColorS = float4(saturate(materialEmissiveColor + ambientLight + diffuseLight) * texelColor, materialDiffuseColor.a); //Le sacamos el specular por feo
 	
 	//POINT
 	
@@ -344,7 +344,7 @@ float4 ps_DiffuseMap(PS_DIFFUSE_MAP input) : COLOR0
 	
 	/* Color final: modular (Emissive + Ambient + Diffuse) por el color de la textura, y luego sumar Specular.
 	   El color Alpha sale del diffuse material */
-	float4 finalColorP = float4(saturate(materialEmissiveColor + ambientLightP + diffuseLightP) * texelColorP + specularLightP, materialDiffuseColor.a);
+	float4 finalColorP = float4(saturate(materialEmissiveColor + ambientLightP + diffuseLightP) * texelColorP, materialDiffuseColor.a); //Le sacamos el specular por feo
 	return finalColorS + finalColorP;
 }
 

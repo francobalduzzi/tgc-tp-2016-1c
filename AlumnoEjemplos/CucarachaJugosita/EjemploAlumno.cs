@@ -372,18 +372,45 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
             antorcha1 = new LuzNormal(new Vector3(138f, 80f, 10f));
             antorcha1.rotateY(3.14f);
+            antorcha1.lightColor = Color.White;
+            antorcha1.Intensity = 20f;
+            antorcha1.Attenuation = 0.5f;
             antorcha2 = new LuzNormal(new Vector3(806f, 80f, 485f));
+            antorcha2.lightColor = Color.White;
+            antorcha2.Intensity = 20f;
+            antorcha2.Attenuation = 0.5f;
             antorcha3 = new LuzNormal(new Vector3(1191f, 80f, 351f));
+            antorcha3.lightColor = Color.White;
+            antorcha3.Intensity = 20f;
+            antorcha3.Attenuation = 0.5f;
             antorcha3.rotateY(1.57f);
             antorcha4 = new LuzNormal(new Vector3(1689f, 80f, 343f));
+            antorcha4.lightColor = Color.White;
+            antorcha4.Intensity = 20f;
+            antorcha4.Attenuation = 0.5f;
             antorcha4.rotateY(3.14f);
             antorcha5 = new LuzNormal(new Vector3(1467f, 80f, 958f));
+            antorcha5.lightColor = Color.White;
+            antorcha5.Intensity = 20f;
+            antorcha5.Attenuation = 0.5f;
             antorcha5.rotateY(3.14f);
             antorcha6 = new LuzNormal(new Vector3(310f, 80f, 974f));
+            antorcha6.lightColor = Color.White;
+            antorcha6.Intensity = 20f;
+            antorcha6.Attenuation = 0.5f;
             antorcha6.rotateY(-1.57f);
             antorcha7 = new LuzNormal(new Vector3(2703f, 80f, 2342f));
+            antorcha7.lightColor = Color.White;
+            antorcha7.Intensity = 20f;
+            antorcha7.Attenuation = 0.5f;
             antorcha8 = new LuzNormal(new Vector3(4485f, 80f, 1737f));
+            antorcha8.lightColor = Color.White;
+            antorcha8.Intensity = 20f;
+            antorcha8.Attenuation = 0.5f;
             antorcha9 = new LuzNormal(new Vector3(2534f, 80f, 557f));
+            antorcha9.lightColor = Color.White;
+            antorcha9.Intensity = 20f;
+            antorcha9.Attenuation = 0.5f;
             antorcha9.rotateY(3.14f);
             listaLuces.Add(antorcha1);
             listaLuces.Add(antorcha2);
@@ -588,7 +615,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     if (finPartida)
                     {
                         merlusaPostPersecucion = false;
-                        finPartida = false;
+                        //finPartida = false;
                     }
                     
                     int valor = (int)GuiController.Instance.UserVars.getValue("variablePrueba");
@@ -854,12 +881,20 @@ namespace AlumnoEjemplos.CucarachaJugosita
                         
                         if (!reproducidoMerlusa || merlusaPostPersecucion)
                             {
+                            if (!finPartida)
+                            {
                                 merlusaPostPersecucion = false;
                                 reproducidoMerlusa = true;
                                 sonidos.playMerlusa();
                             }
-                            camara.efectoMerlusa(timeMerlusa + contadorSecundarioMerlusa);
-                            efectoPostProcesadoMerlusa(elapsedTime, d3dDevice, merlusa);
+                            else
+                            {
+                                finPartida = false;
+                            }
+                                
+                            }
+                        camara.efectoMerlusa(timeMerlusa + contadorSecundarioMerlusa);
+                        efectoPostProcesadoMerlusa(elapsedTime, d3dDevice, merlusa);
                         
                     }
                     else
@@ -1185,10 +1220,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     }
 
                 }
-                /*if(contador == 0)
-                {*/
+                if(contador == 0)
+                {
                     enemigo.getMesh().render();
-                //}
+                }
                 
             }
                 

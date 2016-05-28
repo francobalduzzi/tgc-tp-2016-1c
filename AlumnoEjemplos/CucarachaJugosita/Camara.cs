@@ -379,14 +379,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public void esconder(Vector3 posicion, Vector3 direccion)
         {
             this.posicionAntesDeEsconderse = eye;
-            eye = new Vector3(posicion.X,eye.Y,posicion.Z);
-            Vector3 dir1 = direccion-eye;
-            dir1.Y = 0;
-            dir1.Normalize();
-            Vector3 dir2 = target - eye;
-            dir2.Y = 0;
-            dir2.Normalize();
-            rotateY(Geometry.DegreeToRadian(FastMath.Acos(Vector3.Dot(dir1, dir2))));
+            setCamera(new Vector3(posicion.X, eye.Y, posicion.Z), direccion);
             this.escondido = true;
         }
         public void desesconder()
@@ -502,7 +495,6 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     return true;
                 }
             }
-
             return false;
 
         }
