@@ -104,13 +104,13 @@ namespace AlumnoEjemplos.CucarachaJugosita
         ManejoIluminacion manejoI;
         NumerosLlaves numeroLLaves;
         Trofeo trofeo;
-        float time = 0;
-        public float timeMerlusa = 0f; // Vuevle a 0 cada vez que se le termina la merlusa
-        public Boolean merlusaPostPersecucion = false;
-        public float contadorSecundarioMerlusa = 9f;
-        public Boolean reproducidoMerlusa = false;
-        Boolean nightVision = false;
-        float contadorNight =  30f;
+        float time;
+        public float timeMerlusa; // Vuevle a 0 cada vez que se le termina la merlusa
+        public Boolean merlusaPostPersecucion;
+        public float contadorSecundarioMerlusa;
+        public Boolean reproducidoMerlusa;
+        Boolean nightVision;
+        float contadorNight;
         TgcMesh meshInservible;
         PuertaFinal puertaF;
         Boolean finPartida;
@@ -582,14 +582,15 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     break;
                 case EstadoMenu.Juego:
                     Device d3dDevice = GuiController.Instance.D3dDevice;
-                    if (finPartida)
-                    {
-                        reiniciar();
-                        finPartida = false;
-                    }
                     //sonidos.playFondo();  ---->> Musica de fondo en todo el juego probar si dejar esta
                     //objeto.actualizarEscenario(escena, camara); // Atencion aca, esto es como moo de prueba baja mucho ls FPS, lo ideal seria tener ls meshes cocinados y en el init del programa estos se carguen a cada uno de los objetos
                     //Obtener valor de UserVar (hay que castear)
+                    if (finPartida)
+                    {
+                        merlusaPostPersecucion = false;
+                        finPartida = false;
+                    }
+                    
                     int valor = (int)GuiController.Instance.UserVars.getValue("variablePrueba");
 
                     ///////////////INPUT//////////////////
@@ -834,10 +835,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     sonidos.stopMerlusa();
                     sonidos.playPersecucion();
                     efectoPostProcesadoPersecucion(elapsedTime, d3dDevice);
-                    if (!finPartida)
-                    {
-                        merlusaPostPersecucion = true;
-                    }
+                    merlusaPostPersecucion = true;
+                    timeMerlusa = 0;
                     
                 }
                 else
@@ -847,17 +846,21 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     if (merlusaPostPersecucion)
                     {
                         merlusa = merlusaPostPersecucion;
-                        merlusaPostPersecucion = false;
+                        
+
                     }
                     if (merlusa || timeMerlusa != 0)
                     {
-                        if (!reproducidoMerlusa)
-                        {
-                            reproducidoMerlusa = true;
-                            sonidos.playMerlusa();
-                        }                        
-                        camara.efectoMerlusa(timeMerlusa+contadorSecundarioMerlusa);
-                        efectoPostProcesadoMerlusa(elapsedTime, d3dDevice, merlusa);
+                        
+                        if (!reproducidoMerlusa || merlusaPostPersecucion)
+                            {
+                                merlusaPostPersecucion = false;
+                                reproducidoMerlusa = true;
+                                sonidos.playMerlusa();
+                            }
+                            camara.efectoMerlusa(timeMerlusa + contadorSecundarioMerlusa);
+                            efectoPostProcesadoMerlusa(elapsedTime, d3dDevice, merlusa);
+                        
                     }
                     else
                     {
