@@ -1591,6 +1591,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
              sonidos.stopFondo();
              sonidos.stopMerlusa();
              sonidos.stopPersecucion();
+             sonidos.init(); //Los cargamos de vuelta para que empiecen de 0
 
         }
     }

@@ -39,6 +39,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         protected Sliding slidin = new Sliding();
         protected Camara camara;
         protected Tgc3dSound sonidoCaminar;
+        protected Tgc3dSound sonidoPerseguir;
 
         public void reiniciar()
         {
@@ -127,7 +128,9 @@ namespace AlumnoEjemplos.CucarachaJugosita
             bounding.move(new Vector3(15, 0, -170));
             sonidoCaminar = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosDir + "CucarachaJugosita\\Media\\pasos_16.wav", mesh.Position);
             sonidoCaminar.MinDistance = 30f;
-            sonidoCaminar.play(true);
+            sonidoPerseguir = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosDir + "CucarachaJugosita\\Media\\monstruoMuyEnojado.wav", mesh.Position);
+            sonidoPerseguir.MinDistance = 300f;
+
         }
 
         public virtual void init()
@@ -230,9 +233,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
             switch (estado)
             {
                 case Estado.RecorriendoIda:
-                    while(caminoIda[contador] != null && i )
+                    sonidoPerseguir.stop();
+                    sonidoCaminar.play(true);
+                    while (caminoIda[contador] != null && i )
                     {
-                        if((mesh.Position - caminoIda[contador]).Length() < 1f)
+                        if((mesh.Position - caminoIda[contador]).LengthSq() < 1f)
                         {
                             contador++;
                             if (contador == cantidadWP)
@@ -267,9 +272,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
                     break;
                 case Estado.RecorriendoVuelta:
+                    sonidoPerseguir.stop();
+                    sonidoCaminar.play(true);
                     while (caminoVuelta[contador] != null && i)
                     {
-                        if ((mesh.Position - caminoVuelta[contador]).Length() < 1f)
+                        if ((mesh.Position - caminoVuelta[contador]).LengthSq() < 1f)
                         {
                             contador++;
                             if (contador == cantidadWP)
@@ -304,12 +311,15 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
                     break;
                 case Estado.Parado:
+                    sonidoCaminar.stop();
                     Vector3 direccion = caminoOriginal[1] - mesh.Position;
                     direccion.Normalize();
                     direccion.Y = 0;
                     mesh.rotateY((float)Math.Atan2(direccion.X, direccion.Z) - mesh.Rotation.Y - Geometry.DegreeToRadian(180f));
                     break;
                 case Estado.Persiguiendo:
+                    sonidoCaminar.stop();
+                    sonidoPerseguir.play(true);
                     selectedAnim = animationList[2];
                     mesh.playAnimation(selectedAnim, true);
                     seguirASlider(posCam, elapsedTime, VELOCIDAD_MOVIMIENTO_CORRER);
@@ -355,7 +365,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
         public void dejarDePerseguir(Vector3 posCam)
         {
-            if ((mesh.Position - posCam).Length() > 500f)
+            if ((mesh.Position - posCam).LengthSq() > 250000f)
             {
                 selectedAnim = animationList[1];
                 mesh.playAnimation(selectedAnim, true);
@@ -381,7 +391,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             calculito.Y = 0;
             calculito.Normalize();
             distancia = posicion - mesh.Position;
-            return (Vector3.Dot(director, calculito) >= 0.5 && distancia.Length() <= 500 && calculoParedesEnMedio(posicion));
+            return (Vector3.Dot(director, calculito) >= 0.5 && distancia.LengthSq() <= 250000 && calculoParedesEnMedio(posicion));
         }
 
         public Boolean calculoParedesEnMedio(Vector3 posicion)

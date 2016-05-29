@@ -24,6 +24,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         TgcStaticSound monstruo;
         TgcStaticSound fondoSonido;
         bool tipoPaso = true;
+        string alumnoMediaFolder;
         string respiracionMerlusa;
         string respiracionPersecucion;
         string dirMonstruo;
@@ -32,15 +33,16 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public Sonidos()
         {
             init();
-            contador = 300f;
+            
             Device d3dDevice = GuiController.Instance.D3dDevice;
         }
         public void init()
         {
-            string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
+            contador = 180f;
+            alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
             respiracionMerlusa = alumnoMediaFolder + "CucarachaJugosita\\Media\\juego felipe respiracion corta susto .wav";
             respiracionPersecucion = alumnoMediaFolder + "CucarachaJugosita\\Media\\respiracion_corriendo_16.wav";
-            dirMonstruo = alumnoMediaFolder + "CucarachaJugosita\\Media\\monstruoAlgoEnojado_16.wav";
+            dirMonstruo = alumnoMediaFolder + "CucarachaJugosita\\Media\\monstruo_lamento.wav";
             fondo = alumnoMediaFolder + "CucarachaJugosita\\Media\\Juego felipe sonido ambiente terror.wav";
             
             respiro = new TgcStaticSound();
@@ -82,7 +84,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             contador -= elapsedTime;
             if(contador <= 0)
             {
-                contador = 300f;
+                contador = 180f;
                 monstruo.play();
             }
         }
