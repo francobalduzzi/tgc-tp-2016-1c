@@ -60,6 +60,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         Puerta puerta3;
         Puerta puerta4;
         Puerta puerta5;
+        Puerta puerta6;
         Sonidos sonidos;
         float contador = 0;
         Barra barra;
@@ -81,7 +82,18 @@ namespace AlumnoEjemplos.CucarachaJugosita
         LuzNormal antorcha8;
         LuzNormal antorcha9;
         List<LuzNormal> listaLuces;
-        ElementoMapa esqueleto;
+        ElementoMapa cosa1;
+        ElementoMapa cosa2;
+        ElementoMapa cosa3;
+        ElementoMapa cosa4;
+        ElementoMapa cosa5;
+        ElementoMapa cosa6;
+        ElementoMapa cosa7;
+        ElementoMapa cosa8;
+        ElementoMapa cosa9;
+        ElementoMapa cosa10;
+        ElementoMapa cosa11;
+        ElementoMapa cosa12;
         ArrayList listaEscondites;
         Escondite escondite1;
         VertexBuffer screenQuadVB;
@@ -104,6 +116,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         ManejoIluminacion manejoI;
         NumerosLlaves numeroLLaves;
         Trofeo trofeo;
+        NightRecarga activadorNightvision;
         float time;
         public float timeMerlusa; // Vuevle a 0 cada vez que se le termina la merlusa
         public Boolean merlusaPostPersecucion;
@@ -197,15 +210,18 @@ namespace AlumnoEjemplos.CucarachaJugosita
             puerta2.init(new Vector3(1699f, 45f, 855f));
             puerta2.rotateY(-3.14f);
             puerta2.escalar(new Vector3(0.8f, 0.8f, 0.8f));
-            puerta3 = new Puerta();
-            puerta3.init(new Vector3(2457f, 57f, 1130f));
-            puerta3.rotateY(-1.57f);
+            puerta3 = new Puerta();//puertaSusto
+            puerta3.init(new Vector3(2645f, 57f, 1971f));
+            puerta3.rotateY(3.14f);
             puerta4 = new Puerta();
             puerta4.init(new Vector3(3193f, 57f, 1300f));
             puerta4.rotateY(-3.14f);
             puerta5 = new Puerta();
-            puerta5.init(new Vector3(1425f, 57f, 1363f));
+            puerta5.init(new Vector3(1425f, 57f, 1270f));
             puerta5.rotateY(-3.14f);
+            puerta6 = new Puerta();//puertaSusto
+            puerta6.init(new Vector3(4442f, 57f, 1232f));
+            puerta6.rotateY(3.14f);
 
             //Añadimos puertas a la lista
             listaPuertas.Add(puerta1);
@@ -213,6 +229,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             listaPuertas.Add(puerta3);
             listaPuertas.Add(puerta4);
             listaPuertas.Add(puerta5);
+            listaPuertas.Add(puerta6);
 
             foreach (Puerta puerta in listaPuertas) //Aca añadimos los meshes correspondiente a cada puerta a la escena
             {
@@ -236,8 +253,26 @@ namespace AlumnoEjemplos.CucarachaJugosita
             enemigo1.setCamara(camara);
 
 
-            esqueleto = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3(359f, 0f, 940f));
-            esqueleto.rotateY(3.14f);
+            cosa1 = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3(225f, 0f, 312f));
+            cosa1.rotateY(1.57f);
+            cosa2 = new ElementoMapa("Esqueleto2-TgcScene.xml", new Vector3(934f, 5.02f, 164f));
+            cosa2.rotateY(1.57f);
+            cosa3 = new ElementoMapa("Esqueleto3-TgcScene.xml", new Vector3(325f, 0f, 1004f));
+            cosa3.rotateY(-1.57f);
+            cosa4 = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3(1740f, 0f, 1520f));
+            cosa5 = new ElementoMapa("Esqueleto2-TgcScene.xml", new Vector3(1467f, 0f, 958f));
+            cosa5.rotateY(3.14f);
+            cosa6 = new ElementoMapa("Esqueleto3-TgcScene.xml", new Vector3(1815f, 0f, 645f));
+            cosa6.rotateY(1.57f);
+            cosa7 = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3(3235f, 0f, 825f));
+            cosa7.rotateY(3.14f);
+            cosa8 = new ElementoMapa("Esqueleto2-TgcScene.xml", new Vector3(4485f, 0f, 1737f));
+            cosa9 = new ElementoMapa("Esqueleto3-TgcScene.xml", new Vector3(2657f, 0f, 575f));
+            cosa9.rotateY(3.14f);
+            cosa10 = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3(1180f, 0f, 330f));
+            cosa10.rotateY(1.57f);
+            cosa11 = new ElementoMapa("Esqueleto2-TgcScene.xml", new Vector3(866f, 0f, 1136f));
+            cosa12 = new ElementoMapa("Esqueleto3-TgcScene.xml", new Vector3(1755f, 0f, 2120f));
 
 
             enemigo2 = new Enemigo2(); //Cargamos un enemigo
@@ -323,9 +358,9 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
             //Añadimos los escondite a la lista
             listaEscondites = new ArrayList();
-            escondite1 = new Escondite();
-            escondite1.init(new Vector3(944f, 5.02f, 164f), new Vector3(904f, 5.02f, 164f));
-            listaEscondites.Add(escondite1);
+            //escondite1 = new Escondite();
+            //escondite1.init(new Vector3(944f, 5.02f, 164f), new Vector3(904f, 5.02f, 164f));
+            //listaEscondites.Add(escondite1);
 
             //Añadimos recargas a la lista
             listaRecargas = new ArrayList();
@@ -359,11 +394,22 @@ namespace AlumnoEjemplos.CucarachaJugosita
             numeroLLaves.setNumeroLLaves(listaLlaves.Count);
 
             //Añado el unico trofeo
-            trofeo = new Trofeo(new Vector3(4373f, 10f, 1609f));
+            trofeo = new Trofeo(new Vector3(2524f, 10f, 626f));
 
             //Añadimos elementos del mapa
             listaElementoMapa = new ArrayList();
-            listaElementoMapa.Add(esqueleto);
+            listaElementoMapa.Add(cosa1);
+            listaElementoMapa.Add(cosa2);
+            listaElementoMapa.Add(cosa3);
+            listaElementoMapa.Add(cosa4);
+            listaElementoMapa.Add(cosa5);
+            listaElementoMapa.Add(cosa6);
+            listaElementoMapa.Add(cosa7);
+            listaElementoMapa.Add(cosa8);
+            listaElementoMapa.Add(cosa9);
+            listaElementoMapa.Add(cosa10);
+            listaElementoMapa.Add(cosa11);
+            listaElementoMapa.Add(cosa12);
 
             manejoI = new ManejoIluminacion();
             manejoI.setEscena(escena);
@@ -427,7 +473,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
             //Instanciamos puerta final
             puertaF = new PuertaFinal();
-            puertaF.init(new Vector3(791, -300, 205), numeroLLaves);
+            puertaF.init(new Vector3(2560f, 57f, 866f), numeroLLaves);
             escena.Meshes.Add(puertaF.getMeshP());
             escena.Meshes.Add(puertaF.getMeshC1());
             escena.Meshes.Add(puertaF.getMeshC2());
@@ -443,6 +489,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
             meshInservible.Position = camara.getPosition();
             GuiController.Instance.DirectSound.ListenerTracking = meshInservible;
 
+
+            activadorNightvision = new NightRecarga(new Vector3(794f, 30f, 138f));
 
             //Aca vamos a cargar todos los elementos a renderizar en una lista generica -- Para la iluminacion
             todosElementosARenderizar = new ArrayList();
@@ -647,7 +695,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                         objeto = farol;
                         objeto.Encendida = true;
                     }
-                    if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.N))
+                    if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.N) && activadorNightvision.verificarColision(camara))
                     {
                         nightVision = true;
                     }
@@ -657,6 +705,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                         //Boton izq apretado
                     }
                     postProcesado(elapsedTime, d3dDevice);
+                    //renderTotal(elapsedTime);
                     break;
             }
 
@@ -713,6 +762,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
             colisionVictoria();
             puertaF.render();
             sonidos.sonidoMonstruo(elapsedTime);
+            activadorNightvision.verificarColision(camara);
+            activadorNightvision.render(elapsedTime);
         }
         public void cargarImagenes2D()
         {

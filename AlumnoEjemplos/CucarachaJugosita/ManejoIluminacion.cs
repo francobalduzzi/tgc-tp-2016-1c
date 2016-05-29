@@ -113,7 +113,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     }
                     else
                     {
-                        mesh.Effect.SetValue("lightIntensity", 0);
+                        mesh.Effect.SetValue("lightIntensity", 5);
                     }
                     mesh.Effect.SetValue("lightAttenuation", objeto.Attenuation);
                     mesh.Effect.SetValue("spotLightAngleCos", FastMath.ToRad(objeto.SpotAngle));
@@ -152,7 +152,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                         }
                         else
                         {
-                            elemento.getMesh().Effect.SetValue("lightIntensity", 0);
+                            elemento.getMesh().Effect.SetValue("lightIntensity", 5);
                         }
                         elemento.getMesh().Effect.SetValue("lightAttenuation", objeto.Attenuation);
                         elemento.getMesh().Effect.SetValue("spotLightAngleCos", FastMath.ToRad(objeto.SpotAngle));
@@ -231,7 +231,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     }
                     else
                     {
-                            elemento.getMesh().Effect.SetValue("lightIntensity", 0);
+                            elemento.getMesh().Effect.SetValue("lightIntensity", 5);
                     }
                         elemento.getMesh().Effect.SetValue("lightAttenuation", objeto.Attenuation);
                         elemento.getMesh().Effect.SetValue("lightColorP", ColorValue.FromColor(luzDelMesh.lightColor));
@@ -266,7 +266,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     }
                     else
                     {
-                        mesh.Effect.SetValue("lightIntensity", 0);
+                        mesh.Effect.SetValue("lightIntensity", 5);
                     }
                     mesh.Effect.SetValue("lightAttenuation", objeto.Attenuation);
                     mesh.Effect.SetValue("lightColorP", ColorValue.FromColor(luzDelMesh.lightColor));

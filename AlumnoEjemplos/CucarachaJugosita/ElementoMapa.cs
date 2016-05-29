@@ -14,8 +14,6 @@ namespace AlumnoEjemplos.CucarachaJugosita
         private TgcScene escena;
         public TgcMesh mesh;
 
-
-
         public ElementoMapa (String escena,Vector3 posicion)
         {
             var loader = new TgcSceneLoader();

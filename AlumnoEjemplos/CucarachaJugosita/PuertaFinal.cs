@@ -75,7 +75,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             text2.changeFont(new System.Drawing.Font("Chiller", 30, FontStyle.Regular));
             var loader = new TgcSceneLoader();
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
-            puerta1 = loader.loadSceneFromFile(alumnoMediaFolder + "CucarachaJugosita\\Media\\Component_1-TgcScene.xml");
+            puerta1 = loader.loadSceneFromFile(alumnoMediaFolder + "CucarachaJugosita\\Media\\Component_2-TgcScene.xml");
             meshP = puerta1.Meshes[0];
             meshP.Position = posP;
             cobertura1 = loader.loadSceneFromFile(alumnoMediaFolder + "CucarachaJugosita\\Media\\cobertura1-TgcScene.xml");
@@ -143,7 +143,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             {
                 if (!llaves.juntoTodas())
                 {
-                    text2.Text = "Debes juntar todas las llaves para abrir esta puerta";
+                    text2.Text = "Debes juntar todas las llaves";
                 }
                 else
                 {
