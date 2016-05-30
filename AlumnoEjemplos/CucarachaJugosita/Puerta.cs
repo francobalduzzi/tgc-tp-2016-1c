@@ -215,7 +215,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public Boolean verificarColision(Enemigo enemigo) //Prueba verificar colision con mi rayo
         {
             Ray rayo = new Ray(enemigo.getMesh().Position, enemigo.meDirijoA());
-            if (estado == Estado.Cerrado && enemigo.getEstado() != Enemigo.Estado.Persiguiendo)
+            if (estado == Estado.Cerrado && enemigo.getEstado() != Enemigo.Estado.Persiguiendo && enemigo.getEstado() != Enemigo.Estado.Parado)
             {
                 if(rayo.intersectAABB(meshP.BoundingBox) && (meshP.Position - enemigo.getMesh().Position).Length() < 100f)
                 {

@@ -39,6 +39,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
         Enemigo enemigo4;
         Enemigo enemigo5;
         EnemigoAnimacion enemigoAnimado;
+        EnemigoAnimacion enemigoAnimado2;
+        EnemigoAnimacion enemigoAnimado3;
         LinternaRecarga recarga;
         LinternaRecarga recarga1;
         LinternaRecarga recarga2;
@@ -335,7 +337,25 @@ namespace AlumnoEjemplos.CucarachaJugosita
             enemigoAnimado.setEstado(Enemigo.Estado.Parado);
             
             enemigoAnimado.init();
+
+            enemigoAnimado2 = new EnemigoAnimacion(new Vector3(2673f, 60f, 1913f), new Vector3(100, 100, 80));
+            enemigoAnimado2.getCaminoOriginal().SetValue(new Vector3(2677f, 5.02f, 2006f), 0);
+            enemigoAnimado2.getCaminoOriginal().SetValue(new Vector3(2669f, 5.02f, 1817f), 1);
+            enemigoAnimado2.getCaminoOriginal().SetValue(new Vector3(3294f, 5.02f, 1811f), 2);
+            enemigoAnimado2.setCantidadWP(3);
+            enemigoAnimado2.setEstado(Enemigo.Estado.Parado);
+            enemigoAnimado2.init();
+
+            enemigoAnimado3 = new EnemigoAnimacion(new Vector3(4473f, 60f, 1177f), new Vector3(100, 100, 80));
+            enemigoAnimado3.getCaminoOriginal().SetValue(new Vector3(4470f, 5.02f, 1288f), 0);
+            enemigoAnimado3.getCaminoOriginal().SetValue(new Vector3(4470f, 5.02f, 565f), 1);
+            enemigoAnimado3.getCaminoOriginal().SetValue(new Vector3(3805f, 5.02f, 565f), 2);
+            enemigoAnimado3.setCantidadWP(3);
+            enemigoAnimado3.setEstado(Enemigo.Estado.Parado);
+            enemigoAnimado3.init();
             //Añadimos enemigos a la lista
+            listaEnemigos.Add(enemigoAnimado3);
+            listaEnemigos.Add(enemigoAnimado2);
             listaEnemigos.Add(enemigoAnimado);
             listaEnemigos.Add(enemigo1);
             listaEnemigos.Add(enemigo2); //Cargamos los enemigos
@@ -521,6 +541,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             {
                 elementosDesaparecedores.Add(recarga);
             }
+            elementosDesaparecedores.Add(activadorNightvision);
             manejoI.setTodosLosElementos(todosElementosARenderizar);
             manejoI.setEnemigosARenderizar(enemigosARenderizar);
             manejoI.setElementosDesaparecedores(elementosDesaparecedores);
@@ -695,10 +716,6 @@ namespace AlumnoEjemplos.CucarachaJugosita
                         objeto = farol;
                         objeto.Encendida = true;
                     }
-                    if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.N) && activadorNightvision.verificarColision(camara))
-                    {
-                        nightVision = true;
-                    }
                     //Capturar Input Mouse
                     if (GuiController.Instance.D3dInput.buttonPressed(TgcViewer.Utils.Input.TgcD3dInput.MouseButtons.BUTTON_LEFT))
                     {
@@ -762,8 +779,16 @@ namespace AlumnoEjemplos.CucarachaJugosita
             colisionVictoria();
             puertaF.render();
             sonidos.sonidoMonstruo(elapsedTime);
-            activadorNightvision.verificarColision(camara);
+            activarNightVision();
             activadorNightvision.render(elapsedTime);
+        }
+
+        public void activarNightVision()
+        {
+            if (activadorNightvision.verificarColision(camara))
+            {
+                nightVision = true;
+            }
         }
         public void cargarImagenes2D()
         {
@@ -1618,6 +1643,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 enemigo.reiniciar();
             }
             enemigoAnimado.reiniciarAnimacion(); //Hay que reiniciarle las banderas
+            enemigoAnimado2.reiniciarAnimacion();
+            enemigoAnimado3.reiniciarAnimacion();
             foreach(ElementoDesaparecedor elemento in elementosDesaparecedores)
             {
                 elemento.reiniciar();

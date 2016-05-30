@@ -11,7 +11,7 @@ using AlumnoEjemplos.CucarachaJugosita;
 
 namespace AlumnoEjemplos.CucarachaJugosita
 {
-    class NightRecarga
+    class NightRecarga : ElementoDesaparecedor
     {
         public Vector3 posicion;
         public TgcBox colision;
@@ -35,13 +35,17 @@ namespace AlumnoEjemplos.CucarachaJugosita
             mesh = nightRe.Meshes[0];
 
         }
+        public override TgcMesh getMesh()
+        {
+            return mesh;
+        }
         public void render(float elapsedTime)
         {
             var matrizView = GuiController.Instance.D3dDevice.Transform.View;
             if (bandera == false)
             {
                 mesh.rotateY(2f * elapsedTime);
-                mesh.render();
+                //mesh.render();
             }
 
         }
@@ -56,11 +60,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
             return false;
         }
 
-        public Boolean desaparecer()
+        public override Boolean desaparecer()
         {
             return bandera == false;
         }
-        public void reiniciar()
+        public override void reiniciar()
         {
             bandera = false;
         }

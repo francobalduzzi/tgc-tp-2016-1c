@@ -45,7 +45,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             if (bandera == false)
             {
                 meshLR.rotateY(2f * elapsedTime);
-                meshLR.render();
+                //meshLR.render();
             }
 
         }

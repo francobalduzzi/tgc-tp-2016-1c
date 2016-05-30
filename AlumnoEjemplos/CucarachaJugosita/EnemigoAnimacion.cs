@@ -142,7 +142,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             {
                 morir();
             }
-            //box.BoundingBox.render();   -->>> Descomentar cuando se quiera ubicar un plano de deteccion de efecto fantasmal
+            //box.BoundingBox.render();   //-->>> Descomentar cuando se quiera ubicar un plano de deteccion de efecto fantasmal
             //bounding.render();
             //bounding.BoundingBox.render();
             //mesh.BoundingBox.render();
