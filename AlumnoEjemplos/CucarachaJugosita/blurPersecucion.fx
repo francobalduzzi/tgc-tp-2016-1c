@@ -209,6 +209,7 @@ float4 ps_blur( PS_INPUT_DEFAULT Input ) : COLOR0
 	color = color / 5;
 	color.b = color.b * sin(8*time);
 	color.g = color.g * sin(8*time);
+	/*------------------>>>>>>>>>>>>>>>>>>>>*/color.r = color.r *1.7;   //Pueden variar la intensidad del rojo tocando este valor. Como estaba antes este valor no estaba.   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-------------------------
 	return color;
 }
 

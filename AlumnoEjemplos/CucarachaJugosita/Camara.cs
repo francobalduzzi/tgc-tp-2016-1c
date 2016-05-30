@@ -379,7 +379,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public void esconder(Vector3 posicion, Vector3 direccion)
         {
             this.posicionAntesDeEsconderse = eye;
-            setCamera(new Vector3(posicion.X, eye.Y, posicion.Z), direccion);
+            setCamera(posicion, direccion);
             this.escondido = true;
         }
         public void desesconder()

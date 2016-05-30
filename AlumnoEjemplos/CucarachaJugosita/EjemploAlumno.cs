@@ -129,6 +129,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         TgcMesh meshInservible;
         PuertaFinal puertaF;
         Boolean finPartida;
+        Boolean perseguido;
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
         /// Influye en donde se va a haber en el árbol de la derecha de la pantalla.
@@ -378,9 +379,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
             //Añadimos los escondite a la lista
             listaEscondites = new ArrayList();
-            //escondite1 = new Escondite();
-            //escondite1.init(new Vector3(944f, 5.02f, 164f), new Vector3(904f, 5.02f, 164f));
-            //listaEscondites.Add(escondite1);
+            escondite1 = new Escondite(); //Para poner casillero le pasamos de path: "LockerMetal-TgcScene.xml" y de tipo: Escondito.Tipo.Casillero.
+                                          //Para poner mesa le pasamos de path: "mesaPiola-TgcScene.xml" y de tipo: Escondite.Tipo.Mesa
+            escondite1.init(new Vector3(545f, 5.02f, 1043f), new Vector3(545f, 5.02f, 1000f), "mesaPiola-TgcScene.xml", Escondite.Tipo.Mesa);
+            listaEscondites.Add(escondite1);
 
             //Añadimos recargas a la lista
             listaRecargas = new ArrayList();
@@ -751,6 +753,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 {
                     mesh.render();
                 }
+                foreach(ElementoDesaparecedor elemento in elementosDesaparecedores)
+                {
+                    elemento.getMesh().render();
+                }
             }
             else
             {
@@ -937,6 +943,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 {
                     sonidos.stopMerlusa();
                     sonidos.playPersecucion();
+                    perseguido = true;
                     efectoPostProcesadoPersecucion(elapsedTime, d3dDevice);
                     merlusaPostPersecucion = true;
                     timeMerlusa = 0;
@@ -944,6 +951,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 }
                 else
                 {
+                    perseguido = false;
                     sonidos.stopPersecucion();
                     merlusa = camara.activarEfectoMerlusa();
                     if (merlusaPostPersecucion)
@@ -952,7 +960,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                         
 
                     }
-                    if (merlusa || timeMerlusa != 0)
+                    if (merlusa || timeMerlusa != 0 || (objeto.Intensity > -0.05f && objeto.Intensity < 0.05f))
                     {
                         
                         if (!reproducidoMerlusa || merlusaPostPersecucion)
@@ -1302,7 +1310,25 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 }
                 
             }
-                
+            //Render de llaves y recargas brillosas
+            foreach (ElementoDesaparecedor elemento in elementosDesaparecedores)
+            {
+                Ray rayo = new Ray(camara.getPosition(), elemento.getMesh().Position);
+                int contador = 0;
+                foreach (TgcMesh mesh in escena.Meshes)
+                {
+                    if (rayo.intersectAABB(mesh.BoundingBox))
+                    {
+                        contador++;
+                    }
+
+                }
+                if (contador == 0)
+                {
+                    elemento.getMesh().render();
+                }
+            }
+
 
             // El resto opacos
             //renderScene(elapsedTime, "DibujarObjetosOscuros");
@@ -1582,7 +1608,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         {
             foreach (Escondite escondite in listaEscondites)
             {
-                if (escondite.verificarColision(camara))
+                if (escondite.verificarColision(camara, perseguido))
                 {
                     if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.E))
                     {

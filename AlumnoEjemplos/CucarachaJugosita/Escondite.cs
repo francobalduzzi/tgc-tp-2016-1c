@@ -17,12 +17,13 @@ namespace AlumnoEjemplos.CucarachaJugosita
         TgcMesh mesh;
         private TgcText2d text2;
         Vector3 direccion;
-        public void init(Vector3 posicion, Vector3 direccion)
+        Tipo tipo;
+        public void init(Vector3 posicion, Vector3 direccion, String escena, Tipo tipo)
         {
             this.direccion = direccion;
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
             var loader = new TgcSceneLoader();
-            mesh = loader.loadSceneFromFile(alumnoMediaFolder + "CucarachaJugosita\\Media\\LockerMetal-TgcScene.xml").Meshes[0];
+            mesh = loader.loadSceneFromFile(alumnoMediaFolder + "CucarachaJugosita\\Media\\" + escena).Meshes[0]; 
             mesh.Position = posicion;
             Vector3 direc = direccion - posicion;
             direc.Y = 0;
@@ -35,6 +36,12 @@ namespace AlumnoEjemplos.CucarachaJugosita
             text2.Position = new Point(500, 500);
             text2.Size = new Size(300, 100);
             text2.changeFont(new System.Drawing.Font("Chiller", 30, FontStyle.Regular));
+            this.tipo = tipo;
+        }
+        public enum Tipo
+        {
+            Casillero = 0,
+            Mesa = 1,
         }
         public TgcMesh getMesh()
         {
@@ -45,10 +52,15 @@ namespace AlumnoEjemplos.CucarachaJugosita
             this.enemigos = enemigos;
         }
 
-        public Boolean verificarColision(Camara camara)
+        public Boolean verificarColision(Camara camara, Boolean perseguido)
         {
             if ((mesh.Position - camara.getPosition()).Length() <= 100f)
             {
+                if (perseguido)
+                {
+                    text2.Text = "No puedes esconderte mientras estas siendo perseguido";
+                    return false;
+                }
                 if (camara.getEscondido())
                 {
                     text2.Text = "Presiona E para salir";
@@ -69,7 +81,23 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
         public void esconder(Camara camara)
         {
-            camara.esconder(mesh.Position, direccion);
+            Vector3 posicion;
+            switch (tipo)
+            {
+                case Tipo.Mesa:
+                    posicion = mesh.Position;
+                    posicion.Y = 5.05f;
+                    break;
+                case Tipo.Casillero:
+                    posicion = mesh.Position;
+                    posicion.Y = camara.getPosition().Y;
+                    break;
+                default:
+                    posicion = mesh.Position;
+                    posicion.Y = camara.getPosition().Y;
+                    break;
+            }
+            camara.esconder(posicion, direccion);
         }
 
         public void render()
