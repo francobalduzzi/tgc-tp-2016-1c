@@ -64,7 +64,6 @@ namespace AlumnoEjemplos.CucarachaJugosita
         Puerta puerta5;
         Puerta puerta6;
         Sonidos sonidos;
-        float contador = 0;
         Barra barra;
         ArrayList listaEnemigos;
         ArrayList listaPuertas;
@@ -790,6 +789,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             colisionVictoria();
             puertaF.render();
             sonidos.sonidoMonstruo(elapsedTime);
+            sonidos.sonidoRespiracionCadaTanto(elapsedTime);
             activarNightVision();
             activadorNightvision.render(elapsedTime);
         }
@@ -1722,6 +1722,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
              sonidos.stopMerlusa();
              sonidos.stopPersecucion();
              sonidos.stopSonidoMonstruo();
+             sonidos.stopSonidoRespiracionCadaTanto();
              sonidos.dispose(); //Hago dispose y vuevlo a cargar todos los sonidos por las dudas
              sonidos.init(); //Los cargamos de vuelta para que empiecen de 0
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TgcViewer;
+using TgcViewer.Utils.Sound;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSkeletalAnimation;
 
@@ -16,6 +17,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public Boolean animada;
         public Boolean activarAnimacion;
         public TgcBox box; //caja para ver cuando lanzar la animacion
+        public TgcStaticSound sonidoPreSusto;
         /*public new void reiniciar()
         {
             base.reiniciar();
@@ -29,6 +31,9 @@ namespace AlumnoEjemplos.CucarachaJugosita
         }
         public EnemigoAnimacion(Vector3 cercania, Vector3 dimensionesCaja)
         {
+            string pathSonido = alumnoMediaFolder + "CucarachaJugosita\\Media\\Juego felipe sonido ambiente terror.wav";
+            sonidoPreSusto = new TgcStaticSound();
+            sonidoPreSusto.loadSound(pathSonido);
             this.cercania = cercania;
               animada = false;
               activarAnimacion = false;
@@ -103,6 +108,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                         {
                             activarAnimacion = false;
                             animada = true;
+                            sonidoPreSusto.stop();
                         }
                     }
                     else
@@ -120,8 +126,17 @@ namespace AlumnoEjemplos.CucarachaJugosita
             TgcBox cajita = new TgcBox();
             cajita.Position = posCam;
             cajita.Size = new Vector3(10f, 10f, 10f);
+            if((cercania-posCam).Length() <= 400f)
+            {
+                sonidoPreSusto.play();
+            }
+            else
+            {
+                sonidoPreSusto.stop();
+            }
             if(TgcCollisionUtils.testAABBAABB(cajita.BoundingBox,box.BoundingBox))
             {
+                
                 activarAnimacion = true;
             }
         }
