@@ -88,6 +88,17 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 monstruo.play();
             }
         }
+        public void stopSonidoMonstruo()
+        {
+            monstruo.stop();
+        }
+        public void dispose()
+        {
+            respiro.dispose();
+            respiroPersecucion.dispose();
+            monstruo.dispose();
+            fondoSonido.dispose();
+        }
 
     }
 

@@ -501,7 +501,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             escena.Meshes.Add(puertaF.getMeshC2());
             escena.Meshes.Add(puertaF.getMeshC3());
 
-            GuiController.Instance.FullScreenEnable =false;
+            GuiController.Instance.FullScreenEnable =true;
 
 
             //Hacer que el Listener del sonido 3D siga al personaje
@@ -755,8 +755,13 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 }
                 foreach(ElementoDesaparecedor elemento in elementosDesaparecedores)
                 {
-                    elemento.getMesh().render();
+                    if (elemento.desaparecer())
+                    {
+                        elemento.getMesh().render();
+                    }
+                   
                 }
+                chequearPersecucion();
             }
             else
             {
@@ -1325,7 +1330,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 }
                 if (contador == 0)
                 {
-                    elemento.getMesh().render();
+                    if (elemento.desaparecer())
+                    {
+                        elemento.getMesh().render();
+                    }
+                    
                 }
             }
 
@@ -1452,6 +1461,28 @@ namespace AlumnoEjemplos.CucarachaJugosita
         }
         #endregion
         //Fin efectos nightVision
+
+        public void chequearPersecucion()
+        {
+            int contador = 0;
+            foreach (Enemigo enemigo in listaEnemigos)
+                {
+                if (enemigo.getEstado() == Enemigo.Estado.Persiguiendo)
+                     {
+                        contador++;
+                    }
+                }
+           if (contador > 0)
+            {
+                perseguido = true;
+            }
+            else
+            {
+                perseguido = false;
+            }
+        }
+
+
         public enum EstadoMenu
         {
             Menu = 0,
@@ -1475,19 +1506,14 @@ namespace AlumnoEjemplos.CucarachaJugosita
             TgcBox bounding = new TgcBox();
             bounding = TgcBox.fromSize(camara.getPosition(), new Vector3(5f, 5f, 5f));
             int contador1 = 0;
-            int contador2 = 0;
             foreach (Enemigo enemigo in listaEnemigos)
             {
-                if (TgcCollisionUtils.testAABBAABB(enemigo.getMesh().BoundingBox, bounding.BoundingBox))
+                if (TgcCollisionUtils.testAABBAABB(enemigo.getMesh().BoundingBox, bounding.BoundingBox) && enemigo.getEstado() == Enemigo.Estado.Persiguiendo)
                 {
                     contador1++;
                 }
-                if(enemigo.getEstado() == Enemigo.Estado.Persiguiendo)
-                {
-                    contador2++;
-                }
             }
-            if(contador1>0 && contador2 > 0)
+            if(contador1>0)
             {
                 estadoMenu = EstadoMenu.GameOver;
                 finPartida = true;
@@ -1695,6 +1721,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
              sonidos.stopFondo();
              sonidos.stopMerlusa();
              sonidos.stopPersecucion();
+             sonidos.stopSonidoMonstruo();
+             sonidos.dispose(); //Hago dispose y vuevlo a cargar todos los sonidos por las dudas
              sonidos.init(); //Los cargamos de vuelta para que empiecen de 0
 
         }
