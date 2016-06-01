@@ -10,7 +10,7 @@
       <specular>[0,0,0,0]</specular>
       <opacity>1</opacity>
       <alphaBlendEnable>True</alphaBlendEnable>
-      <bitmap uvTiling="[1,1]" uvOffset="[1,1]">Puerta.transparenecia.png</bitmap>
+      <bitmap uvTiling="[1,1]" uvOffset="[1,1]">Puerta.transparenecia (1).png</bitmap>
     </m>
   </materials>
   <meshes count="1">
