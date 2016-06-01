@@ -23,8 +23,9 @@ namespace AlumnoEjemplos.CucarachaJugosita
             this.direccion = direccion;
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
             var loader = new TgcSceneLoader();
-            mesh = loader.loadSceneFromFile(alumnoMediaFolder + "CucarachaJugosita\\Media\\" + escena).Meshes[0]; 
+            mesh = loader.loadSceneFromFile(alumnoMediaFolder + "CucarachaJugosita\\Media\\" + escena).Meshes[0];
             mesh.Position = posicion;
+            mesh.AlphaBlendEnable = true;
             Vector3 direc = direccion - posicion;
             direc.Y = 0;
             direc.Normalize();
@@ -104,6 +105,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         {
             text2.render();
             mesh.render();
+            
         }
     }
 }

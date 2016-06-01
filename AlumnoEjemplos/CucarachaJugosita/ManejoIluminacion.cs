@@ -113,7 +113,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     }
                     else
                     {
-                        mesh.Effect.SetValue("lightIntensity", 5);
+                        mesh.Effect.SetValue("lightIntensity", 0);
                     }
                     mesh.Effect.SetValue("lightAttenuation", objeto.Attenuation);
                     mesh.Effect.SetValue("spotLightAngleCos", FastMath.ToRad(objeto.SpotAngle));
@@ -152,7 +152,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                         }
                         else
                         {
-                            elemento.getMesh().Effect.SetValue("lightIntensity", 5);
+                            elemento.getMesh().Effect.SetValue("lightIntensity", 0);
                         }
                         elemento.getMesh().Effect.SetValue("lightAttenuation", objeto.Attenuation);
                         elemento.getMesh().Effect.SetValue("spotLightAngleCos", FastMath.ToRad(objeto.SpotAngle));
@@ -206,8 +206,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     if (elemento.desaparecer())
                     {
                         elemento.getMesh().Effect = effectPointYPoint;
-                        //mesh.Effect = GuiController.Instance.Shaders.TgcMeshPointLightShader;
-                        //elemento.getMesh().Effect = GuiController.Instance.Shaders.TgcMeshShader;
+                       // elemento.getMesh().Effect = GuiController.Instance.Shaders.TgcMeshShader;
                         elemento.getMesh().Technique = GuiController.Instance.Shaders.getTgcMeshTechnique(elemento.getMesh().RenderType);
                     }
                     
@@ -231,7 +230,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     }
                     else
                     {
-                            elemento.getMesh().Effect.SetValue("lightIntensity", 5);
+                            elemento.getMesh().Effect.SetValue("lightIntensity", 0);
                     }
                         elemento.getMesh().Effect.SetValue("lightAttenuation", objeto.Attenuation);
                         elemento.getMesh().Effect.SetValue("lightColorP", ColorValue.FromColor(luzDelMesh.lightColor));
@@ -266,13 +265,14 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     }
                     else
                     {
-                        mesh.Effect.SetValue("lightIntensity", 5);
+                        mesh.Effect.SetValue("lightIntensity", 0);
                     }
                     mesh.Effect.SetValue("lightAttenuation", objeto.Attenuation);
                     mesh.Effect.SetValue("lightColorP", ColorValue.FromColor(luzDelMesh.lightColor));
                     mesh.Effect.SetValue("lightPositionP", TgcParserUtils.vector3ToFloat4Array(luzDelMesh.Posicion));
                     mesh.Effect.SetValue("lightIntensityP", luzDelMesh.Intensity);
                     mesh.Effect.SetValue("lightAttenuationP", luzDelMesh.Attenuation);
+                    mesh.AlphaBlendEnable = true;
                     mesh.render();
                 }
             }

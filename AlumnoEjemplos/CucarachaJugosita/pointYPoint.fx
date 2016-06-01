@@ -225,6 +225,7 @@ struct VS_OUTPUT_DIFFUSE_MAP
 	float3 SpotHalfAngleVec	: TEXCOORD4;
 	float3 PointLightVec	: TEXCOORD5;
 	float3 PointHalfAngleVec	: TEXCOORD6;
+	float4 Color : COLOR;
 };
 
 
@@ -264,7 +265,7 @@ VS_OUTPUT_DIFFUSE_MAP vs_DiffuseMap(VS_INPUT_DIFFUSE_MAP input)
 
 	//HalfAngleVec (H): vector de reflexion simplificado de Phong-Blinn (H = |V + L|). Usado en Specular
 	output.PointHalfAngleVec = viewVector + output.PointLightVec;
-
+	output.Color = input.Color;
 	return output;
 }
 
@@ -279,6 +280,7 @@ struct PS_DIFFUSE_MAP
 	float3 SpotHalfAngleVec	: TEXCOORD4;
 	float3 PointLightVec	: TEXCOORD5;
 	float3 PointHalfAngleVec	: TEXCOORD6;
+	float4 Color : COLOR;
 };
 
 //Pixel Shader
@@ -289,6 +291,7 @@ float4 ps_DiffuseMap(PS_DIFFUSE_MAP input) : COLOR0
 	float3 Ln = normalize(input.SpotLightVec);
 	float3 Hn = normalize(input.SpotHalfAngleVec);
 	
+	float4 color = tex2D(diffuseMap, input.Texcoord) * input.Color;
 	//Calcular atenuacion por distancia
 	float distAtten = length(lightPosition.xyz - input.WorldPosition) * lightAttenuation;
 
@@ -345,7 +348,9 @@ float4 ps_DiffuseMap(PS_DIFFUSE_MAP input) : COLOR0
 	/* Color final: modular (Emissive + Ambient + Diffuse) por el color de la textura, y luego sumar Specular.
 	   El color Alpha sale del diffuse material */
 	float4 finalColorP = float4(saturate(materialEmissiveColor + ambientLightP + diffuseLightP) * texelColorP, materialDiffuseColor.a); //Le sacamos el specular por feo
-	return finalColorS + finalColorP;
+	float4 colorF = finalColorP + finalColorS;
+	colorF.a = color.a;
+	return colorF;
 }
 
 

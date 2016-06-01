@@ -380,7 +380,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             listaEscondites = new ArrayList();
             escondite1 = new Escondite(); //Para poner casillero le pasamos de path: "LockerMetal-TgcScene.xml" y de tipo: Escondito.Tipo.Casillero.
                                           //Para poner mesa le pasamos de path: "mesaPiola-TgcScene.xml" y de tipo: Escondite.Tipo.Mesa
-            escondite1.init(new Vector3(545f, 5.02f, 1043f), new Vector3(545f, 5.02f, 1000f), "mesaPiola-TgcScene.xml", Escondite.Tipo.Mesa);
+            escondite1.init(new Vector3(545f, 5.02f, 1043f), new Vector3(545f, 5.02f, 1000f), "LockerAlphaBlending-TgcScene.xml", Escondite.Tipo.Casillero);
             listaEscondites.Add(escondite1);
 
             //Añadimos recargas a la lista
@@ -546,6 +546,14 @@ namespace AlumnoEjemplos.CucarachaJugosita
             manejoI.setTodosLosElementos(todosElementosARenderizar);
             manejoI.setEnemigosARenderizar(enemigosARenderizar);
             manejoI.setElementosDesaparecedores(elementosDesaparecedores);
+
+
+
+
+
+
+
+
             ///////////////USER VARS//////////////////
 
             //Crear una UserVar
