@@ -34,8 +34,9 @@ namespace AlumnoEjemplos.CucarachaJugosita
             text2.Text = "";
             text2.Color = Color.DarkRed;
             text2.Align = TgcText2d.TextAlign.CENTER;
-            text2.Position = new Point(500, 500);
             text2.Size = new Size(300, 100);
+            Size screenSize = GuiController.Instance.Panel3d.Size;
+            text2.Position = new Point(screenSize.Width / 2 - text2.Size.Width / 2, screenSize.Height - text2.Size.Height * 3); text2.Size = new Size(300, 100);
             text2.changeFont(new System.Drawing.Font("Chiller", 30, FontStyle.Regular));
             this.tipo = tipo;
         }

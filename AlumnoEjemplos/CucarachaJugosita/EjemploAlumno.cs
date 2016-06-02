@@ -97,6 +97,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         ElementoMapa cosa12;
         ArrayList listaEscondites;
         Escondite escondite1;
+        Escondite escondite2;
         VertexBuffer screenQuadVB;
         Texture renderTarget2D;
         Texture g_pGlowMap;
@@ -380,8 +381,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
             listaEscondites = new ArrayList();
             escondite1 = new Escondite(); //Para poner casillero le pasamos de path: "LockerMetal-TgcScene.xml" y de tipo: Escondito.Tipo.Casillero.
                                           //Para poner mesa le pasamos de path: "mesaPiola-TgcScene.xml" y de tipo: Escondite.Tipo.Mesa
-            escondite1.init(new Vector3(545f, 5.02f, 1043f), new Vector3(545f, 5.02f, 1000f), "LockerAlphaBlending-TgcScene.xml", Escondite.Tipo.Casillero);
+            escondite1.init(new Vector3(1191f, 5.02f, 370f), new Vector3(963f, 5.02f, 370f), "LockerAlphaBlending-TgcScene.xml", Escondite.Tipo.Casillero);
             listaEscondites.Add(escondite1);
+            escondite2 = new Escondite();
+            escondite2.init(new Vector3(519f, 5.02f, 1046f), new Vector3(519f, 5.02f, 867f), "mesaPiola-TgcScene.xml", Escondite.Tipo.Mesa);
+            listaEscondites.Add(escondite2);
 
             //Añadimos recargas a la lista
             listaRecargas = new ArrayList();
@@ -500,7 +504,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             escena.Meshes.Add(puertaF.getMeshC2());
             escena.Meshes.Add(puertaF.getMeshC3());
 
-            GuiController.Instance.FullScreenEnable =true;
+            GuiController.Instance.FullScreenEnable =false;
 
 
             //Hacer que el Listener del sonido 3D siga al personaje
@@ -753,7 +757,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             //enemigo.seguirA(camara.getPosition(), elapsedTime);
             moverCamaraConVela(elapsedTime); //Actualizamos el valor de la camara y vemos si generar efecto de vela
             // vela1.render();
-            objeto.render();
+            
             if (nightVision && contadorNight > 0) //Hacemos esto para que el nightvision no arrastre valores de linterna etc.
             {
                 foreach(TgcMesh mesh in todosElementosARenderizar)
@@ -800,6 +804,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
             sonidos.sonidoRespiracionCadaTanto(elapsedTime);
             activarNightVision();
             activadorNightvision.render(elapsedTime);
+            GuiController.Instance.Text3d.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
+            objeto.render();
         }
 
         public void activarNightVision()
