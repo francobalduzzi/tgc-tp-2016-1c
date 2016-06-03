@@ -23,7 +23,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public TgcScene antorcha;
         public Effect efectoAntorcha;
         public float time;
-
+        Boolean banderaTiempo;
+        float contador;
         //Cosas glow
 
         VertexBuffer screenQuadVB;
@@ -34,7 +35,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         Surface pOldRT;
         Surface g_pDepthStencil;     // Depth-stencil buffer
         Device d3dDevice;
-
+        
 
         public virtual void titilar()
         {
@@ -44,7 +45,9 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public LuzNormal(Vector3 pos)
         {
             d3dDevice = GuiController.Instance.D3dDevice;          
-            time = 0;
+            time = 2;
+            contador = 0;
+            banderaTiempo = false;
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
             var loader = new TgcSceneLoader();
             antorcha = loader.loadSceneFromFile(alumnoMediaFolder + "CucarachaJugosita\\Media\\Antorcha-TgcScene.xml");
@@ -97,7 +100,14 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public void render()
         {
 
-            time += GuiController.Instance.ElapsedTime;         
+                time += GuiController.Instance.ElapsedTime;
+                contador += GuiController.Instance.ElapsedTime;
+
+            if (time >= 4)
+            {
+               // time -= contador;
+               // contador = 0;
+            }        
             mesh.Effect.SetValue("time", time);
             mesh.Effect.Technique = "DIFFUSE_MAP";
             mesh.render();

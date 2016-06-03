@@ -29,6 +29,15 @@ sampler2D diffuseMap = sampler_state
 	MAGFILTER = LINEAR;
 	MIPFILTER = LINEAR;
 };
+
+//Textura para Lightmap
+texture texLightMap;
+sampler2D lightMap = sampler_state
+{
+	Texture = (texLightMap);
+};
+
+
 //Glow
 float screen_dx;					// tamaño de la pantalla en pixels
 float screen_dy;
@@ -57,20 +66,6 @@ sampler_state
 };
 //Fin glow
 
-//Textura para Lightmap
-texture texLightMap;
-sampler2D lightMap = sampler_state
-{
-	Texture = (texLightMap);
-};
-// Gaussian Blur
-
-static const int kernel_r = 6;
-static const int kernel_size = 13;
-static const float Kernel[kernel_size] = 
-{
-    0.002216,    0.008764,    0.026995,    0.064759,    0.120985,    0.176033,    0.199471,    0.176033,    0.120985,    0.064759,    0.026995,    0.008764,    0.002216,
-};
 
 
 /**************************************************************************************/
@@ -161,17 +156,15 @@ VS_OUTPUT_DIFFUSE_MAP vs_DiffuseMap(VS_INPUT_DIFFUSE_MAP input)
 {
 	VS_OUTPUT_DIFFUSE_MAP output;
 	
-	output.Position = input.Position;
 	float4 color = tex2Dlod(diffuseMap, float4(input.Texcoord,0,0));
 	if(input.Texcoord.y < 0.7 /*&& input.Texcoord.x < 0.3*/&& color.r >0.5){
-		output.Position.x = 2*sin(0.1*output.Position.y*time)/*+  cos(time*output.Position.z)*/;
+		input.Position.x = input.Position.x+sin(time*3 + input.Position.y);
 		//output.Position.x = 2*sin(10*time*output.Position.x);
 		//output.Position.x = output.Position.x + sin(time);
 	}
 	output.WorldPosition = mul(input.Position, matWorld);
 	//Proyectar posicion
-	output.Position = mul(output.Position, matWorldViewProj);
-
+	output.Position = mul(input.Position, matWorldViewProj);
 	//Enviar color directamente
 	output.Color = input.Color;
 	
@@ -192,6 +185,7 @@ struct PS_DIFFUSE_MAP
 };
 
 //Pixel Shader
+float blur_intensity = 0.05;
 float4 ps_DiffuseMap(PS_DIFFUSE_MAP input) : COLOR0
 {      
 	//Modular color de la textura por color del mesh
@@ -200,14 +194,26 @@ float4 ps_DiffuseMap(PS_DIFFUSE_MAP input) : COLOR0
 	if(input.Texcoord.y < 0.7 /*&& input.Texcoord.x < 0.3*/&& color.r >0.5){
 	
 		color.r = 1;
-		color.g = 0;
-		color.b = 0;
-		//Aca vamos a hacer cosas locas de BLUR
-		//Color = 0;
-		//for(int i=0;i<3;++i)
-		//for(int j=0;j<3;++j)
-		//Color += tex2D(diffuseMap, input.Texcoord/*+float2((float)(i-kernel_r)/10,(float)(j-kernel_r)/10)*/) /** Kernel[i]*Kernel[j]*/; //Pasams diffuse en vez del render target
-		//Color.a = 1;
+		color.g = 0.3;
+		color.b = 0.3;
+		//Obtener color de textura
+		float4 color1 = tex2D( diffuseMap, input.Texcoord );
+	
+		//Tomar samples adicionales de texels vecinos y sumarlos (formamos una cruz)
+		color1 += tex2D( diffuseMap, float2(input.Texcoord.x + blur_intensity, input.Texcoord.y));
+		color1 += tex2D( diffuseMap, float2(input.Texcoord.x - blur_intensity, input.Texcoord.y));
+		color1 += tex2D( diffuseMap, float2(input.Texcoord.x, input.Texcoord.y + blur_intensity));
+		color1 += tex2D( diffuseMap, float2(input.Texcoord.x, input.Texcoord.y - blur_intensity));
+	
+		//Obtener color segun textura
+		//float4 color2 = tex2D( RenderTarget, Input.Texcoord );
+		//Escalar el color para oscurecerlo
+		//float value = ((color2.r + color2.g + color2.b) / 3) * scaleFactor; 
+		//color2.rgb = color2.rgb * (1 - scaleFactor) + value * scaleFactor;
+		//Escalar el color para oscurecerlo
+		//Promediar todos
+		color1 = color1 / 5;
+		//color = color1;
 	}
 	
 	return color;
@@ -226,101 +232,6 @@ technique DIFFUSE_MAP
 	  PixelShader = compile ps_3_0 ps_DiffuseMap();
    }
 }
-
-
-
-//BLUR
-
-
-void VSCopy( float4 vPos : POSITION, float2 vTex : TEXCOORD0,out float4 oPos : POSITION,out float2 oScreenPos: TEXCOORD0)
-{
-    oPos = vPos;
-	oScreenPos = vTex;
-	oPos.w = 1;
-}
-
-
-
-
-void Blur(float2 screen_pos  : TEXCOORD0,out float4 Color : COLOR)
-{ 
-    Color = 0;
-	for(int i=0;i<kernel_size;++i)
-	for(int j=0;j<kernel_size;++j)
-		Color += tex2D(RenderTarget, screen_pos+float2((float)(i-kernel_r)/screen_dx,(float)(j-kernel_r)/screen_dy)) * Kernel[i]*Kernel[j];
-	Color.a = 1;
-
-}
-
-//GaussianBlurSeparable
-
-void BlurH(float2 screen_pos  : TEXCOORD0,out float4 Color : COLOR)
-{ 
-    Color = 0;
-	for(int i=0;i<kernel_size;++i)
-		Color += tex2D(RenderTarget, screen_pos+float2((float)(i-kernel_r)/screen_dx,0)) * Kernel[i];
-	Color.a = 1;
-}
-
-void BlurV(float2 screen_pos  : TEXCOORD0,out float4 Color : COLOR)
-{ 
-    Color = 0;
-	for(int i=0;i<kernel_size;++i)
-		Color += tex2D(RenderTarget, screen_pos+float2(0,(float)(i-kernel_r)/screen_dy)) * Kernel[i];
-	Color.a = 1;
-
-}
-
-technique GaussianBlurSeparable
-{
-   pass Pass_0
-   {
-	  VertexShader = compile vs_3_0 VSCopy();
-	  PixelShader = compile ps_3_0 BlurH();
-   }
-   pass Pass_1
-   {
-	  VertexShader = compile vs_3_0 VSCopy();
-	  PixelShader = compile ps_3_0 BlurV();
-   }
-
-}
-
-float4 PSDownFilter4( in float2 Tex : TEXCOORD0 ) : COLOR0
-{
-    float4 Color = 0;
-    for (int i = 0; i < 4; i++)
-    for (int j = 0; j < 4; j++)
-		Color += tex2D(RenderTarget, Tex+float2((float)i/screen_dx,(float)j/screen_dy));
-
-	return Color / 16;
-}
-
-
-
-technique DownFilter4
-{
-   pass Pass_0
-   {
-	  VertexShader = compile vs_3_0 VSCopy();
-	  PixelShader = compile ps_3_0 PSDownFilter4();
-   }
-
-}
-
-
-technique GaussianBlur
-{
-   pass Pass_0
-   {
-	  VertexShader = compile vs_3_0 VSCopy();
-	  PixelShader = compile ps_3_0 Blur();
-   }
-
-}
-
-
-//FIN BLUR
 
 /**************************************************************************************/
 /* DIFFUSE_MAP_AND_LIGHTMAP */
