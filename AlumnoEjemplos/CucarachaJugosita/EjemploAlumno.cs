@@ -384,7 +384,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             escondite1.init(new Vector3(1191f, 5.02f, 370f), new Vector3(963f, 5.02f, 370f), "LockerAlphaBlending-TgcScene.xml", Escondite.Tipo.Casillero);
             listaEscondites.Add(escondite1);
             escondite2 = new Escondite();
-            escondite2.init(new Vector3(519f, 5.02f, 1046f), new Vector3(519f, 5.02f, 867f), "mesaPiola-TgcScene.xml", Escondite.Tipo.Mesa);
+            escondite2.init(new Vector3(521f, 5.02f, 1045f), new Vector3(523f, 5.02f, 860f), "mesaPiola-TgcScene.xml", Escondite.Tipo.Mesa);
             listaEscondites.Add(escondite2);
 
             //Añadimos recargas a la lista
@@ -770,6 +770,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     {
                         elemento.getMesh().render();
                     }
+
                    
                 }
                 chequearPersecucion();
