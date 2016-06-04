@@ -59,7 +59,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
         }
 
-        public void render(Device d3dDevice)
+        public void render()
         {
 
                 time += GuiController.Instance.ElapsedTime;

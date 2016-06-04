@@ -285,7 +285,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             }
             foreach (LuzNormal luz in listaLuces)
             {
-                luz.render(device);
+                luz.render();
             }
         }
         

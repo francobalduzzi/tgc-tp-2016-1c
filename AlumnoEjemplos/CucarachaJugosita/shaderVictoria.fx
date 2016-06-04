@@ -82,7 +82,6 @@ float4 ps_oscurecer( PS_INPUT_DEFAULT Input ) : COLOR0
 	float value = 0.5*distanciaTextura;
 	
 	if(color.r == 1 && color.g == 0.4 && color.b == 0.4)
-
 	{
 	
 	

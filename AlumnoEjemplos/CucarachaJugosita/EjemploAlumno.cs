@@ -1308,6 +1308,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
             foreach (Enemigo enemigo in listaEnemigos)
                 enemigo.getMesh().render();
 
+            foreach (LuzNormal luz in listaLuces)
+            {
+                luz.render();
+            }
             //device.EndScene();
             pSurf.Dispose();
 
@@ -1362,7 +1366,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     
                 }
             }
-
+            
 
             // El resto opacos
             //renderScene(elapsedTime, "DibujarObjetosOscuros");
