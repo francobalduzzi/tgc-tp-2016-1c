@@ -576,7 +576,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             escena.Meshes.Add(puertaF.getMeshC2());
             escena.Meshes.Add(puertaF.getMeshC3());
 
-            GuiController.Instance.FullScreenEnable =false;
+            GuiController.Instance.FullScreenEnable =true;
 
 
             //Hacer que el Listener del sonido 3D siga al personaje
@@ -613,6 +613,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             foreach(ElementoMapa elemento in listaElementoMapa)
             {
                 todosElementosARenderizar.Add(elemento.mesh);
+                escena.Meshes.Add(elemento.mesh);
             }
             foreach(Recarga recarga in listaRecargas)
             {
@@ -1803,8 +1804,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 elemento.reiniciar();
             }
 
-            numeroLLaves = new NumerosLlaves(); // Esto es una pija, hay que recrear el objeto sino no funca y no reinicia el contador
-            numeroLLaves.setNumeroLLaves(listaLlaves.Count);
+
+            numeroLLaves.reiniciar();
             trofeo.reiniciar();
 
 

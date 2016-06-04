@@ -14,8 +14,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
     public class NumerosLlaves
     {
         TgcText2d textoActual;
-        int numeroDeLlaves = 0;
-        public int recolectadas = 0;
+        int numeroDeLlaves;
+        public int recolectadas;
         public NumerosLlaves()
         {
             this.init();
@@ -23,7 +23,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public void init()
         {
             Device d3dDevice = GuiController.Instance.D3dDevice;
-
+            numeroDeLlaves = 0;
+            recolectadas = 0;
            textoActual = new TgcText2d();
            textoActual.Text = "Llaves:"+recolectadas+"/"+numeroDeLlaves;
             //textoActual.Position = new Point(GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth * 3/16, GuiController.Instance.D3dDevice.PresentationParameters.BackBufferHeight * 18/20);  <-- Relacion si se quiere a la izquierda de la barra
@@ -53,6 +54,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public void reiniciar()
         {
             recolectadas = 0;
+            textoActual.Text = "Llaves:" + recolectadas + "/" + numeroDeLlaves;
         }
     }
 }

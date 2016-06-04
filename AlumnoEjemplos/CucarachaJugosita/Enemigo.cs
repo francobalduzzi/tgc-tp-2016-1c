@@ -23,7 +23,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         protected string[] animationsPath;
         protected string selectedAnim;
         protected const float VELOCIDAD_MOVIMIËNTO = 50f;
-        protected const float VELOCIDAD_MOVIMIENTO_CORRER = 100f;
+        protected const float VELOCIDAD_MOVIMIENTO_CORRER = 150f;
         protected Boolean bloqueadoMov = false;
         protected float tiempoBloqueado = 100f;
         protected TgcSkeletalMesh mesh;
