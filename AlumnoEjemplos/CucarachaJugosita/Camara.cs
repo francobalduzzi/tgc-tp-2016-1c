@@ -404,7 +404,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
              realMovement = new Vector3(realMovement.X, 0, realMovement.Z);
              move(realMovement);
             return realMovement;
-           /* move(v); //Dejo esto para poder atravesar paredes con A y D asi podemos salir del mapa y testear mas facil
+            /*move(v); //Dejo esto para poder atravesar paredes con A y D asi podemos salir del mapa y testear mas facil
             return v;*/
         }
 

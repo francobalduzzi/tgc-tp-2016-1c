@@ -88,7 +88,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             {
                 case Tipo.Mesa:
                     posicion = mesh.Position;
-                    posicion.Y = 5.05f;
+                    posicion.Y = 15f;
                     break;
                 case Tipo.Casillero:
                     posicion = mesh.Position;

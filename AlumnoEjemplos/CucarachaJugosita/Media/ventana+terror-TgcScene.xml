@@ -1,0 +1,14 @@
+<tgcScene>
+	<name>ventana+terror</name>
+	<texturesExport enabled='true' dir='Textures'/>
+	<lightmapExport enabled='false' dir='LightMaps'/>
+	<materials count='1'>
+	<m name='material' type='Multimaterial'>
+	<subM name='mat_0' type='Standardmaterial'>
+		<ambient>[51.0,51.0,51.0,255.0]</ambient>
+		<diffuse>[255,255,255,255]</diffuse>
+		<specular>[51.0,51.0,51.0,255.0]</specular>
+		<opacity>100.0</opacity>
+		<alphaBlendEnable>false</alphaBlendEnable>
+		<bitmap uvTiling='[1.0,1.0]' uvOffset='[0.0,0.0]'>2.png</bitmap>
+	</subM>

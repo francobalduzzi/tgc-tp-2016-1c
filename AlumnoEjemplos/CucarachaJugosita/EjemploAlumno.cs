@@ -95,9 +95,31 @@ namespace AlumnoEjemplos.CucarachaJugosita
         ElementoMapa cosa10;
         ElementoMapa cosa11;
         ElementoMapa cosa12;
+        ElementoMapa barril1;
+        ElementoMapa barril2;
+        ElementoMapa barril3;
+        ElementoMapa barril4;
+        ElementoMapa barril5;
+        ElementoMapa barril6;
+        ElementoMapa barril7;
+        ElementoMapa barril8;
+        ElementoMapa aragna1;
+        ElementoMapa aragna2;
+        ElementoMapa aragna3;
+        ElementoMapa aragna4;
+        ElementoMapa aragna5;
+        ElementoMapa aragna6;
+        ElementoMapa aragna7;
+        ElementoMapa aragna8;
+        ElementoMapa mueble1;
+        ElementoMapa mueble2;
+        ElementoMapa mueble3;
         ArrayList listaEscondites;
         Escondite escondite1;
-        Escondite escondite2;
+        Escondite escondite3;
+        Escondite escondite4;
+        Escondite escondite5;
+        Escondite escondite6;
         VertexBuffer screenQuadVB;
         Texture renderTarget2D;
         Texture g_pGlowMap;
@@ -256,26 +278,48 @@ namespace AlumnoEjemplos.CucarachaJugosita
             enemigo1.setCamara(camara);
 
 
-            cosa1 = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3(225f, 0f, 312f));
-            cosa1.rotateY(1.57f);
-            cosa2 = new ElementoMapa("Esqueleto2-TgcScene.xml", new Vector3(934f, 5.02f, 164f));
-            cosa2.rotateY(1.57f);
-            cosa3 = new ElementoMapa("Esqueleto3-TgcScene.xml", new Vector3(325f, 0f, 1004f));
-            cosa3.rotateY(-1.57f);
-            cosa4 = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3(1740f, 0f, 1520f));
-            cosa5 = new ElementoMapa("Esqueleto2-TgcScene.xml", new Vector3(1467f, 0f, 958f));
-            cosa5.rotateY(3.14f);
-            cosa6 = new ElementoMapa("Esqueleto3-TgcScene.xml", new Vector3(1815f, 0f, 645f));
-            cosa6.rotateY(1.57f);
-            cosa7 = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3(3235f, 0f, 825f));
-            cosa7.rotateY(3.14f);
-            cosa8 = new ElementoMapa("Esqueleto2-TgcScene.xml", new Vector3(4485f, 0f, 1737f));
-            cosa9 = new ElementoMapa("Esqueleto3-TgcScene.xml", new Vector3(2657f, 0f, 575f));
-            cosa9.rotateY(3.14f);
-            cosa10 = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3(1180f, 0f, 330f));
-            cosa10.rotateY(1.57f);
-            cosa11 = new ElementoMapa("Esqueleto2-TgcScene.xml", new Vector3(866f, 0f, 1136f));
-            cosa12 = new ElementoMapa("Esqueleto3-TgcScene.xml", new Vector3(1755f, 0f, 2120f));
+            cosa1 = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3(225f, 0f, 312f),new Vector3(161f,60f,309f));
+            cosa2 = new ElementoMapa("Esqueleto2-TgcScene.xml", new Vector3(934f, 5.02f, 164f), new Vector3(862f, 60f, 154f));
+            cosa3 = new ElementoMapa("Esqueleto3-TgcScene.xml", new Vector3(325f, 0f, 1004f), new Vector3(402f, 60f, 1009f));
+            cosa4 = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3(1740f, 0f, 1520f), new Vector3(1746f, 60f, 1439f));
+            cosa5 = new ElementoMapa("Esqueleto2-TgcScene.xml", new Vector3(1467f, 0f, 958f), new Vector3(1455f, 60f, 1036f));
+            cosa6 = new ElementoMapa("Esqueleto3-TgcScene.xml", new Vector3(1780f, 0f, 645f), new Vector3(1726f, 60f, 640f));
+            cosa7 = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3(3235f, 0f, 825f), new Vector3(3230f, 60f, 935f));
+            cosa8 = new ElementoMapa("Esqueleto2-TgcScene.xml", new Vector3(4485f, 0f, 1737f), new Vector3(4491f, 60f, 1615f));
+            cosa9 = new ElementoMapa("Esqueleto3-TgcScene.xml", new Vector3(2657f, 0f, 575f), new Vector3(2652f, 60f, 691f));
+            cosa10 = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3(1180f, 0f, 330f), new Vector3(1120f, 60f, 331f));
+            cosa11 = new ElementoMapa("Esqueleto2-TgcScene.xml", new Vector3(866f, 0f, 1136f), new Vector3(869f, 60f, 1010f));
+            cosa12 = new ElementoMapa("Esqueleto3-TgcScene.xml", new Vector3(1755f, 0f, 2120f), new Vector3(1765f, 60f, 2013f));
+
+            barril1 = new ElementoMapa("BarrilPolvora-TgcScene.xml", new Vector3(218f, 0f, 35f), new Vector3(161f, 60f, 309f));
+            barril2 = new ElementoMapa("BarrilPolvora-TgcScene.xml", new Vector3(1103f, 0f, 1038f), new Vector3(161f, 60f, 309f));
+            barril3 = new ElementoMapa("BarrilPolvora-TgcScene.xml", new Vector3(1951f, 0f, 41f), new Vector3(161f, 60f, 309f));
+            barril4 = new ElementoMapa("BarrilPolvora-TgcScene.xml", new Vector3(3214f, 0f, 454f), new Vector3(161f, 60f, 309f));
+            barril5 = new ElementoMapa("BarrilPolvora-TgcScene.xml", new Vector3(4228f, 0f, 520f), new Vector3(161f, 60f, 309f));
+            barril6 = new ElementoMapa("BarrilPolvora-TgcScene.xml", new Vector3(3026f, 0f, 261f), new Vector3(161f, 60f, 309f));
+            barril7 = new ElementoMapa("BarrilPolvora-TgcScene.xml", new Vector3(1086f, 0f, 2073f), new Vector3(161f, 60f, 309f));
+            barril8 = new ElementoMapa("BarrilPolvora-TgcScene.xml", new Vector3(2684f, 0f, 2289f), new Vector3(161f, 60f, 309f));
+
+            aragna1 = new ElementoMapa("Tarantula-TgcScene.xml", new Vector3(1676f, 0f, 397f), new Vector3(1667f, 0f, 515f));
+            aragna1.escalar(new Vector3(0.7f, 0.7f, 0.7f));
+            aragna2 = new ElementoMapa("Tarantula-TgcScene.xml", new Vector3(2514f, 0f, 117f), new Vector3(2359f, 0f, 112f));
+            aragna2.escalar(new Vector3(0.7f, 0.7f, 0.7f));
+            aragna3 = new ElementoMapa("Tarantula-TgcScene.xml", new Vector3(3455f, 0f, 378f), new Vector3(3349f, 0f, 373f));
+            aragna3.escalar(new Vector3(0.7f, 0.7f, 0.7f));
+            aragna4 = new ElementoMapa("Tarantula-TgcScene.xml", new Vector3(3370f, 0f, 1253f), new Vector3(3377f, 0f, 1199f));
+            aragna4.escalar(new Vector3(0.7f, 0.7f, 0.7f));
+            aragna5 = new ElementoMapa("Tarantula-TgcScene.xml", new Vector3(586f, 0f, 1643f), new Vector3(583f, 0f, 1623f));
+            aragna5.escalar(new Vector3(0.7f, 0.7f, 0.7f));
+            aragna6 = new ElementoMapa("Tarantula-TgcScene.xml", new Vector3(2472f, 0f, 1893f), new Vector3(2475f, 0f, 1798f));
+            aragna6.escalar(new Vector3(0.7f, 0.7f, 0.7f));
+            aragna7 = new ElementoMapa("Tarantula-TgcScene.xml", new Vector3(3957f, 0f, 1037f), new Vector3(3896f, 0f, 1034f));
+            aragna7.escalar(new Vector3(0.7f, 0.7f, 0.7f));
+            aragna8 = new ElementoMapa("Tarantula-TgcScene.xml", new Vector3(4202f, 0f, 1505f), new Vector3(4247f, 0f, 1506f));
+            aragna8.escalar(new Vector3(0.7f, 0.7f, 0.7f));
+
+            mueble1 = new ElementoMapa("KARE+78676+Sideboard+Bloody+Mary+4trg,+4SK-TgcScene.xml", new Vector3(2306f, 0f, 20f), new Vector3(2307f, 0f, 180f));
+            mueble2 = new ElementoMapa("KARE+78676+Sideboard+Bloody+Mary+4trg,+4SK-TgcScene.xml", new Vector3(803f, 0f, 20f), new Vector3(804f, 0f, 66f));
+            mueble3 = new ElementoMapa("KARE+78676+Sideboard+Bloody+Mary+4trg,+4SK-TgcScene.xml", new Vector3(2460f, 0f, 1238f), new Vector3(2461f, 0f, 1188f));
 
 
             enemigo2 = new Enemigo2(); //Cargamos un enemigo
@@ -381,11 +425,20 @@ namespace AlumnoEjemplos.CucarachaJugosita
             listaEscondites = new ArrayList();
             escondite1 = new Escondite(); //Para poner casillero le pasamos de path: "LockerMetal-TgcScene.xml" y de tipo: Escondito.Tipo.Casillero.
                                           //Para poner mesa le pasamos de path: "mesaPiola-TgcScene.xml" y de tipo: Escondite.Tipo.Mesa
-            escondite1.init(new Vector3(1191f, 5.02f, 370f), new Vector3(963f, 5.02f, 370f), "LockerAlphaBlending-TgcScene.xml", Escondite.Tipo.Casillero);
+            escondite1.init(new Vector3(1185f, 5.02f, 370f), new Vector3(963f, 5.02f, 370f), "LockerAlphaBlending-TgcScene.xml", Escondite.Tipo.Casillero);
             listaEscondites.Add(escondite1);
-            escondite2 = new Escondite();
-            escondite2.init(new Vector3(521f, 5.02f, 1045f), new Vector3(523f, 5.02f, 860f), "mesaPiola-TgcScene.xml", Escondite.Tipo.Mesa);
-            listaEscondites.Add(escondite2);
+            escondite3 = new Escondite();
+            escondite3.init(new Vector3(738f, 0f, 1113f), new Vector3(734f, 5.02f, 1034f), "mesaPiola-TgcScene.xml", Escondite.Tipo.Mesa);
+            listaEscondites.Add(escondite3);
+            escondite4 = new Escondite();
+            escondite4.init(new Vector3(2972f, 0f, 911f), new Vector3(3028f, 5.02f, 913f), "mesaPiola-TgcScene.xml", Escondite.Tipo.Mesa);
+            listaEscondites.Add(escondite4);
+            escondite5 = new Escondite();
+            escondite5.init(new Vector3(3227f, 5.02f, 225f), new Vector3(3224f, 60f, 259f), "LockerAlphaBlending-TgcScene.xml", Escondite.Tipo.Casillero);
+            listaEscondites.Add(escondite5);
+            escondite6 = new Escondite();
+            escondite6.init(new Vector3(1445f, 5.02f, 1535f), new Vector3(1447f, 60f, 1505f), "LockerAlphaBlending-TgcScene.xml", Escondite.Tipo.Casillero);
+            listaEscondites.Add(escondite6);
 
             //Añadimos recargas a la lista
             listaRecargas = new ArrayList();
@@ -435,6 +488,25 @@ namespace AlumnoEjemplos.CucarachaJugosita
             listaElementoMapa.Add(cosa10);
             listaElementoMapa.Add(cosa11);
             listaElementoMapa.Add(cosa12);
+            listaElementoMapa.Add(barril1);
+            listaElementoMapa.Add(barril2);
+            listaElementoMapa.Add(barril3);
+            listaElementoMapa.Add(barril4);
+            listaElementoMapa.Add(barril5);
+            listaElementoMapa.Add(barril6);
+            listaElementoMapa.Add(barril7);
+            listaElementoMapa.Add(barril8);
+            listaElementoMapa.Add(aragna1);
+            listaElementoMapa.Add(aragna2);
+            listaElementoMapa.Add(aragna3);
+            listaElementoMapa.Add(aragna4);
+            listaElementoMapa.Add(aragna5);
+            listaElementoMapa.Add(aragna6);
+            listaElementoMapa.Add(aragna7);
+            listaElementoMapa.Add(aragna8);
+            listaElementoMapa.Add(mueble1);
+            listaElementoMapa.Add(mueble2);
+            listaElementoMapa.Add(mueble3);
 
             manejoI = new ManejoIluminacion();
             manejoI.setEscena(escena);
@@ -515,7 +587,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             GuiController.Instance.DirectSound.ListenerTracking = meshInservible;
 
 
-            activadorNightvision = new NightRecarga(new Vector3(794f, 30f, 138f));
+            activadorNightvision = new NightRecarga(new Vector3(2677f, 30f, 2230f));
 
             //Aca vamos a cargar todos los elementos a renderizar en una lista generica -- Para la iluminacion
             todosElementosARenderizar = new ArrayList();
@@ -1100,7 +1172,6 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public void efectoPostProcesadoVictoria(float elapsedTime, Device d3dDevice)
         {
             GuiController.Instance.CustomRenderEnabled = true;
-
             efectoVictoria.Technique = "OscurecerTechnique";
             pOldRT = d3dDevice.GetRenderTarget(0);
             Surface pSurf = renderTarget2D.GetSurfaceLevel(0);
@@ -1121,11 +1192,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
             //Ahora volvemos a restaurar el Render Target original (osea dibujar a la pantalla)
             d3dDevice.SetRenderTarget(0, pOldRT);
             d3dDevice.DepthStencilSurface = pOldDS;
+
             //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de alarma
             drawPostProcessVictoria(d3dDevice);
-
             pSurf.Dispose();
-
         }
         private void drawSceneToRenderTargetVictoria(Device d3dDevice, float elapsedTime)
         {
@@ -1170,9 +1240,6 @@ namespace AlumnoEjemplos.CucarachaJugosita
             d3dDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
             efectoVictoria.EndPass();
             efectoVictoria.End();
-
-
-            
 
             //Terminamos el renderizado de la escena
             //d3dDevice.EndScene();
@@ -1366,7 +1433,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     
                 }
             }
-            
+
 
             // El resto opacos
             //renderScene(elapsedTime, "DibujarObjetosOscuros");
