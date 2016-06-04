@@ -278,7 +278,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             enemigo1.setCamara(camara);
 
 
-            cosa1 = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3(225f, 0f, 312f),new Vector3(161f,60f,309f));
+            cosa1 = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3(225f, 0f, 312f), new Vector3(161f, 60f, 309f));
             cosa2 = new ElementoMapa("Esqueleto2-TgcScene.xml", new Vector3(934f, 5.02f, 164f), new Vector3(862f, 60f, 154f));
             cosa3 = new ElementoMapa("Esqueleto3-TgcScene.xml", new Vector3(325f, 0f, 1004f), new Vector3(402f, 60f, 1009f));
             cosa4 = new ElementoMapa("Esqueleto-TgcScene.xml", new Vector3(1740f, 0f, 1520f), new Vector3(1746f, 60f, 1439f));
@@ -1172,6 +1172,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public void efectoPostProcesadoVictoria(float elapsedTime, Device d3dDevice)
         {
             GuiController.Instance.CustomRenderEnabled = true;
+
             efectoVictoria.Technique = "OscurecerTechnique";
             pOldRT = d3dDevice.GetRenderTarget(0);
             Surface pSurf = renderTarget2D.GetSurfaceLevel(0);
@@ -1192,10 +1193,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
             //Ahora volvemos a restaurar el Render Target original (osea dibujar a la pantalla)
             d3dDevice.SetRenderTarget(0, pOldRT);
             d3dDevice.DepthStencilSurface = pOldDS;
-
             //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de alarma
             drawPostProcessVictoria(d3dDevice);
+
             pSurf.Dispose();
+
         }
         private void drawSceneToRenderTargetVictoria(Device d3dDevice, float elapsedTime)
         {
@@ -1240,6 +1242,9 @@ namespace AlumnoEjemplos.CucarachaJugosita
             d3dDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
             efectoVictoria.EndPass();
             efectoVictoria.End();
+
+
+            
 
             //Terminamos el renderizado de la escena
             //d3dDevice.EndScene();
@@ -1433,7 +1438,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     
                 }
             }
-
+            
 
             // El resto opacos
             //renderScene(elapsedTime, "DibujarObjetosOscuros");
