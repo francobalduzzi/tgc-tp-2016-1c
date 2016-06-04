@@ -10,6 +10,7 @@ using TgcViewer.Utils.TgcGeometry;
 using TgcViewer;
 using AlumnoEjemplos.CucarachaJugosita;
 using TgcViewer.Utils.Shaders;
+using TgcViewer.Utils;
 
 namespace AlumnoEjemplos.CucarachaJugosita
 {
@@ -23,8 +24,6 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public TgcScene antorcha;
         public Effect efectoAntorcha;
         public float time;
-        Boolean banderaTiempo;
-        float contador;
         //Cosas glow
 
         VertexBuffer screenQuadVB;
@@ -46,8 +45,6 @@ namespace AlumnoEjemplos.CucarachaJugosita
         {
             d3dDevice = GuiController.Instance.D3dDevice;          
             time = 2;
-            contador = 0;
-            banderaTiempo = false;
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosDir;
             var loader = new TgcSceneLoader();
             antorcha = loader.loadSceneFromFile(alumnoMediaFolder + "CucarachaJugosita\\Media\\Antorcha-TgcScene.xml");
@@ -60,56 +57,17 @@ namespace AlumnoEjemplos.CucarachaJugosita
             mesh.Effect.SetValue("posMesh", TgcParserUtils.vector3ToFloat4Array(mesh.Position));
             mesh.Technique = GuiController.Instance.Shaders.getTgcMeshTechnique(mesh.RenderType);
 
-            //Inicio glow map
-            CustomVertex.PositionTextured[] screenQuadVertices = new CustomVertex.PositionTextured[]
-            {
-                new CustomVertex.PositionTextured( -1, 1, 1, 0,0),
-                new CustomVertex.PositionTextured(1,  1, 1, 1,0),
-                new CustomVertex.PositionTextured(-1, -1, 1, 0,1),
-                new CustomVertex.PositionTextured(1,-1, 1, 1,1)
-            };
-            //vertex buffer de los triangulos
-            screenQuadVB = new VertexBuffer(typeof(CustomVertex.PositionTextured),
-                    4, d3dDevice, Usage.Dynamic | Usage.WriteOnly,
-                        CustomVertex.PositionTextured.Format, Pool.Default);
-            screenQuadVB.SetData(screenQuadVertices, 0, LockFlags.None);
-
-            //Creamos un Render Targer sobre el cual se va a dibujar la pantalla
-            renderTarget2D = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
-                    , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
-                        Format.X8R8G8B8, Pool.Default);
-
-
-            g_pGlowMap = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
-                    , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
-                        Format.X8R8G8B8, Pool.Default);
-
-            g_pRenderTarget4 = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth / 4
-                    , d3dDevice.PresentationParameters.BackBufferHeight / 4, 1, Usage.RenderTarget,
-                        Format.X8R8G8B8, Pool.Default);
-
-            g_pRenderTarget4Aux = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth / 4
-                    , d3dDevice.PresentationParameters.BackBufferHeight / 4, 1, Usage.RenderTarget,
-                        Format.X8R8G8B8, Pool.Default);
-            mesh.Effect.SetValue("g_RenderTarget", renderTarget2D);
-            mesh.Effect.SetValue("screen_dx", 50);
-            mesh.Effect.SetValue("screen_dy", 50);
-
         }
 
-        public void render()
+        public void render(Device d3dDevice)
         {
 
                 time += GuiController.Instance.ElapsedTime;
-                contador += GuiController.Instance.ElapsedTime;
+            GuiController.Instance.CustomRenderEnabled = true;
 
-            if (time >= 4)
-            {
-               // time -= contador;
-               // contador = 0;
-            }        
             mesh.Effect.SetValue("time", time);
             mesh.Effect.Technique = "DIFFUSE_MAP";
+
             mesh.render();
 
 

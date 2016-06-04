@@ -1100,8 +1100,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public void efectoPostProcesadoVictoria(float elapsedTime, Device d3dDevice)
         {
             GuiController.Instance.CustomRenderEnabled = true;
-            time += elapsedTime;
-            effect.SetValue("time", time);
+
+            efectoVictoria.Technique = "OscurecerTechnique";
             pOldRT = d3dDevice.GetRenderTarget(0);
             Surface pSurf = renderTarget2D.GetSurfaceLevel(0);
             d3dDevice.SetRenderTarget(0, pSurf);
@@ -1121,9 +1121,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
             //Ahora volvemos a restaurar el Render Target original (osea dibujar a la pantalla)
             d3dDevice.SetRenderTarget(0, pOldRT);
             d3dDevice.DepthStencilSurface = pOldDS;
-
             //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de alarma
             drawPostProcessVictoria(d3dDevice);
+
+            pSurf.Dispose();
+
         }
         private void drawSceneToRenderTargetVictoria(Device d3dDevice, float elapsedTime)
         {
@@ -1139,6 +1141,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
             //Dibujamos todos los meshes del escenario
             renderTotal(elapsedTime);
+            /*foreach(LuzNormal luz in listaLuces)
+            {
+                luz.getMesh().render();
+            }*/
             //Terminamos manualmente el renderizado de esta escena. Esto manda todo a dibujar al GPU al Render Target que cargamos antes
             // d3dDevice.EndScene();
         }
@@ -1155,6 +1161,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             //Cargamos parametros en el shader de Post-Procesado
             efectoVictoria.SetValue("posCam", TgcParserUtils.vector3ToFloat4Array(camara.getPosition()));
             efectoVictoria.SetValue("posicion", TgcParserUtils.vector3ToFloat4Array(trofeo.posicion));
+            efectoVictoria.SetValue("blur_intensity", 0.010f);
             efectoVictoria.SetValue("render_target2D", renderTarget2D);
             //Limiamos la pantalla y ejecutamos el render del shader
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
@@ -1163,6 +1170,9 @@ namespace AlumnoEjemplos.CucarachaJugosita
             d3dDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
             efectoVictoria.EndPass();
             efectoVictoria.End();
+
+
+            
 
             //Terminamos el renderizado de la escena
             //d3dDevice.EndScene();

@@ -194,16 +194,10 @@ float4 ps_DiffuseMap(PS_DIFFUSE_MAP input) : COLOR0
 	if(input.Texcoord.y < 0.7 /*&& input.Texcoord.x < 0.3*/&& color.r >0.5){
 	
 		color.r = 1;
-		color.g = 0.3;
-		color.b = 0.3;
+		color.g = 0.4;
+		color.b = 0.4;
 		//Obtener color de textura
-		float4 color1 = tex2D( diffuseMap, input.Texcoord );
-	
-		//Tomar samples adicionales de texels vecinos y sumarlos (formamos una cruz)
-		color1 += tex2D( diffuseMap, float2(input.Texcoord.x + blur_intensity, input.Texcoord.y));
-		color1 += tex2D( diffuseMap, float2(input.Texcoord.x - blur_intensity, input.Texcoord.y));
-		color1 += tex2D( diffuseMap, float2(input.Texcoord.x, input.Texcoord.y + blur_intensity));
-		color1 += tex2D( diffuseMap, float2(input.Texcoord.x, input.Texcoord.y - blur_intensity));
+
 	
 		//Obtener color segun textura
 		//float4 color2 = tex2D( RenderTarget, Input.Texcoord );
@@ -212,7 +206,6 @@ float4 ps_DiffuseMap(PS_DIFFUSE_MAP input) : COLOR0
 		//color2.rgb = color2.rgb * (1 - scaleFactor) + value * scaleFactor;
 		//Escalar el color para oscurecerlo
 		//Promediar todos
-		color1 = color1 / 5;
 		//color = color1;
 	}
 	

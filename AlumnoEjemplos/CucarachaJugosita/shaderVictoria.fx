@@ -70,7 +70,8 @@ struct PS_INPUT_DEFAULT
 
 float4 posicion;// Posicion del objeto que provoca la difuminacion, la copa en nuestro caso
 float4 posCam; // Posicion de la camara
-
+float blur_intensity;
+float scaleFactor = 1;
 float4 ps_oscurecer( PS_INPUT_DEFAULT Input ) : COLOR0
 {     
 	//Obtener color segun textura
@@ -79,8 +80,32 @@ float4 ps_oscurecer( PS_INPUT_DEFAULT Input ) : COLOR0
 	float distanciaTextura = length(Input.Texcoord -0.5);
 	//Escalar el color para oscurecerlo
 	float value = 0.5*distanciaTextura;
-	color.rgb = (color.rgb + value/(distanciaPunto/500));
+	
+	if(color.r == 1 && color.g == 0.4 && color.b == 0.4)
 
+	{
+	
+	
+	//Tomar samples adicionales de texels vecinos y sumarlos (formamos una cruz)
+	color += tex2D( RenderTarget, float2(Input.Texcoord.x + blur_intensity, Input.Texcoord.y));
+	color += tex2D( RenderTarget, float2(Input.Texcoord.x - blur_intensity, Input.Texcoord.y));
+	color += tex2D( RenderTarget, float2(Input.Texcoord.x, Input.Texcoord.y + blur_intensity));
+	color += tex2D( RenderTarget, float2(Input.Texcoord.x, Input.Texcoord.y - blur_intensity));
+	
+	//Obtener color segun textura
+	float4 color2 = tex2D( RenderTarget, Input.Texcoord );
+	
+	//Escalar el color para oscurecerlo
+	float value = ((color2.r + color2.g + color2.b) / 3) * scaleFactor; 
+	color2.rgb = color2.rgb * (1 - scaleFactor) + value * scaleFactor;
+	
+	//Promediar todos
+	color = color / 5;
+	
+	}
+	color.rgb = (color.rgb + value/(distanciaPunto/500));
+	
+	
 	return color;
 }
 
