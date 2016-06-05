@@ -894,6 +894,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
                    
                 }
                 chequearPersecucion();
+                foreach (TgcMesh m in elementosPuerta)
+                {
+                    m.render();
+                    //m.render();
+                }
             }
             else
             {
@@ -1594,7 +1599,12 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 m.Technique = Technique;
                 //m.render();
             }
-
+            foreach (TgcMesh m in elementosPuerta)
+            {
+                m.Effect = efectoNightVision;
+                m.Technique = Technique;
+                //m.render();
+            }
             renderTotal(elapsedTime);
             TgcText2d textoActual;
             textoActual = new TgcText2d();
