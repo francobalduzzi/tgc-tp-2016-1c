@@ -864,7 +864,6 @@ namespace AlumnoEjemplos.CucarachaJugosita
             renderEscondites();
             colisionesConEscondites();
             renderEnemigos(camara.getPosition()); //saco el render para poder investigar bien el mapa
-            renderElementosMapa();
             verificarLlaves();
             renderLlaves(elapsedTime);
             numeroLLaves.render();

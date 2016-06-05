@@ -105,7 +105,6 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public void render()
         {
             text2.render();
-            mesh.render();
             
         }
     }
