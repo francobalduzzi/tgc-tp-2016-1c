@@ -63,6 +63,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
         public float contadorXZMerlusa = 0;
         public Boolean merlusaXZ = true;
         public ArrayList enemigos;
+        public ArrayList elementosARenderizar;
+        public ArrayList puertasARenderizar;
         public Camara()
         {
             Control focusWindows = GuiController.Instance.D3dDevice.CreationParameters.FocusWindow;
@@ -72,7 +74,14 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     focusWindows.Height / 2)
                     );
         }
-
+        public void setElementosARenderizar(ArrayList meshes)
+        {
+            elementosARenderizar = meshes;
+        }
+        public void setPuertasARenderizar(ArrayList meshes)
+        {
+           puertasARenderizar = meshes;
+        }
         public void setEnemigos(ArrayList enemigos)
         {
             this.enemigos = enemigos;
@@ -482,13 +491,21 @@ namespace AlumnoEjemplos.CucarachaJugosita
             {
                 int contador = 0;
                 Ray rayo = new Ray(eye, enemigo.getMesh().Position);
-                foreach (TgcMesh mesh in escena.Meshes)
+                foreach (TgcMesh mesh in elementosARenderizar)
                 {
                     if (rayo.intersectAABB(mesh.BoundingBox))
                     {
                         contador++;
                     }
                     
+                }
+                foreach (TgcMesh mesh in puertasARenderizar)
+                {
+                    if (rayo.intersectAABB(mesh.BoundingBox))
+                    {
+                        contador++;
+                    }
+
                 }
                 if (contador == 0 && calculo(enemigo.getMesh().Position))
                 {

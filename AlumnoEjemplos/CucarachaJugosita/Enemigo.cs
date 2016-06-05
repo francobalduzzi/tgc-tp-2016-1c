@@ -40,11 +40,21 @@ namespace AlumnoEjemplos.CucarachaJugosita
         protected Camara camara;
         protected Tgc3dSound sonidoCaminar;
         protected Tgc3dSound sonidoPerseguir;
+        public ArrayList elementosARenderizar;
+        public ArrayList puertasARenderizar;
 
         public void reiniciar()
         {
             mesh.Position = caminoOriginal[0];
             contador = 0;
+        }
+        public void setElementosARenderizar(ArrayList meshes)
+        {
+            elementosARenderizar = meshes;
+        }
+        public void setPuertasARenderizar(ArrayList meshes)
+        {
+            puertasARenderizar = meshes;
         }
         public void setCamara(Camara camara)
         {
@@ -398,7 +408,14 @@ namespace AlumnoEjemplos.CucarachaJugosita
         {
             int contador = 0;
             Ray rayo = new Ray(this.mesh.Position, posicion);
-            foreach (TgcMesh mesh in escena.Meshes)
+            foreach (TgcMesh mesh in elementosARenderizar)
+            {
+                if (rayo.intersectAABB(mesh.BoundingBox))
+                {
+                    contador++;
+                }
+            }
+            foreach (TgcMesh mesh in puertasARenderizar)
             {
                 if (rayo.intersectAABB(mesh.BoundingBox))
                 {

@@ -26,9 +26,14 @@ namespace AlumnoEjemplos.CucarachaJugosita
         ArrayList todosLosElementos;
         ArrayList enemigosARenderizar;
         ArrayList elementosDesaparecedores;
+        ArrayList listaPuertas;
         public void setEscena(TgcScene escena)
         {
             this.escena = escena;
+        }
+        public void setListaPuertas(ArrayList puertas)
+        {
+            listaPuertas = puertas;
         }
         public void setTodosLosElementos(ArrayList todos)
         {
@@ -170,7 +175,41 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     mesh.Effect.SetValue("lightAttenuationP", luzDelMesh.Attenuation);
                     mesh.render();
                 }
-                
+                foreach (TgcMesh mesh in listaPuertas) //Esto lo pongo aca, ya que las sombras tengo que hacerlas primero si no se vuelve loquito
+                {
+                    mesh.Effect = effectSpotYPoint;
+
+                    mesh.Technique = GuiController.Instance.Shaders.getTgcMeshTechnique(mesh.RenderType);
+                }
+                foreach (TgcMesh mesh in listaPuertas)
+                {
+                    luzDelMesh = luzMasCercana(mesh.BoundingBox.calculateBoxCenter());
+                    mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(Color.Black));
+                    mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(Color.White));
+                    mesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor(Color.White));
+                    mesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor(Color.White));
+                    mesh.Effect.SetValue("materialSpecularExp", 9f);
+                    mesh.Effect.SetValue("lightColor", ColorValue.FromColor(objeto.color));
+                    mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(camara.getPosition()));
+                    mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(camara.getPosition()));
+                    mesh.Effect.SetValue("spotLightDir", TgcParserUtils.vector3ToFloat4Array(lightDir));
+                    if (objeto.Encendida)
+                    {
+                        mesh.Effect.SetValue("lightIntensity", objeto.Intensity);
+                    }
+                    else
+                    {
+                        mesh.Effect.SetValue("lightIntensity", 0);
+                    }
+                    mesh.Effect.SetValue("lightAttenuation", objeto.Attenuation);
+                    mesh.Effect.SetValue("spotLightAngleCos", FastMath.ToRad(objeto.SpotAngle));
+                    mesh.Effect.SetValue("spotLightExponent", objeto.SpotExponent);
+                    mesh.Effect.SetValue("lightColorP", ColorValue.FromColor(luzDelMesh.lightColor));
+                    mesh.Effect.SetValue("lightPositionP", TgcParserUtils.vector3ToFloat4Array(luzDelMesh.Posicion));
+                    mesh.Effect.SetValue("lightIntensityP", luzDelMesh.Intensity);
+                    mesh.Effect.SetValue("lightAttenuationP", luzDelMesh.Attenuation);
+                    mesh.render();
+                }
                 /*foreach (TgcSkeletalMesh mesh in todosLosElementos)
                 {
                     mesh.Effect = effectSpotYPoint;
@@ -256,6 +295,39 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     mesh.Technique = GuiController.Instance.Shaders.getTgcMeshTechnique(mesh.RenderType);
                 }
                 foreach (TgcMesh mesh in todosLosElementos)
+                {
+                    luzDelMesh = luzMasCercana(mesh.BoundingBox.calculateBoxCenter());
+                    mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(Color.Black));
+                    mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(Color.White));
+                    mesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor(Color.White));
+                    mesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor(Color.White));
+                    mesh.Effect.SetValue("materialSpecularExp", 9f);
+                    mesh.Effect.SetValue("lightColor", ColorValue.FromColor(objeto.color));
+                    mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(camara.getPosition()));
+                    mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(camara.getPosition()));
+                    if (objeto.Encendida)
+                    {
+                        mesh.Effect.SetValue("lightIntensity", objeto.Intensity);
+                    }
+                    else
+                    {
+                        mesh.Effect.SetValue("lightIntensity", 0);
+                    }
+                    mesh.Effect.SetValue("lightAttenuation", objeto.Attenuation);
+                    mesh.Effect.SetValue("lightColorP", ColorValue.FromColor(luzDelMesh.lightColor));
+                    mesh.Effect.SetValue("lightPositionP", TgcParserUtils.vector3ToFloat4Array(luzDelMesh.Posicion));
+                    mesh.Effect.SetValue("lightIntensityP", luzDelMesh.Intensity);
+                    mesh.Effect.SetValue("lightAttenuationP", luzDelMesh.Attenuation);
+                    mesh.AlphaBlendEnable = true;
+                    mesh.render();
+                }
+                foreach (TgcMesh mesh in listaPuertas) //Esto lo pongo aca, ya que las sombras tengo que hacerlas primero si no se vuelve loquito
+                {
+                    mesh.Effect = effectPointYPoint;
+
+                    mesh.Technique = GuiController.Instance.Shaders.getTgcMeshTechnique(mesh.RenderType);
+                }
+                foreach (TgcMesh mesh in listaPuertas)
                 {
                     luzDelMesh = luzMasCercana(mesh.BoundingBox.calculateBoxCenter());
                     mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(Color.Black));

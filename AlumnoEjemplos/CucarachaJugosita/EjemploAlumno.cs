@@ -73,6 +73,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
         ArrayList todosElementosARenderizar; //Hay que separar en 2 xq los enemigos son skeletical
         ArrayList enemigosARenderizar;
         ArrayList elementosDesaparecedores;
+        ArrayList elementosPuerta;
+        List<TgcMesh> escenaSinPuertas; //Asi no renderizamos 2 veces.
         LuzNormal antorcha1;
         LuzNormal antorcha2;
         LuzNormal antorcha3;
@@ -629,11 +631,41 @@ namespace AlumnoEjemplos.CucarachaJugosita
             manejoI.setTodosLosElementos(todosElementosARenderizar);
             manejoI.setEnemigosARenderizar(enemigosARenderizar);
             manejoI.setElementosDesaparecedores(elementosDesaparecedores);
+            elementosPuerta = new ArrayList();
+            foreach(Puerta puerta in listaPuertas)
+            {
+                elementosPuerta.Add(puerta.getMeshC1());
+                elementosPuerta.Add(puerta.getMeshC2());
+                elementosPuerta.Add(puerta.getMeshC3());
+                elementosPuerta.Add(puerta.getMeshP());
+            }
+            elementosPuerta.Add(puertaF.getMeshC1());
+            elementosPuerta.Add(puertaF.getMeshC2());
+            elementosPuerta.Add(puertaF.getMeshC3());
+            elementosPuerta.Add(puertaF.getMeshP());
+            manejoI.setListaPuertas(elementosPuerta);
+            escenaSinPuertas = new List<TgcMesh>();
+            foreach(TgcMesh mesh in escena.Meshes)
+            {
+                escenaSinPuertas.Add(mesh);
+            }
+            foreach(TgcMesh mesh in elementosPuerta)
+            {
+                escenaSinPuertas.Remove(mesh);
+            }
 
-
-
-            
-
+            camara.setPuertasARenderizar(elementosPuerta);
+            camara.setElementosARenderizar(todosElementosARenderizar);
+            enemigo1.setElementosARenderizar(todosElementosARenderizar);
+            enemigo1.setPuertasARenderizar(elementosPuerta);
+            enemigo2.setElementosARenderizar(todosElementosARenderizar);
+            enemigo2.setPuertasARenderizar(elementosPuerta);
+            enemigo3.setElementosARenderizar(todosElementosARenderizar);
+            enemigo3.setPuertasARenderizar(elementosPuerta);
+            enemigo4.setElementosARenderizar(todosElementosARenderizar);
+            enemigo4.setPuertasARenderizar(elementosPuerta);
+            enemigo5.setElementosARenderizar(todosElementosARenderizar);
+            enemigo5.setPuertasARenderizar(elementosPuerta);
 
             ///////////////USER VARS//////////////////
 
@@ -698,7 +730,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 string element = lista[i];
             }
 
-            partesARenderizar = new PartesARenderizar(escena, camara);
+            partesARenderizar = new PartesARenderizar(escenaSinPuertas, camara);
             cosasARenderizar = new ArrayList();
 
         }
