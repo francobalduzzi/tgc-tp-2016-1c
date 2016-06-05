@@ -260,10 +260,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
             foreach (Puerta puerta in listaPuertas) //Aca añadimos los meshes correspondiente a cada puerta a la escena
             {
-                escena.Meshes.Add(puerta.getMeshC1());
-                escena.Meshes.Add(puerta.getMeshC3());
-                escena.Meshes.Add(puerta.getMeshC2());
                 escena.Meshes.Add(puerta.getMeshP());
+                escena.Meshes.Add(puerta.getMeshC1());
+                escena.Meshes.Add(puerta.getMeshC2());
+                escena.Meshes.Add(puerta.getMeshC3());         
+                
             }
             listaEnemigos = new ArrayList(); //Creamos lista de enemigos
             enemigo1 = new Enemigo(); //Cargamos un enemigo  Toda la carga de enemigos se hace en una funcion cargar enemigos, etc
@@ -877,7 +878,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition()); //Actualizamos la user var, nos va a servir
             renderEscondites();
             colisionesConEscondites();
-            //renderEnemigos(camara.getPosition()); //saco el render para poder investigar bien el mapa
+            renderEnemigos(camara.getPosition()); //saco el render para poder investigar bien el mapa
             verificarLlaves();
             renderLlaves(elapsedTime);
             numeroLLaves.render();
@@ -893,22 +894,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             activadorNightvision.render(elapsedTime);
             GuiController.Instance.Text3d.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
             objeto.render();
-
-            partesARenderizar.caja1.BoundingBox.render();
-            partesARenderizar.caja2.BoundingBox.render();
-            partesARenderizar.caja3.BoundingBox.render();
-            partesARenderizar.caja4.BoundingBox.render();
-            partesARenderizar.caja5.BoundingBox.render();
-            partesARenderizar.caja6.BoundingBox.render();
-            partesARenderizar.caja7.BoundingBox.render();
-            partesARenderizar.caja8.BoundingBox.render();
-            partesARenderizar.caja9.BoundingBox.render();
-            partesARenderizar.caja10.BoundingBox.render();
-            partesARenderizar.caja11.BoundingBox.render();
-            partesARenderizar.caja12.BoundingBox.render();
-            partesARenderizar.caja13.BoundingBox.render();
-            partesARenderizar.caja14.BoundingBox.render();
-        }
+       }
 
         public void activarNightVision()
         {

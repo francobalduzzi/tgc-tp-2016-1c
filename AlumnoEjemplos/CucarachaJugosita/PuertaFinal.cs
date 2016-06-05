@@ -172,10 +172,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
         {
             text2.render();
             this.moverPuerta();
-            /*puerta1.renderAll();
+            puerta1.renderAll();
             cobertura1.renderAll();
             cobertura3.renderAll();
-            cobertura2.renderAll();*/
+            cobertura2.renderAll();
             meshP.BoundingBox.transform(meshP.Transform);
             meshC1.BoundingBox.transform(meshC1.Transform);
             meshC2.BoundingBox.transform(meshC2.Transform);

@@ -173,6 +173,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 this.addAll(listaCaja1, listaADevolver1);
                 this.addAll(listaCaja2, listaADevolver1);
                 this.addAll(listaCaja3, listaADevolver1);
+                this.addAll(listaCaja8, listaADevolver1);
                 return listaADevolver1;
             }
 
@@ -192,6 +193,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 this.addAll(listaCaja1, listaADevolver3);
                 this.addAll(listaCaja8,listaADevolver3);
                 this.addAll(listaCaja4, listaADevolver3);
+                this.addAll(listaCaja10, listaADevolver3);
                 return listaADevolver3;
             }
 
@@ -204,6 +206,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 this.addAll(listaCaja9, listaADevolver4);
                 this.addAll(listaCaja5, listaADevolver4);
                 this.addAll(listaCaja10, listaADevolver4);
+                this.addAll(listaCaja12, listaADevolver4);
                 return listaADevolver4;
             }
 
@@ -250,6 +253,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 this.addAll(listaCaja8, listaADevolver9);
                 this.addAll(listaCaja4, listaADevolver9);
                 this.addAll(listaCaja10, listaADevolver9);
+                this.addAll(listaCaja11, listaADevolver9);
                 return listaADevolver9;
             }
 
@@ -261,6 +265,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 this.addAll(listaCaja14, listaADevolver10);
                 this.addAll(listaCaja11, listaADevolver10);
                 this.addAll(listaCaja12, listaADevolver10);
+                this.addAll(listaCaja13, listaADevolver10);
                 return listaADevolver10;
             }
 
