@@ -152,6 +152,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
         PuertaFinal puertaF;
         Boolean finPartida;
         Boolean perseguido;
+        PartesARenderizar partesARenderizar;
+        ArrayList cosasARenderizar;
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
         /// Influye en donde se va a haber en el árbol de la derecha de la pantalla.
@@ -577,7 +579,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             escena.Meshes.Add(puertaF.getMeshC3());
 
             GuiController.Instance.FullScreenEnable =true;
-
+            
 
             //Hacer que el Listener del sonido 3D siga al personaje
             TgcScene escena2;
@@ -589,6 +591,9 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
             activadorNightvision = new NightRecarga(new Vector3(2677f, 30f, 2230f));
 
+
+
+            
             //Aca vamos a cargar todos los elementos a renderizar en una lista generica -- Para la iluminacion
             todosElementosARenderizar = new ArrayList();
             enemigosARenderizar = new ArrayList();
@@ -626,9 +631,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
 
 
-
-
-
+            
 
 
             ///////////////USER VARS//////////////////
@@ -693,6 +696,10 @@ namespace AlumnoEjemplos.CucarachaJugosita
             {
                 string element = lista[i];
             }
+
+            partesARenderizar = new PartesARenderizar(escena, camara);
+            cosasARenderizar = new ArrayList();
+
         }
 
 
@@ -829,8 +836,15 @@ namespace AlumnoEjemplos.CucarachaJugosita
         {
             //enemigo.seguirA(camara.getPosition(), elapsedTime);
             moverCamaraConVela(elapsedTime); //Actualizamos el valor de la camara y vemos si generar efecto de vela
-            // vela1.render();
-            
+                                             // vela1.render();
+
+            todosElementosARenderizar.Clear();
+            foreach(TgcMesh mesh in partesARenderizar.aRenderizar())
+            {
+                todosElementosARenderizar.Add(mesh);
+            }
+
+
             if (nightVision && contadorNight > 0) //Hacemos esto para que el nightvision no arrastre valores de linterna etc.
             {
                 foreach(TgcMesh mesh in todosElementosARenderizar)
@@ -863,7 +877,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             GuiController.Instance.UserVars.setValue("PosCam", camara.getPosition()); //Actualizamos la user var, nos va a servir
             renderEscondites();
             colisionesConEscondites();
-            renderEnemigos(camara.getPosition()); //saco el render para poder investigar bien el mapa
+            //renderEnemigos(camara.getPosition()); //saco el render para poder investigar bien el mapa
             verificarLlaves();
             renderLlaves(elapsedTime);
             numeroLLaves.render();
@@ -879,6 +893,21 @@ namespace AlumnoEjemplos.CucarachaJugosita
             activadorNightvision.render(elapsedTime);
             GuiController.Instance.Text3d.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
             objeto.render();
+
+            partesARenderizar.caja1.BoundingBox.render();
+            partesARenderizar.caja2.BoundingBox.render();
+            partesARenderizar.caja3.BoundingBox.render();
+            partesARenderizar.caja4.BoundingBox.render();
+            partesARenderizar.caja5.BoundingBox.render();
+            partesARenderizar.caja6.BoundingBox.render();
+            partesARenderizar.caja7.BoundingBox.render();
+            partesARenderizar.caja8.BoundingBox.render();
+            partesARenderizar.caja9.BoundingBox.render();
+            partesARenderizar.caja10.BoundingBox.render();
+            partesARenderizar.caja11.BoundingBox.render();
+            partesARenderizar.caja12.BoundingBox.render();
+            partesARenderizar.caja13.BoundingBox.render();
+            partesARenderizar.caja14.BoundingBox.render();
         }
 
         public void activarNightVision()
