@@ -40,11 +40,11 @@ namespace AlumnoEjemplos.CucarachaJugosita
         ArrayList listaCaja12;
         ArrayList listaCaja13;
         ArrayList listaCaja14;
-        List<TgcMesh> escena;
+        TgcScene escena;
         TgcObb obb;
         Camara camara;
 
-        public PartesARenderizar(List<TgcMesh> mapa,Camara camarita)
+        public PartesARenderizar(TgcScene mapa,Camara camarita)
         {
             escena = mapa;
             camara = camarita;
@@ -99,7 +99,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
         private void init()
         {
-            foreach (TgcMesh mesh in escena) 
+            foreach (TgcMesh mesh in escena.Meshes) 
             {
                 obb = TgcObb.computeFromAABB(mesh.BoundingBox);
                 if (TgcCollisionUtils.testObbAABB(obb, caja1.BoundingBox))
@@ -241,8 +241,9 @@ namespace AlumnoEjemplos.CucarachaJugosita
             if (TgcCollisionUtils.testSphereAABB(camara.camaraColision, caja8.BoundingBox))
             {
                 this.addAll(listaCaja8, listaADevolver8);
-                this.addAll(listaCaja5, listaADevolver8);
+                this.addAll(listaCaja3, listaADevolver8);
                 this.addAll(listaCaja9, listaADevolver8);
+                this.addAll(listaCaja1, listaADevolver8);
                 return listaADevolver8;
             }
 
@@ -295,6 +296,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             {
                 this.addAll(listaCaja13, listaADevolver13);
                 this.addAll(listaCaja12, listaADevolver13);
+                this.addAll(listaCaja10, listaADevolver13);
                 return listaADevolver13;
             }
 
