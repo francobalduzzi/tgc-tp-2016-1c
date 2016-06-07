@@ -203,6 +203,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             camara.MovementSpeed = 200f;
             camara.RotationSpeed = 5f;
             camara.JumpSpeed = 80f;
+            camara.LockCam = true;
             //GuiController.Instance: acceso principal a todas las herramientas del Framework
 
             //Device de DirectX para crear primitivas
@@ -748,6 +749,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             switch (estadoMenu)
             {
                 case EstadoMenu.Menu:
+                    sonidos.playFondo();
                     GuiController.Instance.Drawer2D.beginDrawSprite();
                     menu.render();
                     GuiController.Instance.Drawer2D.endDrawSprite();
@@ -803,6 +805,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                     }
                     break;
                 case EstadoMenu.Juego:
+                    sonidos.stopFondo();
                     Device d3dDevice = GuiController.Instance.D3dDevice;
                     //sonidos.playFondo();  ---->> Musica de fondo en todo el juego probar si dejar esta
                     //objeto.actualizarEscenario(escena, camara); // Atencion aca, esto es como moo de prueba baja mucho ls FPS, lo ideal seria tener ls meshes cocinados y en el init del programa estos se carguen a cada uno de los objetos

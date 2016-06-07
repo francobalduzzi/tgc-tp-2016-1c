@@ -223,22 +223,6 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 movimiento = v;
                 moving = true;
             }
-
-            //Jump
-            if (GuiController.Instance.D3dInput.keyDown(Key.Space))
-            {
-                Vector3 v = moveUp(JumpSpeed * elapsedTime);
-                movimiento = v;
-                moving = true;
-            }
-
-            //Crouch
-            if (GuiController.Instance.D3dInput.keyDown(Key.LeftControl))
-            {
-                Vector3 v = moveUp(-JumpSpeed * elapsedTime);
-                movimiento = v;
-                moving = true;
-            }
             if (camBloqueada)
             {
                 tiempoBloqueado -= 90f * elapsedTime;
@@ -413,7 +397,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
              realMovement = new Vector3(realMovement.X, 0, realMovement.Z);
              move(realMovement);
             return realMovement;
-           /* move(v); //Dejo esto para poder atravesar paredes con A y D asi podemos salir del mapa y testear mas facil
+            /*move(v); //Dejo esto para poder atravesar paredes con A y D asi podemos salir del mapa y testear mas facil
             return v;*/
         }
 

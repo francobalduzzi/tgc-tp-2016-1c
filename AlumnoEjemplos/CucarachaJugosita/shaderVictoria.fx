@@ -102,7 +102,7 @@ float4 ps_oscurecer( PS_INPUT_DEFAULT Input ) : COLOR0
 	color = color / 5;
 	
 	}
-	color.rgb = (color.rgb + value/(distanciaPunto/500));
+	color.rgb = (color.rgb + value/(distanciaPunto/100));
 	
 	
 	return color;

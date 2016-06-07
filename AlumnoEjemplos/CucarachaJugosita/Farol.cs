@@ -18,7 +18,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
         private TgcText2d text2;
         public TgcScene farol;
         private float movimientoFarol;
-        const float VALORMAXIMOINTENSIDAD = 30;
+        const float VALORMAXIMOINTENSIDAD = 12;
         Barra barra;
         override public void mover(float elapsedTime)
         {
