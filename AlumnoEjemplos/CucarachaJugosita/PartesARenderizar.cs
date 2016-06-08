@@ -288,6 +288,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 this.addAll(listaCaja7, listaADevolver12);
                 this.addAll(listaCaja13, listaADevolver12);
                 this.addAll(listaCaja11, listaADevolver12);
+                this.addAll(listaCaja4, listaADevolver12);
                 return listaADevolver12;
             }
 
