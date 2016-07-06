@@ -37,7 +37,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             text2.Size = new Size(300, 100);
             Size screenSize = GuiController.Instance.Panel3d.Size;
             text2.Position = new Point(screenSize.Width / 2 - text2.Size.Width / 2, screenSize.Height - text2.Size.Height * 3); text2.Size = new Size(300, 100);
-            text2.changeFont(new System.Drawing.Font("Chiller", 30, FontStyle.Regular));
+            text2.changeFont(new System.Drawing.Font("Chiller", /*30*/GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth / 45, FontStyle.Regular));
             this.tipo = tipo;
         }
         public enum Tipo

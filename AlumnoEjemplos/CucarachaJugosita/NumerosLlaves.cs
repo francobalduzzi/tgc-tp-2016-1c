@@ -35,7 +35,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             new Vector2();
             //textoActual.Position = new Point(screenSize.Width - textoActual.Size.Width*31/20, screenSize.Height - textoActual.Size.Height*3/2);
             textoActual.Color = Color.DarkRed;
-           textoActual.changeFont(new System.Drawing.Font("Chiller", 30, FontStyle.Regular));
+           textoActual.changeFont(new System.Drawing.Font("Chiller", /*30*/GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth/45, FontStyle.Regular));
         }
         public void setNumeroLLaves(int tamañoLista)
         {
