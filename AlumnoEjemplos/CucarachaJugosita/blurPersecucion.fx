@@ -53,6 +53,8 @@ sampler RenderTarget = sampler_state
     MipFilter = NONE;
     MinFilter = NONE;
     MagFilter = NONE;
+	AddressU = CLAMP;
+    AddressV = CLAMP;
 };
 
 

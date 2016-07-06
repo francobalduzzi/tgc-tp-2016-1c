@@ -37,8 +37,8 @@ namespace AlumnoEjemplos.CucarachaJugosita
 
 
 
-            sprite.Scaling = new Vector2(0.1f,0.05f);
-            spriteAmarillo.Scaling = new Vector2(0.1f, 0.05f);
+            sprite.Scaling = new Vector2(GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth/13000f, GuiController.Instance.D3dDevice.PresentationParameters.BackBufferHeight/ 13000f); //-->> Antes estaba en 0.01f, 0.05f
+            spriteAmarillo.Scaling = new Vector2(GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth / 13000f, GuiController.Instance.D3dDevice.PresentationParameters.BackBufferHeight / 13000f);
 
             sprite.Position = new Vector2(GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth* 4/5, GuiController.Instance.D3dDevice.PresentationParameters.BackBufferHeight *  9/10);
             spriteAmarillo.Position = new Vector2(GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth * 4 / 5, GuiController.Instance.D3dDevice.PresentationParameters.BackBufferHeight * 9 / 10);
@@ -57,7 +57,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             sprite.render();
             if(cargaLinterna>0.02)
             {
-                spriteAmarillo.Scaling = new Vector2(0.1f * cargaLinterna, 0.05f);
+                spriteAmarillo.Scaling = new Vector2(cargaLinterna*GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth / 13000f, GuiController.Instance.D3dDevice.PresentationParameters.BackBufferHeight / 13000f);
                 spriteAmarillo.render();
             }
 

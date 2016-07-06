@@ -880,7 +880,6 @@ namespace AlumnoEjemplos.CucarachaJugosita
                 todosElementosARenderizar.Add(mesh);
             }
 
-
             if (nightVision && contadorNight > 0) //Hacemos esto para que el nightvision no arrastre valores de linterna etc.
             {
                 foreach(TgcMesh mesh in todosElementosARenderizar)
@@ -991,7 +990,6 @@ namespace AlumnoEjemplos.CucarachaJugosita
             estadoMenu = EstadoMenu.Menu;
 
         }
-
         //Renders individuales de las listas de cosas
         #region
         public void renderTrofeo(float elapsedTime)

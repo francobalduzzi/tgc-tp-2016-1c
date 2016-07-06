@@ -52,6 +52,10 @@ sampler RenderTarget = sampler_state
     MipFilter = NONE;
     MinFilter = NONE;
     MagFilter = NONE;
+	/*AddressU = BORDER;
+    AddressV = BORDER;*/
+	AddressU = CLAMP;
+    AddressV = CLAMP;
 };
 
 
@@ -75,7 +79,7 @@ float scaleFactor = 1;
 float4 ps_oscurecer( PS_INPUT_DEFAULT Input ) : COLOR0
 {     
 	//Obtener color segun textura
-	float4 color = tex2D( RenderTarget, Input.Texcoord );
+	float4 color = tex2D( RenderTarget, Input.Texcoord);
 	float distanciaPunto = length(posicion.xyz - posCam.xyz);
 	float distanciaTextura = length(Input.Texcoord -0.5);
 	//Escalar el color para oscurecerlo

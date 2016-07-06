@@ -49,6 +49,10 @@ sampler RenderTarget = sampler_state
     MipFilter = NONE;
     MinFilter = NONE;
     MagFilter = NONE;
+	/*AddressU = BORDER;
+    AddressV = BORDER;*/
+	AddressU = CLAMP;
+    AddressV = CLAMP;
 };
 
 
