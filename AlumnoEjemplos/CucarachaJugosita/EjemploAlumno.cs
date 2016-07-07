@@ -1614,7 +1614,7 @@ namespace AlumnoEjemplos.CucarachaJugosita
             textoActual.Position = new Point(GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth * 1 / 60, GuiController.Instance.D3dDevice.PresentationParameters.BackBufferHeight * 3 / 10);
             textoActual.Size = new Size(GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth, GuiController.Instance.D3dDevice.PresentationParameters.BackBufferHeight);
             textoActual.Color = Color.DarkGreen;
-            textoActual.changeFont(new System.Drawing.Font("Chiller", 200, FontStyle.Regular));
+            textoActual.changeFont(new System.Drawing.Font("Chiller", GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth /6 /*200*/, FontStyle.Regular));
             textoActual.render();
 
         }
